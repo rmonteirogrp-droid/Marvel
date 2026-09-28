@@ -561,6 +561,8 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 .film-etat:empty{display:none}
 
 .titre-plex img{height:17px;width:auto;display:block}
+.entree.plex-erreur{flex-direction:column;align-items:flex-start;gap:4px}
+.entree.plex-erreur span{font-size:12.5px;line-height:1.45}
 
 .toast-acces{position:fixed;z-index:300;left:50%;top:calc(var(--haut) + 16px);transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:30px;background:rgba(20,20,22,.94);border:1px solid rgba(229,160,13,.5);color:#fff;font:600 13.5px 'Montserrat',sans-serif;white-space:nowrap;box-shadow:0 12px 30px rgba(0,0,0,.6);animation:apparait .3s ease, efface .5s 3.6s ease forwards}
 .toast-acces img{height:14px}
@@ -1125,8 +1127,41 @@ async function plexCharger(){
     }
   }
   if(!plex.client){ plex.client = "mt-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); plexSauver(); }
-  // Bibliothèque relue en arrière-plan si elle date de plus de 12 h.
-  if(plex.token && plex.serveur && Date.now() - plex.indexe > 12 * 3600e3) plexIndexer().catch(() => {});
+  // Bibliothèque relue en arrière-plan si elle date de plus de 12 h (ou jamais lue en accès partagé).
+  if(plexPartage && plex.token && (!plexNbFilms() || Date.now() - plex.indexe > 12 * 3600e3)) plexPreparerPartage();
+  else if(plex.token && plex.serveur && Date.now() - plex.indexe > 12 * 3600e3) plexIndexer().catch(() => {});
+}
+/* Accès partagé : chemin vers le serveur depuis un autre réseau, puis lecture de la bibliothèque. */
+let plexPrep = null;
+function plexPreparerPartage(){
+  if(plexPrep) return plexPrep;
+  plex.etat = "recherche"; plex.erreur = "";
+  if(vue === "profil" && !document.getElementById("app").hidden) rendreProfil();
+  plexPrep = (async () => {
+    try{
+      if(!plex.serveur || !(await plexJoignable(plex.serveur.uri, plex.serveur.token, 3500))){
+        if(!(await plexTrouverServeur())) throw new Error("injoignable");
+      }
+      await plexIndexer();
+      plex.etat = plexNbFilms() ? "ok" : "vide";
+    }catch(e){
+      plex.etat = "erreur";
+      const m = String(e && e.message || e);
+      plex.erreur = m === "acces" || m === "401" ? "Accès refusé : demande un nouveau lien à l'identifiant 1."
+        : m === "injoignable" ? "Le serveur ne répond pas depuis ce réseau. Vérifie que le PC est allumé et que l'accès à distance de Plex est actif."
+        : "Erreur de connexion (" + m + ").";
+    }
+    plexSauver(); plexPrep = null;
+    if(vue === "profil" && !document.getElementById("app").hidden) rendreProfil();
+  })();
+  return plexPrep;
+}
+function enregistrerLienAcces(texte){
+  const m = /plex=([\w-]+)/.exec(texte || "");
+  if(!m) return false;
+  try{ JSON.parse(deb64url(m[1])); }catch(e){ return false; }
+  memo.ecrire("mt-plex-acces", m[1]); memo.effacer("mt-plex-partage");
+  return true;
 }
 function plexEntetes(token){
   const e = { "Accept":"application/json", "X-Plex-Product":PLEX_PRODUIT, "X-Plex-Version":"1.0",
@@ -1181,14 +1216,16 @@ async function plexJoignable(uri, token, delai){
 }
 async function plexTrouverServeur(){
   const r = await fetch("https://plex.tv/api/v2/resources?includeHttps=1&includeRelay=1&includeIPv6=1", { headers:plexEntetes(plex.token) });
+  if(r.status === 401) throw new Error("acces");
   const serveurs = (await r.json()).filter(s => (s.provides || "").includes("server"))
     .sort((a, b) => (b.owned ? 1 : 0) - (a.owned ? 1 : 0));
   // Ordre d'essai : réseau local (rapide à la maison), accès à distance, relais Plex. Pas de http depuis une page https.
-  const rang = c => (c.relay ? 2 : c.local ? 0 : 1) + (c.protocol === "https" ? 0 : 3);
+  // En accès partagé (autre maison), l'accès à distance passe en premier.
+  const rang = c => (c.relay ? 2 : c.local ? (plexPartage ? 1 : 0) : (plexPartage ? 0 : 1)) + (c.protocol === "https" ? 0 : 3);
   for(const s of serveurs){
     const cx = (s.connections || []).filter(c => location.protocol !== "https:" || c.protocol === "https").sort((a, b) => rang(a) - rang(b));
     for(const c of cx){
-      if(await plexJoignable(c.uri, s.accessToken || plex.token, c.local ? 2500 : 5000)){
+      if(await plexJoignable(c.uri, s.accessToken || plex.token, c.local ? 2500 : c.relay ? 8000 : 6000)){
         plex.serveur = { nom:s.name, uri:c.uri, token:s.accessToken || plex.token, id:s.clientIdentifier };
         plexSauver(); return true;
       }
@@ -1661,9 +1698,14 @@ function rendreProfil(){
     <button class="entree" data-action="plex-partager"><b>Partager avec les autres identifiants</b><span>Envoyer le lien</span><span class="chev">›</span></button>
     <button class="entree" data-action="plex-maj"><b>Actualiser la bibliothèque</b><span class="chev">›</span></button>
     <button class="entree" data-action="plex-deco"><b>Déconnecter Plex</b><span class="chev">›</span></button>` : `
-    <button class="entree" data-action="plex"><b>Connecter Plex</b><span>Regarder tes films ici</span><span class="chev">›</span></button>`}` : plexPartage ? `
+    <button class="entree" data-action="plex"><b>Connecter Plex</b><span>Regarder tes films ici</span><span class="chev">›</span></button>`}` : `
     <p class="titre-section titre-plex"><img src="${LOGO_PLEX}" alt="Plex"></p>
-    <div class="entree"><b>Films disponibles</b><span>${plexNbFilms()} films</span></div>` : ""}
+    ${!plexPartage ? `<div class="entree"><b>Pas encore d'accès aux films</b></div>`
+      : plex.etat === "recherche" ? `<div class="entree"><b>Connexion au serveur…</b></div>`
+      : plexNbFilms() ? `<div class="entree"><b>Films disponibles</b><span>${plexNbFilms()} films</span></div>`
+      : `<div class="entree plex-erreur"><b>Films indisponibles</b><span>${esc(plex.erreur || "La bibliothèque n'a pas encore été lue.")}</span></div>
+         <button class="entree" data-action="plex-reessayer"><b>Réessayer</b><span class="chev">›</span></button>`}
+    <button class="entree" data-action="plex-lien"><b>${plexPartage ? "Changer le lien d'accès" : "Coller le lien d'accès"}</b><span class="chev">›</span></button>`}
 
     <p class="titre-section">Compte</p>
     <button class="entree" data-action="changer"><b>Changer de profil</b><span>${esc(profilActif().nom)}</span><span class="chev">›</span></button>
@@ -2190,6 +2232,13 @@ document.getElementById("app").addEventListener("click", e => {
       majSonVue(); sortirCompte(); demarrerAmbiance();
     } else if(act.dataset.action === "plex"){
       plexConnecter();
+    } else if(act.dataset.action === "plex-reessayer"){
+      plexPreparerPartage();
+    } else if(act.dataset.action === "plex-lien"){
+      const t = prompt("Colle le lien d'accès envoyé par l'identifiant 1 :");
+      if(t === null) return;
+      if(!enregistrerLienAcces(t)){ alert("Ce lien ne contient pas d'accès aux films."); return; }
+      plexCharger().then(() => allerA("profil"));
     } else if(act.dataset.action === "plex-partager"){
       partagerLien();
     } else if(act.dataset.action === "plex-maj"){
