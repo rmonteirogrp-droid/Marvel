@@ -562,6 +562,20 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 
 .titre-plex img{height:17px;width:auto;display:block}
 
+/* ══ Reprendre ══ */
+.reprendre{display:flex;gap:11px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 26px}
+.reprendre::-webkit-scrollbar{display:none}
+.rp-carte{flex:0 0 118px;width:118px;min-width:0;text-align:left}
+.rp-aff{position:relative;display:block;aspect-ratio:2/3;border-radius:9px;overflow:hidden;background:#000;box-shadow:0 8px 20px rgba(0,0,0,.5)}
+.rp-aff img{width:100%;height:100%;object-fit:cover;display:block}
+.rp-lecture{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:rgba(0,0,0,.55);border:1.5px solid rgba(255,255,255,.85);display:grid;place-items:center;backdrop-filter:blur(4px)}
+.rp-lecture svg{width:15px;height:15px;fill:#fff;margin-left:2px}
+.rp-barre{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.28)}
+.rp-barre i{display:block;height:100%;background:var(--rouge)}
+.rp-carte b{display:block;margin-top:8px;font-size:12.5px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-carte small{display:block;color:var(--gris);font-size:11px;margin-top:2px}
+.rp-carte:active .rp-aff{transform:scale(.97)}
+
 /* ══ Bouton son des vidéos ══ */
 .son-vue{position:absolute;z-index:3;right:14px;bottom:18px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:#fff}
 .son-vue svg{width:17px;height:17px;fill:currentColor}
@@ -1181,6 +1195,34 @@ function plexCle(it){
   if(!plex.token || !plex.serveur || !it || it.k !== "film") return null;
   return (it.tmdb && plex.films[it.tmdb]) || plex.films["t:" + normTitre(it.t) + "|" + it.a] || null;
 }
+/* « Reprendre » : films Plex commencés et pas terminés, avec leur progression (source : ton serveur Plex). */
+function rendreReprendre(){
+  const z = document.getElementById("reprendre"); if(!z) return;
+  if(!plex.token || !plex.serveur){ z.innerHTML = ""; return; }
+  const parCle = {};
+  ["mcu","multi"].forEach(u => tous(u).forEach(it => { const k = plexCle(it); if(k) parCle[k] = it; }));
+  const liste = Object.entries(plex.prog || {}).map(([k, p]) => ({ it:parCle[k], ...p }))
+    .filter(x => x.it && x.d && x.o > 60e3 && x.o < x.d * .92).sort((a, b) => b.q - a.q);
+  z.innerHTML = liste.length ? `<p class="titre-section">Reprendre</p>
+    <div class="reprendre">${liste.map(x => `<button class="rp-carte" data-reprendre="${x.it.id}">
+      <span class="rp-aff"><img src="${x.it.affiche || ICO[x.it.i]}" alt=""><span class="rp-lecture"><svg viewBox="0 0 24 24"><path d="M6 3.4 20 12 6 20.6z"/></svg></span>
+      <span class="rp-barre"><i style="width:${Math.round(x.o / x.d * 100)}%"></i></span></span>
+      <b>${esc(x.it.t)}</b><small>${fmtDuree(Math.max(1, Math.round((x.d - x.o) / 60000)))} restantes</small></button>`).join("")}</div>` : "";
+}
+let repriseMaj = 0;
+async function majReprendre(){
+  if(!plex.token || !plex.serveur || Date.now() - repriseMaj < 60e3) return;
+  repriseMaj = Date.now();
+  try{
+    const prog = {};
+    const secs = ((await plexGet("/library/sections")).MediaContainer || {}).Directory || [];
+    for(const d of secs.filter(d => d.type === "movie")){
+      const m = ((await plexGet(`/library/sections/${d.key}/all?type=1&inProgress=1`)).MediaContainer || {}).Metadata || [];
+      m.filter(x => x.viewOffset).forEach(x => prog[x.ratingKey] = { o:x.viewOffset, d:x.duration, q:(x.lastViewedAt || 0) * 1000 });
+    }
+    plex.prog = prog; plexSauver(); rendreReprendre();
+  }catch(e){}
+}
 function plexNbFilms(){ return ["mcu","multi"].reduce((n, u) => n + tous(u).filter(plexCle).length, 0); }
 
 /* Lecteur de film */
@@ -1214,7 +1256,8 @@ async function lireFilm(it){
     if(sous.some(s => s.selected)) await plexPut(`/library/parts/${part.id}?subtitleStreamID=0&allParts=1`);
     Object.assign(film, { partId:part.id, audios, sous, audio:choix ? choix.id : null, sousTitre:0, duree:meta.duration || 0 });
     rendreReglages();
-    const reprise = meta.viewOffset && meta.viewOffset < film.duree * .95 ? Math.floor(meta.viewOffset / 1000) : 0;
+    const pos = meta.viewOffset || ((plex.prog || {})[cle] || {}).o || 0;
+    const reprise = pos && pos < film.duree * .95 ? Math.floor(pos / 1000) : 0;
     await demarrerFlux(reprise);
   }catch(e){
     filmEtat("Impossible de lire ce film.<br>Vérifie que ton serveur Plex est allumé.");
@@ -1291,17 +1334,20 @@ function rapportFilm(etat){
   if(!film) return;
   const ms = filmPosition() * 1000;
   const q = new URLSearchParams({ ratingKey:film.cle, key:"/library/metadata/" + film.cle, state:etat, time:String(ms), duration:String(film.duree) });
+  plex.prog = plex.prog || {};
+  plex.prog[film.cle] = { o:ms, d:film.duree, q:Date.now() };
   fetch(plex.serveur.uri + "/:/timeline?" + q, { headers:{ ...plexEntetes(plex.serveur.token), "X-Plex-Session-Identifier":film.session } }).catch(() => {});
   // Générique atteint : film marqué vu dans Plex et dans l'app.
   if(film.duree && ms > film.duree * .92 && !film.vu){
-    film.vu = true;
+    film.vu = true; delete plex.prog[film.cle];
     fetch(plex.serveur.uri + `/:/scrobble?identifier=com.plexapp.plugins.library&key=${film.cle}`, { headers:plexEntetes(plex.serveur.token) }).catch(() => {});
     if(!ici().vus[film.it.id]) basculerVu(film.it.id, document.querySelector(`.ligne[data-id="${film.it.id}"]`));
   }
 }
 function arreterFilm(){
   if(!film) return;
-  rapportFilm("stopped");
+  rapportFilm("stopped"); plexSauver();
+  if(vue === "accueil") rendreReprendre();
   clearInterval(film.rapport);
   fetch(plex.serveur.uri + "/video/:/transcode/universal/stop?session=" + film.session, { headers:plexEntetes(plex.serveur.token) }).catch(() => {});
   const v = document.getElementById("film-video");
@@ -1392,6 +1438,7 @@ function rendreAccueil(){
         <span class="ph-c">${v}/${g.items.length}</span>
       </div>`;}).join("")}</div>
 
+    <div id="reprendre"></div>
     <p class="titre-section">Suivre Marvel France</p>
     <div class="reseaux">${RESEAUX.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener" aria-label="${x[0]}">${x[2]}</a>`).join("")}</div>`;
 }
@@ -1660,7 +1707,7 @@ function allerA(v){
   if(v === "doomsday") document.body.dataset.page = "doom"; else delete document.body.dataset.page;
   document.documentElement.style.backgroundColor = v === "doomsday" ? "#030703" : (univers === "multi" ? "#160609" : "#000");
   ({accueil:rendreAccueil, parcours:rendreParcours, doomsday:rendreDoomsday, profil:rendreProfil})[v]();
-  if(v === "accueil"){ animerSorties(); lancerVideoAccueil(); }
+  if(v === "accueil"){ animerSorties(); lancerVideoAccueil(); rendreReprendre(); majReprendre(); }
   if(v === "doomsday"){ majRebours(); lancerVideo("doom-video", VIDEO_DOOM_PAGE); }
   majSonVue();
   requestAnimationFrame(() => {
@@ -2116,6 +2163,8 @@ document.getElementById("app").addEventListener("click", e => {
     sonsVues = !sonsVues; memo.ecrire("mt-sons-videos", sonsVues ? "1" : "0");
     majSonVue(); return;
   }
+  const rp = e.target.closest("[data-reprendre]");
+  if(rp){ const it = parId(rp.dataset.reprendre) || tous("mcu").concat(tous("multi")).find(i => i.id === rp.dataset.reprendre); if(it) lireFilm(it); return; }
   if(e.target.closest("#btn-tva")){ ouvrirTva(); return; }
   const tr = e.target.closest("[data-trailer]");
   if(tr){ const t = TRAILERS[+tr.dataset.trailer]; lireVideo(t.src, t.titre, t.langue, t.vignette); return; }
