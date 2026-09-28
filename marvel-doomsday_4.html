@@ -547,16 +547,11 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 #film{z-index:140;height:100dvh}
 .film-ecran{position:absolute;inset:0;height:100dvh;background:#000}
 #film-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
-.film-haut{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:12px;padding:calc(var(--haut) + 12px) 14px 26px;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent);transition:opacity .3s}
-.film-haut{justify-content:space-between}
-.film-fermer{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:16px;flex:0 0 auto;display:grid;place-items:center}
-.film-fermer svg{width:19px;height:19px;fill:#fff}
-.film-reglages{position:absolute;top:calc(var(--haut) + 56px);right:14px;width:min(280px,calc(100% - 28px));max-height:60vh;overflow-y:auto;padding:8px 6px 10px;border-radius:14px;background:rgba(20,20,22,.94);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);box-shadow:0 16px 40px rgba(0,0,0,.6);animation:apparait .18s ease}
-.film-reglages[hidden]{display:none}
-.fr-titre{padding:10px 12px 6px;color:var(--gris);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.film-reglages button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:9px;color:#fff;font:600 14px 'Montserrat',sans-serif;text-align:left}
-.film-reglages button i{width:16px;font-style:normal;color:#E5A00D;font-weight:800}
-.film-reglages button.ok{background:rgba(255,255,255,.08)}
+.film-lancer{position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:grid;place-items:center;animation:apparait .2s}
+.film-lancer svg{width:30px;height:30px;fill:#fff;margin-left:5px}
+.film-lancer[hidden]{display:none}
+.film-annuler{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 34px);transform:translateX(-50%);padding:9px 22px;border-radius:99px;background:rgba(255,255,255,.12);color:#D9D9DE;font:600 13.5px 'Montserrat',sans-serif}
+#film.lecture .film-annuler{display:none}
 .film-etat{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);text-align:center;color:#D9D9DE;font-size:14.5px;line-height:1.6;pointer-events:none}
 .film-etat:empty{display:none}
 
@@ -756,12 +751,8 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 </div></div>
 <div class="modale" id="film"><div class="film-ecran">
   <video id="film-video" controls playsinline preload="auto"></video>
-  <div class="film-haut"><button class="film-fermer" id="film-fermer" aria-label="Fermer">✕</button>
-    <button class="film-fermer" id="film-param" aria-label="Paramètres"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.7a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.4L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.7h4l.4-2.7a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg></button></div>
-  <div class="film-reglages" id="film-reglages" hidden>
-    <p class="fr-titre">Audio</p><div id="fr-audio"></div>
-    <p class="fr-titre">Sous-titres</p><div id="fr-sous"></div>
-  </div>
+  <button class="film-lancer" id="film-lancer" aria-label="Lancer le film" hidden><svg viewBox="0 0 24 24"><path d="M6 3.5v17l14-8.5z"/></svg></button>
+  <button class="film-annuler" id="film-annuler">Annuler</button>
   <p class="film-etat" id="film-etat"></p>
 </div></div>
 <div class="modale" id="lecteur"><div class="fond" data-fermer></div><div class="boite"><div class="cadre" id="cadre"></div><p class="son" id="lecteur-titre"></p></div></div>
@@ -1317,7 +1308,10 @@ async function lireFilm(it){
   film = { it, cle, session:"mt" + Date.now().toString(36), duree:0, base:0 };
   const m = document.getElementById("film"); m.classList.remove("part"); m.classList.add("on");
   document.body.style.overflow = "hidden"; majSonVue();
-  document.getElementById("film-reglages").hidden = true;
+  m.classList.remove("lecture"); document.getElementById("film-lancer").hidden = true;
+  const v = document.getElementById("film-video");
+  if(v.webkitEnterFullscreen){ const p = v.play(); if(p) p.catch(() => {}); }   // Safari : débloque le plein écran natif
+  else entrerPleinEcran();
   filmEtat("Connexion à ton serveur Plex…");
   try{
     const meta = (await plexGet(`/library/metadata/${cle}`)).MediaContainer.Metadata[0];
@@ -1331,7 +1325,6 @@ async function lireFilm(it){
     // Sous-titres coupés par défaut (Plex les incruste sinon, ex. anglais forcés).
     if(sous.some(s => s.selected)) await plexPut(`/library/parts/${part.id}?subtitleStreamID=0&allParts=1`);
     Object.assign(film, { partId:part.id, audios, sous, audio:choix ? choix.id : null, sousTitre:0, duree:meta.duration || 0 });
-    rendreReglages();
     const pos = meta.viewOffset || ((plex.prog || {})[cle] || {}).o || 0;
     const reprise = pos && pos < film.duree * .95 ? Math.floor(pos / 1000) : 0;
     await demarrerFlux(reprise);
@@ -1339,35 +1332,31 @@ async function lireFilm(it){
     filmEtat("Impossible de lire ce film.<br>Vérifie que ton serveur Plex est allumé.");
   }
 }
-const nomPiste = s => esc(s.displayTitle || s.language || "Piste " + s.id);
-function rendreReglages(){
-  document.getElementById("fr-audio").innerHTML = film.audios.length ? film.audios.map(s =>
-    `<button data-audio="${s.id}" class="${s.id === film.audio ? "ok" : ""}"><i>${s.id === film.audio ? "✓" : ""}</i>${nomPiste(s)}</button>`).join("")
-    : `<button class="ok" disabled><i>✓</i>Piste d'origine</button>`;
-  document.getElementById("fr-sous").innerHTML = [{id:0}, ...film.sous].map(s =>
-    `<button data-sous="${s.id}" class="${s.id === film.sousTitre ? "ok" : ""}"><i>${s.id === film.sousTitre ? "✓" : ""}</i>${s.id ? nomPiste(s) : "Aucun"}</button>`).join("");
+function entrerPleinEcran(){
+  const m = document.getElementById("film"), fs = m.requestFullscreen || m.webkitRequestFullscreen;
+  if(!fs) return;
+  const r = fs.call(m);
+  const paysage = () => { if(screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(() => {}); };
+  if(r && r.then) r.then(paysage, () => {}); else paysage();
 }
-document.getElementById("film-param").addEventListener("click", () => {
-  const r = document.getElementById("film-reglages"); r.hidden = !r.hidden;
+function pleinEcran(){
+  const v = document.getElementById("film-video");
+  if(!film || !v.webkitEnterFullscreen || v.webkitDisplayingFullscreen) return;
+  try{ v.webkitEnterFullscreen(); }catch(e){}
+}
+function montrerLancer(){
+  filmEtat("");
+  document.getElementById("film").classList.remove("lecture");
+  document.getElementById("film-lancer").hidden = false;
+}
+document.getElementById("film-lancer").addEventListener("click", () => {
+  const v = document.getElementById("film-video");
+  document.getElementById("film-lancer").hidden = true;
+  const p = v.play(); if(p) p.catch(() => {});
+  if(v.webkitEnterFullscreen){ try{ v.webkitEnterFullscreen(); }catch(e){} }
+  else if(!(document.fullscreenElement || document.webkitFullscreenElement)) entrerPleinEcran();
 });
-document.getElementById("film-reglages").addEventListener("click", async e => {
-  const a = e.target.closest("[data-audio]"), s = e.target.closest("[data-sous]");
-  if(!film || (!a && !s)) return;
-  const pos = filmPosition();
-  if(a){
-    const piste = film.audios.find(x => String(x.id) === a.dataset.audio); if(!piste || piste.id === film.audio) return;
-    film.audio = piste.id;
-    memo.ecrire("mt-plex-langue", /^(fr|fra|fre)$/i.test(piste.languageCode || "") ? "vf" : "vo");
-    await plexPut(`/library/parts/${film.partId}?audioStreamID=${piste.id}&allParts=1`);
-  } else {
-    const id = +s.dataset.sous; if(id === film.sousTitre) return;
-    film.sousTitre = id;
-    await plexPut(`/library/parts/${film.partId}?subtitleStreamID=${id}&allParts=1`);
-  }
-  rendreReglages();
-  document.getElementById("film-reglages").hidden = true;
-  demarrerFlux(pos);   // le flux repart au même endroit avec la nouvelle piste
-});
+document.getElementById("film-annuler").addEventListener("click", arreterFilm);
 function plexPut(chemin){ return fetch(plex.serveur.uri + chemin, { method:"PUT", headers:plexEntetes(plex.serveur.token) }); }
 function urlFlux(depart){
   const q = new URLSearchParams({
@@ -1394,14 +1383,19 @@ async function demarrerFlux(depart){
     film.hls = new Hls({ xhrSetup:(xhr, u) => { if(!/X-Plex-Token=/.test(u)) xhr.open("GET", u + (u.includes("?") ? "&" : "?") + "X-Plex-Token=" + encodeURIComponent(tok), true); } });
     film.hls.loadSource(url); film.hls.attachMedia(v);
   }
+  v.onloadedmetadata = pleinEcran;
   v.onplaying = () => {
-    filmEtat("");
+    filmEtat(""); document.getElementById("film").classList.add("lecture");
+    document.getElementById("film-lancer").hidden = true;
+    pleinEcran();
+    // Plein écran refusé par le navigateur : le film attend une touche sur ▶.
+    setTimeout(() => { if(film && v.webkitEnterFullscreen && !v.webkitDisplayingFullscreen){ v.pause(); montrerLancer(); } }, 1500);
     for(const t of v.textTracks) t.mode = "disabled";   // aucune piste de sous-titres affichée par le lecteur
     // Selon le serveur, le flux repart de 0 ou garde le temps réel du film.
     if(film && film.depart && v.currentTime > film.depart / 2) film.base = 0;
   };
   v.onerror = () => filmEtat("Lecture impossible.<br>Vérifie ta connexion.");
-  const p = v.play(); if(p) p.catch(() => filmEtat("Touche ▶ pour lancer le film."));
+  const p = v.play(); if(p) p.catch(e => { if(film && e.name !== "AbortError") montrerLancer(); });
   clearInterval(film.rapport);
   film.rapport = setInterval(() => rapportFilm(v.paused ? "paused" : "playing"), 10000);
 }
@@ -1421,7 +1415,8 @@ function rapportFilm(etat){
   }
 }
 function arreterFilm(){
-  if(!film) return;
+  if(!film || film.arret) return;
+  film.arret = true;
   rapportFilm("stopped"); plexSauver();
   if(vue === "accueil") rendreReprendre();
   clearInterval(film.rapport);
@@ -1430,11 +1425,24 @@ function arreterFilm(){
   if(film.hls) film.hls.destroy();
   v.pause(); v.removeAttribute("src"); v.load();
   film = null;
+  try{ if(v.webkitDisplayingFullscreen) v.webkitExitFullscreen(); }catch(e){}
+  if(document.fullscreenElement || document.webkitFullscreenElement){
+    try{ const r = (document.exitFullscreen || document.webkitExitFullscreen).call(document); if(r && r.catch) r.catch(() => {}); }catch(e){}
+  }
+  if(screen.orientation && screen.orientation.unlock) try{ screen.orientation.unlock(); }catch(e){}
   const m = document.getElementById("film"); m.classList.add("part");
   setTimeout(() => { m.classList.remove("on","part"); majSonVue(); }, 230);
   if(!document.getElementById("fiche").classList.contains("on")) document.body.style.overflow = "";
 }
-document.getElementById("film-fermer").addEventListener("click", arreterFilm);
+// La croix du lecteur plein écran (iPhone) ou la touche Échap ferment le film.
+document.getElementById("film-video").addEventListener("webkitendfullscreen", () => {
+  const v = document.getElementById("film-video");
+  if(film && v.webkitPresentationMode !== "picture-in-picture") arreterFilm();
+});
+["fullscreenchange","webkitfullscreenchange"].forEach(ev => document.addEventListener(ev, () => {
+  if(film && !(document.fullscreenElement || document.webkitFullscreenElement)) arreterFilm();
+}));
+document.getElementById("film-video").addEventListener("ended", () => { if(film) arreterFilm(); });
 // Rotation du téléphone : la page est remise en haut pour que le film reste centré.
 addEventListener("resize", () => { if(film) scrollTo(0, 0); });
 document.getElementById("film-video").addEventListener("pause", () => rapportFilm("paused"));
