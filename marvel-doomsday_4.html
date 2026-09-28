@@ -80,15 +80,21 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .profil-carte span{display:block;color:var(--gris);font-size:12.5px;margin-top:5px}
 
 #splash[hidden]{display:none !important}
-#splash{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:var(--noir);animation:splashIn .25s ease}
+#splash{position:fixed;inset:0;z-index:200;display:grid;place-items:center;overflow:hidden;background:#000;animation:splashIn .25s ease}
 #splash.part{animation:splashOut .42s cubic-bezier(.4,0,.2,1) both}
-#splash img{height:42px;animation:logoIn .85s cubic-bezier(.2,.9,.3,1) both}
-.jauge-splash{width:120px;height:2px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
-.jauge-splash i{display:block;height:100%;width:0;background:var(--rouge);animation:remplit var(--t,1s) cubic-bezier(.5,0,.3,1) forwards}
+#splash>*{grid-area:1/1}
+/* Ouverture façon film : halo rouge, logo qui sort du flou, reflet, trait de lumière anamorphique. */
+.splash-lueur{position:absolute;left:50%;top:50%;margin:-75vmax 0 0 -75vmax;width:150vmax;height:150vmax;border-radius:50%;background:radial-gradient(circle,rgba(236,29,36,.34) 0%,rgba(236,29,36,.08) 22%,transparent 50%);animation:splashLueur var(--t,1s) ease-out both}
+.splash-logo{position:relative;overflow:hidden;line-height:0;animation:splashLogo var(--t,1s) cubic-bezier(.2,.9,.3,1) both}
+.splash-logo img{height:48px}
+.splash-logo::after{content:"";position:absolute;inset:-30% -80%;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.8) 50%,transparent 58%);transform:translateX(-60%);animation:splashReflet calc(var(--t,1s) * .6) calc(var(--t,1s) * .3) ease-in-out both}
+.splash-flare{width:min(78vw,420px);height:2px;margin-top:82px;border-radius:2px;background:linear-gradient(90deg,transparent,#EC1D24 25%,#fff 50%,#EC1D24 75%,transparent);box-shadow:0 0 14px #EC1D24;animation:splashFlare var(--t,1s) cubic-bezier(.2,.9,.3,1) both}
+@keyframes splashLueur{0%{opacity:0;transform:scale(.35)}50%{opacity:1}100%{opacity:.55;transform:scale(1)}}
+@keyframes splashLogo{0%{opacity:0;transform:scale(1.28);filter:blur(12px) brightness(2.2)}45%{opacity:1;filter:blur(0) brightness(1.35)}100%{transform:scale(1);filter:none}}
+@keyframes splashReflet{to{transform:translateX(60%)}}
+@keyframes splashFlare{0%{opacity:0;transform:scaleX(0)}40%{opacity:1}100%{opacity:.3;transform:scaleX(1)}}
 @keyframes splashIn{from{opacity:0}to{opacity:1}}
 @keyframes splashOut{to{opacity:0;transform:scale(1.04)}}
-@keyframes logoIn{0%{opacity:0;transform:scale(.86)}60%{opacity:1}100%{opacity:1;transform:scale(1)}}
-@keyframes remplit{to{width:100%}}
 
 /* ══ Barre haute ══ */
 #app{padding-top:calc(var(--haut) + 52px);padding-bottom:calc(var(--bas) + 66px);max-width:720px;margin:0 auto}
@@ -590,7 +596,7 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 
 <div class="fete" id="fete" hidden><canvas id="fete-canvas"></canvas><div class="fete-in">
   <span class="fete-sur" id="fete-sur"></span><h2 id="fete-titre"></h2><p id="fete-sous"></p></div></div>
-<div id="splash" hidden><img id="splash-logo" src="" alt="Marvel"><span class="jauge-splash"><i></i></span></div>
+<div id="splash" hidden><span class="splash-lueur"></span><span class="splash-logo"><img id="splash-logo" src="" alt="Marvel"></span><span class="splash-flare"></span></div>
 <div class="modale" id="tva"><div class="fond" data-fermer></div><div class="feuille">
   <div class="entete"><img id="tva-ico" src="" alt=""><span><b>Autorité des Variations Temporelles</b><small>En ligne · Agent de liaison</small></span>
   <button class="fermer" data-fermer style="position:static;margin-left:auto">✕</button></div>
@@ -1185,7 +1191,7 @@ function majUnivers(){
 function entrer(p){
   profil = p;
   sauverSession();
-  splash(1150);
+  splash(1600);
   document.getElementById("ec-profils").classList.remove("on");
   ["barre","app","nav"].forEach(i=>document.getElementById(i).hidden = false);
   majUnivers();
