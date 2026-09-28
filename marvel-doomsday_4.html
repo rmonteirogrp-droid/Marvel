@@ -127,6 +127,12 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
   background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(14px);
   font-family:'Montserrat',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.02em;color:#fff;
   box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.hero-accroche{position:absolute;z-index:1;left:0;right:0;top:calc(var(--haut) + 52px + 20px);display:flex;align-items:center;justify-content:center;gap:12px;
+  font:600 12.5px 'Poppins',system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.8);animation:monteHero .8s cubic-bezier(.2,.9,.3,1) both}
+.hero-accroche::before,.hero-accroche::after{content:"";width:22px;height:1.5px;background:var(--rouge)}
+.hero-in.centre{text-align:center}
+.hero-logo{margin:0 auto;line-height:0}
+.hero-logo img{width:min(74%,320px);height:auto;filter:drop-shadow(0 8px 26px rgba(0,0,0,.85))}
 .hero-titre.petit{font-size:clamp(24px,7.4vw,34px);line-height:.98}
 .hero-in{position:relative;z-index:1;padding:0 18px 26px;width:100%;animation:monteHero .8s cubic-bezier(.2,.9,.3,1) both}
 @keyframes monteHero{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
@@ -340,6 +346,7 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 .doom-hero .logo-doom{position:absolute;top:14px;right:14px;z-index:2;width:min(46%,178px);height:auto;filter:drop-shadow(0 6px 20px rgba(0,0,0,.9))}
 .cr{margin-top:-10px;position:relative;z-index:2}
 .cr-date{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-left:2px}
+.doom-hero .cr-date{position:absolute;left:18px;bottom:30px;z-index:2;margin:0;filter:drop-shadow(0 4px 16px rgba(0,0,0,.85))}
 .cr-date b{font:800 clamp(38px,11vw,50px) 'Poppins';line-height:.82;letter-spacing:-.05em;color:#fff;
   text-shadow:0 0 30px color-mix(in srgb,var(--rouge) 60%,transparent)}
 .cr-date span{font-size:13px;line-height:1.15;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--rouge);padding-top:3px}
@@ -429,6 +436,37 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 .entree{display:flex;align-items:center;gap:12px;width:100%;background:var(--carte);border:1px solid var(--bord);border-radius:10px;padding:14px;margin-bottom:8px;text-align:left}
 .entree b{flex:1;font-size:15px;font-weight:600}
 .entree span{color:var(--gris);font-size:13.5px}
+
+/* ══ Survols ══ */
+.sortie,.entree,.ligne,.savoir,.cu,.profil-carte,.btn-tva,.trailer .play,.cast-ph img,.fermer,.commut .noyau,.carte-doom{transition-property:transform,border-color,background-color,box-shadow,filter,color;transition-duration:.22s}
+.cast-ph img{transition:transform .5s cubic-bezier(.2,.9,.3,1)}
+@media (hover:hover){
+  .btn-rouge:hover,.btn-vu:not(.deja):hover,.hero-cta:hover{filter:brightness(1.14)}
+  .btn-vu.deja:hover{border-color:var(--vert)}
+  .filtres button:not(.actif):hover{border-color:var(--rouge);color:#fff}
+  .filtres button:not(.actif):hover svg{fill:var(--rouge)}
+  .ligne:hover{border-color:color-mix(in srgb,var(--rouge) 55%,var(--bord))}
+  .ligne.vu:hover{border-color:#2F6B45}
+  .bi:hover{border-color:var(--rouge);color:var(--rouge)}
+  .coche:hover{border-color:var(--vert)}
+  .sortie:hover{border-color:var(--rouge);transform:translateY(-3px)}
+  .trailer:hover .play{transform:scale(1.1);box-shadow:0 0 0 7px color-mix(in srgb,var(--rouge) 30%,transparent)}
+  .savoir>button:hover b,.savoir>button:hover i{color:var(--rouge)}
+  .savoir:hover,.entree:hover,.cu:hover,.profil-carte:hover{border-color:color-mix(in srgb,var(--rouge) 60%,var(--bord))}
+  .btn-tva:hover{box-shadow:0 0 22px var(--lueur)}
+  .cast:hover .cast-ph img{transform:scale(1.06)}
+  .cast:hover b{color:var(--rouge)}
+  .nav button:not([aria-current="true"]):hover{color:#fff}
+  .commut:hover .noyau{border-color:var(--rouge)}
+  .fermer:hover{background:var(--rouge)}
+  .grille-avatars button:hover img{filter:none}
+  .carte-doom:hover{box-shadow:0 0 0 1.5px var(--rouge)}
+  .jalon:hover{border-color:color-mix(in srgb,var(--rouge) 60%,var(--bord))}
+}
+/* Sur téléphone : même couleur au toucher. */
+.filtres button:not(.actif):active,.savoir>button:active b,.cast:active b{color:var(--rouge)}
+.sortie:active,.entree:active,.ligne:active,.savoir:active,.profil-carte:active{border-color:var(--rouge)}
+.fermer:active{background:var(--rouge)}
 
 /* ══ Fiche ══ */
 .modale{position:fixed;inset:0;z-index:120;display:none}
@@ -741,9 +779,9 @@ function rendreAccueil(){
     <section class="hero" style="background-image:url(${IMG.heroDoom})">
       <video id="hero-video" muted playsinline loop preload="auto" aria-hidden="true"></video>
       <span class="ombre"></span>
-      <div class="hero-in">
-        <span class="badge-rdv">Le grand rendez&#8209;vous</span>
-        <h1 class="hero-titre petit">Avengers<br>Doomsday</h1>
+      <p class="hero-accroche">Le grand rendez&#8209;vous</p>
+      <div class="hero-in centre">
+        <h1 class="hero-logo"><img src="${IMG.logoDoom}" alt="Avengers: Doomsday"></h1>
       </div>
     </section>` : `
     <section class="hero hero-multi">
@@ -885,14 +923,14 @@ function rendreParcours(){
 
 /* ═══════════ DOOMSDAY ═══════════ */
 function rendreDoomsday(){
-  const j = jours(SORTIE_DOOM), s = stats(profil,"mcu");
+  const s = stats(profil,"mcu");
   document.getElementById("v-doomsday").innerHTML = `
     <div class="doom-hero" style="background-image:url(${IMG.heroDoom})">
       <span class="voile"></span>
       <img class="logo-doom" src="${IMG.logoDoom}" alt="Avengers: Doomsday">
+      <p class="cr-date"><b>16</b><span>décembre<br><em>2026</em></span></p>
     </div>
     <section class="cr">
-      <p class="cr-date"><b>16</b><span>décembre<br><em>2026</em></span></p>
       <div class="cr-grille">
         <div><b data-cr="j">--</b><span>jours</span></div>
         <div><b data-cr="h">--</b><span>heures</span></div>
@@ -909,7 +947,6 @@ function rendreDoomsday(){
       ${(()=>{ const r = restant("mcu"); return r.te
         ? `<div class="prep-p">
              <div><b>${fmtDuree(r.te)}</b><span>à rattraper</span></div>
-             ${j?`<div><b>${Math.ceil(r.te/j)} min</b><span>par jour</span></div>`:""}
            </div>`
         : `<div class="prep-p"><div><b>Prêt</b><span>tous les essentiels sont vus</span></div></div>`; })()}
     </div>
