@@ -357,8 +357,17 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .infos .excl{color:var(--rouge);font-weight:700}
 .bi{width:27px;height:27px;border-radius:50%;border:1px solid var(--bord);color:var(--gris);font:700 12.5px 'Montserrat';flex:0 0 auto;transition:border-color .18s,color .18s}
 .bi:active{border-color:var(--rouge);color:var(--rouge)}
-.coche{width:26px;height:26px;border-radius:50%;border:1.7px solid #3C3C42;flex:0 0 auto;display:grid;place-items:center;color:transparent;font-size:13px;font-weight:700;transition:background .22s,border-color .22s,color .22s}
-.ligne.vu .coche{background:var(--vert);border-color:var(--vert);color:#04300F}
+.coche{position:relative;width:26px;height:26px;border-radius:50%;border:1.7px solid #3C3C42;flex:0 0 auto;display:grid;place-items:center;transition:background .22s,border-color .22s}
+.coche svg{width:16px;height:16px;fill:none;stroke:#04300F;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20}
+.ligne.vu .coche{background:var(--vert);border-color:var(--vert)}
+.ligne.vu .coche svg{stroke-dashoffset:0}
+/* Validation : le cercle se remplit avec un rebond, la coche se dessine, une onde verte s'échappe. */
+.coche.valide{animation:cocheRebond .45s cubic-bezier(.2,1.6,.4,1)}
+.coche.valide svg{animation:cocheTrait .34s .12s cubic-bezier(.6,0,.2,1) both}
+.coche.valide::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--vert);animation:cocheOnde .6s ease-out forwards;pointer-events:none}
+@keyframes cocheRebond{0%{transform:scale(.6)}55%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes cocheTrait{from{stroke-dashoffset:20}to{stroke-dashoffset:0}}
+@keyframes cocheOnde{from{transform:scale(1);opacity:.9}to{transform:scale(2.3);opacity:0}}
 .rien{text-align:center;color:var(--gris2);padding:40px 10px;font-size:14px}
 
 .prep-h{display:flex;align-items:center;gap:14px}
@@ -906,7 +915,12 @@ function basculerVu(id, ligne){
   if(e.vus[id]){ delete e.vus[id]; if(e.dernier===id){ e.dernier=null; e.quand=null; } }
   else { e.vus[id] = true; e.dernier = id; e.quand = Date.now(); }
   const estVu = !!e.vus[id];
-  if(estVu && navigator.vibrate) navigator.vibrate(18);
+  if(estVu){
+    if(navigator.vibrate) navigator.vibrate(18);
+    jouerPop();
+    const c = ligne && ligne.querySelector(".coche");
+    if(c){ c.classList.remove("valide"); void c.offsetWidth; c.classList.add("valide"); setTimeout(() => c.classList.remove("valide"), 700); }
+  }
   if(ligne){
     ligne.classList.toggle("vu", estVu);
     const ic = ligne.querySelector(".ico");
@@ -943,6 +957,18 @@ function sonIntegre(cle, donnees, volume){
 }
 /* Un seul son à la fois : un son ponctuel (chargement, célébration) met la boucle de la vidéo en pause
    pendant sa durée, puis la laisse reprendre après un court silence. */
+/* Petit « pop » de validation, synthétisé (aucun fichier) : note brève qui monte, avec un léger claquement. */
+let ctxPop = null;
+function jouerPop(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
+    ctxPop = ctxPop || new AC(); ctxPop.resume();
+    const t = ctxPop.currentTime, o = ctxPop.createOscillator(), g = ctxPop.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(1180, t + .07);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .008); g.gain.exponentialRampToValueAtTime(.001, t + .16);
+    o.connect(g); g.connect(ctxPop.destination); o.start(t); o.stop(t + .18);
+  }catch(e){}
+}
 let silenceJusqua = 0, minuterieSon = null;
 function reserverSilence(ms){
   silenceJusqua = Math.max(silenceJusqua, Date.now() + ms);
@@ -1433,7 +1459,7 @@ function rendreParcours(){
         <span class="ico"><img src="${ICO[it.i]}" alt=""><span class="badge">✓</span></span>
         <span class="infos"><b>${esc(it.t)}</b><span>${it.a} · ${it.k==="film"?"Film":"Série"} · ${fmtDuree(it.d)}${it.v?" · à venir":""}</span></span>
         <button class="bi" data-fiche="${it.id}" aria-label="Fiche">i</button>
-        <button class="coche" data-coche="${it.id}" aria-label="Marquer comme vu">✓</button>
+        <button class="coche" data-coche="${it.id}" aria-label="Marquer comme vu"><svg viewBox="0 0 24 24"><path d="M6.2 12.6l3.9 3.9 7.7-8.4"/></svg></button>
       </div>`;
     });
   });
