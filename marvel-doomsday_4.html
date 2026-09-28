@@ -534,10 +534,15 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 .film-ecran{position:absolute;inset:0;background:#000;display:grid;place-items:center}
 #film-video{width:100%;height:100%;background:#000}
 .film-haut{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:12px;padding:calc(var(--haut) + 12px) 14px 26px;background:linear-gradient(180deg,rgba(0,0,0,.8),transparent);transition:opacity .3s}
-.film-haut b{flex:1;min-width:0;font:700 14.5px 'Poppins',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.film-fermer{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:16px;flex:0 0 auto}
-#film-audio{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:8px;padding:8px 10px;font:600 12.5px 'Montserrat',sans-serif;max-width:40%}
-#film-audio:empty{display:none}
+.film-haut{justify-content:space-between}
+.film-fermer{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:16px;flex:0 0 auto;display:grid;place-items:center}
+.film-fermer svg{width:19px;height:19px;fill:#fff}
+.film-reglages{position:absolute;top:calc(var(--haut) + 56px);right:14px;width:min(280px,calc(100% - 28px));max-height:60vh;overflow-y:auto;padding:8px 6px 10px;border-radius:14px;background:rgba(20,20,22,.94);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);box-shadow:0 16px 40px rgba(0,0,0,.6);animation:apparait .18s ease}
+.film-reglages[hidden]{display:none}
+.fr-titre{padding:10px 12px 6px;color:var(--gris);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.film-reglages button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:9px;color:#fff;font:600 14px 'Montserrat',sans-serif;text-align:left}
+.film-reglages button i{width:16px;font-style:normal;color:#E5A00D;font-weight:800}
+.film-reglages button.ok{background:rgba(255,255,255,.08)}
 .film-etat{position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);text-align:center;color:#D9D9DE;font-size:14.5px;line-height:1.6;pointer-events:none}
 .film-etat:empty{display:none}
 
@@ -712,7 +717,11 @@ body[data-page="doom"] .barre-prog i{background:linear-gradient(90deg,#3B6B27,#7
 <div class="modale" id="film"><div class="film-ecran">
   <video id="film-video" controls playsinline preload="auto"></video>
   <div class="film-haut"><button class="film-fermer" id="film-fermer" aria-label="Fermer">✕</button>
-    <b id="film-titre"></b><select id="film-audio" aria-label="Langue"></select></div>
+    <button class="film-fermer" id="film-param" aria-label="Paramètres"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.7a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.4L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.4 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.7h4l.4-2.7a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg></button></div>
+  <div class="film-reglages" id="film-reglages" hidden>
+    <p class="fr-titre">Audio</p><div id="fr-audio"></div>
+    <p class="fr-titre">Sous-titres</p><div id="fr-sous"></div>
+  </div>
   <p class="film-etat" id="film-etat"></p>
 </div></div>
 <div class="modale" id="lecteur"><div class="fond" data-fermer></div><div class="boite"><div class="cadre" id="cadre"></div><p class="son" id="lecteur-titre"></p></div></div>
@@ -1157,42 +1166,66 @@ async function lireFilm(it){
   film = { it, cle, session:"mt" + Date.now().toString(36), duree:0, base:0 };
   const m = document.getElementById("film"); m.classList.remove("part"); m.classList.add("on");
   document.body.style.overflow = "hidden"; majSonVue();
-  document.getElementById("film-titre").textContent = it.t;
-  document.getElementById("film-audio").innerHTML = "";
+  document.getElementById("film-reglages").hidden = true;
   filmEtat("Connexion à ton serveur Plex…");
   try{
     const meta = (await plexGet(`/library/metadata/${cle}`)).MediaContainer.Metadata[0];
     const part = meta.Media[0].Part[0];
     const audios = (part.Stream || []).filter(s => s.streamType === 2);
+    const sous = (part.Stream || []).filter(s => s.streamType === 3);
     const pref = await memo.lire("mt-plex-langue");
-    const vf = audios.find(s => /^(fr|fra|fre)$/i.test(s.languageCode || "") || /fran/i.test(s.language || ""));
-    const vo = audios.find(s => !/^(fr|fra|fre)$/i.test(s.languageCode || ""));
-    const choix = (pref === "vo" ? vo : vf) || audios.find(s => s.selected) || audios[0];
+    const estVF = s => /^(fr|fra|fre)$/i.test(s.languageCode || "") || /fran/i.test(s.language || "");
+    const choix = (pref === "vo" ? audios.find(s => !estVF(s)) : audios.find(estVF)) || audios.find(s => s.selected) || audios[0];
     if(choix && !choix.selected) await plexPut(`/library/parts/${part.id}?audioStreamID=${choix.id}&allParts=1`);
-    const sel = document.getElementById("film-audio");
-    sel.innerHTML = audios.length > 1 ? audios.map(s => `<option value="${s.id}"${s === choix ? " selected" : ""}>${esc(s.displayTitle || s.language || "Piste " + s.id)}</option>`).join("") : "";
-    sel.onchange = async () => {
-      const s = audios.find(a => String(a.id) === sel.value);
-      memo.ecrire("mt-plex-langue", /^(fr|fra|fre)$/i.test(s.languageCode || "") ? "vf" : "vo");
-      const pos = filmPosition();
-      await plexPut(`/library/parts/${part.id}?audioStreamID=${s.id}&allParts=1`);
-      demarrerFlux(pos);
-    };
-    film.duree = meta.duration || 0; film.partId = part.id;
+    // Sous-titres coupés par défaut (Plex les incruste sinon, ex. anglais forcés).
+    if(sous.some(s => s.selected)) await plexPut(`/library/parts/${part.id}?subtitleStreamID=0&allParts=1`);
+    Object.assign(film, { partId:part.id, audios, sous, audio:choix ? choix.id : null, sousTitre:0, duree:meta.duration || 0 });
+    rendreReglages();
     const reprise = meta.viewOffset && meta.viewOffset < film.duree * .95 ? Math.floor(meta.viewOffset / 1000) : 0;
     await demarrerFlux(reprise);
   }catch(e){
     filmEtat("Impossible de lire ce film.<br>Vérifie que ton serveur Plex est allumé.");
   }
 }
+const nomPiste = s => esc(s.displayTitle || s.language || "Piste " + s.id);
+function rendreReglages(){
+  document.getElementById("fr-audio").innerHTML = film.audios.length ? film.audios.map(s =>
+    `<button data-audio="${s.id}" class="${s.id === film.audio ? "ok" : ""}"><i>${s.id === film.audio ? "✓" : ""}</i>${nomPiste(s)}</button>`).join("")
+    : `<button class="ok" disabled><i>✓</i>Piste d'origine</button>`;
+  document.getElementById("fr-sous").innerHTML = [{id:0}, ...film.sous].map(s =>
+    `<button data-sous="${s.id}" class="${s.id === film.sousTitre ? "ok" : ""}"><i>${s.id === film.sousTitre ? "✓" : ""}</i>${s.id ? nomPiste(s) : "Aucun"}</button>`).join("");
+}
+document.getElementById("film-param").addEventListener("click", () => {
+  const r = document.getElementById("film-reglages"); r.hidden = !r.hidden;
+});
+document.getElementById("film-reglages").addEventListener("click", async e => {
+  const a = e.target.closest("[data-audio]"), s = e.target.closest("[data-sous]");
+  if(!film || (!a && !s)) return;
+  const pos = filmPosition();
+  if(a){
+    const piste = film.audios.find(x => String(x.id) === a.dataset.audio); if(!piste || piste.id === film.audio) return;
+    film.audio = piste.id;
+    memo.ecrire("mt-plex-langue", /^(fr|fra|fre)$/i.test(piste.languageCode || "") ? "vf" : "vo");
+    await plexPut(`/library/parts/${film.partId}?audioStreamID=${piste.id}&allParts=1`);
+  } else {
+    const id = +s.dataset.sous; if(id === film.sousTitre) return;
+    film.sousTitre = id;
+    await plexPut(`/library/parts/${film.partId}?subtitleStreamID=${id}&allParts=1`);
+  }
+  rendreReglages();
+  document.getElementById("film-reglages").hidden = true;
+  demarrerFlux(pos);   // le flux repart au même endroit avec la nouvelle piste
+});
 function plexPut(chemin){ return fetch(plex.serveur.uri + chemin, { method:"PUT", headers:plexEntetes(plex.serveur.token) }); }
 function urlFlux(depart){
   const q = new URLSearchParams({
     hasMDE:"1", path:"/library/metadata/" + film.cle, mediaIndex:"0", partIndex:"0", protocol:"hls",
     fastSeek:"1", directPlay:"0", directStream:"1", directStreamAudio:"1", subtitleSize:"100", audioBoost:"100",
+
     location:"wan", maxVideoBitrate:"12000", videoResolution:"1920x1080", videoQuality:"100", offset:String(depart),
     session:film.session, "X-Plex-Session-Identifier":film.session, "X-Plex-Client-Identifier":plex.client,
     "X-Plex-Product":PLEX_PRODUIT, "X-Plex-Platform":"Chrome", "X-Plex-Token":plex.serveur.token });
+  if(film.sousTitre) q.set("subtitles", "burn");   // sous-titres choisis : incrustés par Plex
   return plex.serveur.uri + "/video/:/transcode/universal/start.m3u8?" + q;
 }
 async function demarrerFlux(depart){
@@ -1211,6 +1244,7 @@ async function demarrerFlux(depart){
   }
   v.onplaying = () => {
     filmEtat("");
+    for(const t of v.textTracks) t.mode = "disabled";   // aucune piste de sous-titres affichée par le lecteur
     // Selon le serveur, le flux repart de 0 ou garde le temps réel du film.
     if(film && film.depart && v.currentTime > film.depart / 2) film.base = 0;
   };
@@ -1746,6 +1780,16 @@ function demarrerAmbiance(){
   for(let i = 0; i < b.length; i++) o[i] = b.charCodeAt(i);
   ctx.decodeAudioData(o.buffer, buf => { ambiance.buf = buf; jouer(buf); }, () => {});
 }
+// App en arrière-plan : musique d'entrée suspendue et vidéo d'entrée en pause, reprise au retour.
+function pauseArrierePlan(){
+  const cache = document.hidden;
+  if(ambiance.ctx) cache ? ambiance.ctx.suspend() : (ambiance.src && ambiance.ctx.resume());
+  const v = document.getElementById("connexion-video");
+  if(cache) v.pause();
+  else if(document.getElementById("entree-fond").classList.contains("on")){ const p = v.play(); if(p) p.catch(() => {}); }
+}
+document.addEventListener("visibilitychange", pauseArrierePlan);
+window.addEventListener("pagehide", () => { if(ambiance.ctx) ambiance.ctx.suspend(); if(lecteurVue) lecteurVue.pause(); });
 function couperAmbiance(){
   if(!ambiance.src) return;
   const g = ambiance.gain.gain, t = ambiance.ctx.currentTime, s = ambiance.src;
