@@ -1,6 +1,6 @@
 /* Service worker Marvel : l'app (un seul fichier de ~38 Mo) est gardée sur le téléphone.
    Ouverture instantanée, même sans réseau ; chaque nouveau déploiement est installé en arrière-plan. */
-const CACHE = "marvel-7f8dd4c2b44f";
+const CACHE = "marvel-36e198ba11c2";
 const FICHIERS = ["./", "./index.html", "./manifest.webmanifest", "./icone-180.png", "./icone-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FICHIERS.map(u => new Request(u, { cache:"reload" })))).then(() => self.skipWaiting()));
