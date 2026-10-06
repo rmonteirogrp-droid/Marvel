@@ -4374,10 +4374,6 @@ function rendreProfil(){
         <button class="pr-av" data-avatar aria-label="Changer d'icône"><img src="${avatar(profilActif().avatar)}" alt=""><span><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span></button>
         <div class="pr-id"><p class="surtitre">Profil</p><h1 class="titre-l">${esc(profilActif().nom)}</h1></div>
       </div>
-      <section class="bloc pr-plus">
-        <button class="pr-bilan2" data-bilan><span class="pb-mini" aria-hidden="true"><i></i><b>${a.pct}<em>%</em></b><span></span></span>
-          <span class="pb-txt"><b>Mon bilan Marvel</b><small>Ton parcours en une image à partager</small></span><span class="chev">›</span></button>
-      </section>
       <section class="bloc pr-lignes">
         ${[["MCU", a, ra], ["Multivers", b, rb]].map(([nom, st, re]) => `<div class="pr-univ">
           <div class="haut"><b>${nom}</b><em>${st.pct}<i>%</i></em></div>
@@ -4407,7 +4403,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 22h16</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 22h24</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -7652,148 +7648,6 @@ document.addEventListener("click", e => {
   const p = e.target.closest("[data-perso]"); if(p){ ouvrirPerso(+p.dataset.perso); return; }
   const c = e.target.closest("[data-carte-perso]"); if(c && possede(+c.dataset.cartePerso) && typeof ouvrirCarte === "function") ouvrirCarte(+c.dataset.cartePerso);
 });
-
-/* ═══════════ MON BILAN MARVEL ═══════════ */
-/* Une image 1080×1920 (format story) dessinée sur un canvas : pourcentages, heures regardées, cartes, records,
-   et un mur des dernières affiches vues. Partage natif (iPhone : Instagram, WhatsApp…) ou enregistrement. */
-/* Trois coloris pour l'image, choisis sur la page (mémorisés sur l'appareil). */
-const BL_THEMES = {
-  rouge:{ nom:"Rouge", lueur:"230,36,41", points:"rgba(255,42,47,.28)", chiffre:"#ffc21a", tag:["#ff2a2f", "#fff"], pied:["#ff2a2f", "#fff"], barre:"#ffc21a" },
-  jaune:{ nom:"Or", lueur:"255,194,26", points:"rgba(255,194,26,.26)", chiffre:"#ffc21a", tag:["#ffc21a", "#0a0a0a"], pied:["#ffc21a", "#0a0a0a"], barre:"#ffc21a" },
-  noir:{ nom:"Noir", lueur:"255,255,255", points:"rgba(255,255,255,.16)", chiffre:"#ffffff", tag:["#ffffff", "#0a0a0a"], pied:["#ffffff", "#0a0a0a"], barre:"#ff2a2f" }
-};
-let blTheme = "rouge";
-try{ blTheme = BL_THEMES[localStorage.getItem("mt-bilan-theme")] ? localStorage.getItem("mt-bilan-theme") : "rouge"; }catch(e){}
-/* Page : l'image en plein écran, comme un fond d'écran ; dessous, le coloris et un seul bouton. */
-document.body.insertAdjacentHTML("beforeend", `<div class="feuille" id="bilan"><button class="fermer-v" data-fermer aria-label="Fermer"><svg viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></button>
-  <div class="bl-apercu" id="bl-apercu"></div>
-  <div class="bl-bas">
-    <div class="bl-coloris" role="radiogroup" aria-label="Coloris">${Object.entries(BL_THEMES).map(([k, t]) =>
-      `<button role="radio" data-bl-theme="${k}" class="${k === blTheme ? "on" : ""}" aria-checked="${k === blTheme}" aria-label="${t.nom}"><i style="--c:rgb(${t.lueur})"></i></button>`).join("")}</div>
-    <button class="btn btn-blanc bl-partager" data-bl-partager>Partager mon bilan</button>
-    <p class="bl-note" id="bl-note"></p>
-  </div></div>`);
-let bilanBlob = null, bilanUrl = null;
-function chargerImage(src){ return new Promise(ok => { if(!src){ ok(null); return; } const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; }); }
-/* Coupe 2:3 « object-fit: cover » */
-function dessinerCouvert(c, im, x, y, w, h, fy = .3){
-  const r = Math.max(w / im.width, h / im.height), sw = w / r, sh = h / r;
-  c.drawImage(im, (im.width - sw) / 2, Math.max(0, Math.min(im.height - sh, im.height * fy - sh * fy)), sw, sh, x, y, w, h);
-}
-function coinsCoupes(c, x, y, w, h, k){ c.beginPath(); c.moveTo(x + k, y); c.lineTo(x + w, y); c.lineTo(x + w, y + h - k); c.lineTo(x + w - k, y + h); c.lineTo(x, y + h); c.lineTo(x, y + k); c.closePath(); }
-function texteIncline(c, txt, x, y, taille, couleur, ombre){
-  c.save(); c.translate(x, y); c.transform(1, 0, -.14, 1, 0, 0);
-  c.font = `${taille}px Anton, "Arial Narrow", sans-serif`; c.textBaseline = "alphabetic";
-  if(ombre){ c.fillStyle = "rgba(0,0,0,.55)"; c.fillText(txt, 7, 8); }
-  c.fillStyle = couleur; c.fillText(txt, 0, 0); c.restore();
-}
-function etiquette(c, txt, x, y, fond, encre){
-  c.save(); c.font = "800 30px Inter, sans-serif"; const w = c.measureText(txt).width + 44;
-  c.translate(x, y); c.transform(1, 0, -.21, 1, 0, 0); c.fillStyle = fond; c.fillRect(0, 0, w, 54);
-  c.fillStyle = encre; c.textBaseline = "middle"; c.fillText(txt, 22, 29); c.restore(); return w;
-}
-async function dessinerBilan(){
-  try{ await Promise.all([document.fonts.load("400 100px Anton"), document.fonts.load("800 30px Inter"), document.fonts.load("600 30px Inter")]); }catch(e){}
-  const W = 1080, H = 1920, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d");
-  const T = BL_THEMES[blTheme] || BL_THEMES.rouge, ROUGE = T.tag[0], JAUNE = T.chiffre, p = profilActif();
-  const a = stats(profil, "mcu"), m = stats(profil, "multi"), tva = etatTva();
-  const vus = tous("mcu").concat(tous("multi"), tousBonus()).filter(it => vusDe(it.id)[it.id]);
-  const minutes = minutesVues();
-  const nCartes = typeof nbPossedees === "function" ? nbPossedees() : 0, totCartes = typeof CARTES !== "undefined" ? CARTES.length : 0;
-  // fond : noir, lueur rouge, trame de points
-  c.fillStyle = "#07070a"; c.fillRect(0, 0, W, H);
-  const g = c.createRadialGradient(W * .85, 260, 40, W * .85, 260, 900); g.addColorStop(0, `rgba(${T.lueur},${blTheme === "noir" ? .22 : .55})`); g.addColorStop(1, `rgba(${T.lueur},0)`);
-  c.fillStyle = g; c.fillRect(0, 0, W, H);
-  c.fillStyle = T.points;
-  for(let y = 0; y < 760; y += 18) for(let x = W - (760 - y); x < W; x += 18){ c.beginPath(); c.arc(x, y, 3.2, 0, 7); c.fill(); }
-  // en-tête : logo, profil
-  const logo = await chargerImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(((document.querySelector("#barre .logo svg") || {}).outerHTML || "").replace(/^<svg(?![^>]*xmlns)/, '<svg xmlns="http://www.w3.org/2000/svg"')));
-  if(logo) c.drawImage(logo, 80, 90, 190, 76);
-  const av = await chargerImage(avatar(p.avatar));
-  if(av){ c.save(); c.beginPath(); c.roundRect(W - 206, 62, 132, 132, 30); c.clip(); c.drawImage(av, W - 206, 62, 132, 132); c.restore(); }   // icône carrée à bords arrondis, comme dans l'app
-  etiquette(c, "MON BILAN MARVEL", 80, 236, T.tag[0], T.tag[1]);
-  texteIncline(c, p.nom.toUpperCase(), 84, 500, p.nom.length > 9 ? 140 : 180, "#fff", true);
-  // grand pourcentage MCU
-  c.font = "400 330px Anton"; const pct = String(a.pct);
-  texteIncline(c, pct, 84, 860, 330, JAUNE, true);
-  const lp = c.measureText(pct).width; texteIncline(c, "%", 84 + lp + 30, 860, 120, JAUNE);
-  c.font = "800 34px Inter"; c.fillStyle = "rgba(255,255,255,.75)"; c.fillText("DU PARCOURS MCU · " + a.vus + " / " + a.total + " TITRES", 92, 925);
-  // barre segmentée
-  for(let k = 0; k < 25; k++){ c.save(); c.translate(92 + k * 37, 955); c.transform(1, 0, -.36, 1, 0, 0); c.fillStyle = k < Math.round(a.pct / 4) ? T.barre : "rgba(255,255,255,.14)"; c.fillRect(0, 0, 31, 22); c.restore(); }
-  // tuiles de stats
-  const tuiles = [[fmtDuree(minutes) || "0h", "regardées"], [m.pct + "%", "du Multivers"], [tva.n + "/" + tva.liste.length, "étapes chrono"],
-    [nCartes + "/" + totCartes, "cartes"], [a.filmsVus + m.filmsVus + "", "films vus"], [a.seriesVus + m.seriesVus + "", "séries vues"]];
-  tuiles.forEach(([v, l], k) => {
-    const x = 80 + (k % 3) * 315, y = 1030 + Math.floor(k / 3) * 210;
-    coinsCoupes(c, x, y, 295, 185, 24); c.fillStyle = "#14141a"; c.fill();
-    c.fillStyle = k === 0 ? T.pied[0] : "rgba(255,255,255,.08)"; c.fillRect(x, y + 24, 8, 137);
-    c.font = "400 " + (v.length > 6 ? 62 : 78) + "px Anton"; c.fillStyle = k === 0 ? "#fff" : JAUNE; c.fillText(v, x + 34, y + 110);
-    c.font = "700 26px Inter"; c.fillStyle = "rgba(255,255,255,.6)"; c.fillText(l.toUpperCase(), x + 36, y + 152);
-  });
-  // records des défis (les trois meilleurs)
-  const recs = [];
-  try{ const r = recordsHeros(); if(Math.max(r.chrono, r.libre)) recs.push(["Héros en mémoire", Math.max(r.chrono, r.libre) + " noms"]); }catch(e){}
-  try{ const r = recordsVs(); if(r.record) recs.push(["Qui gagne ?", r.record + " duels"]); }catch(e){}
-  try{ const r = recordsQui(); if(r.chrono) recs.push(["Qui est-ce ?", r.chrono + "/15"]); }catch(e){}
-  [["affiche", "Devine l'affiche", " pts"], ["replique", "Qui a dit ça ?", " pts"], ["quiparle", "Qui parle ?", " pts"], ["dossier", "Dossier classifié", " %"], ["filmo", "Filmographie", " pts"], ["ordre", "Dans l'ordre", "/8"]]
-    .forEach(([k, n, u]) => { try{ const r = recordsDe(k); if(r.record) recs.push([n, r.record + u]); }catch(e){} });
-  let y = 1545;
-  etiquette(c, recs.length ? "MES RECORDS" : "MES DERNIERS FILMS", 80, y - 70, blTheme === "rouge" ? "#ffc21a" : "#ff2a2f", blTheme === "rouge" ? "#0a0a0a" : "#fff");
-  if(recs.length){
-    recs.slice(0, 3).forEach(([n, v], k) => {
-      const yy = y + 10 + k * 76; c.font = "400 46px Anton"; c.fillStyle = "#fff"; c.fillText(n.toUpperCase(), 84, yy + 40);
-      c.textAlign = "right"; c.fillStyle = JAUNE; c.fillText(v, W - 84, yy + 40); c.textAlign = "left";
-      c.fillStyle = "rgba(255,255,255,.1)"; c.fillRect(84, yy + 60, W - 168, 2);
-    });
-  } else {
-    const derniers = vus.slice(-5).reverse();
-    for(let k = 0; k < derniers.length; k++){
-      const im = await chargerImage(affiche(derniers[k])); const x = 80 + k * 188;
-      if(im){ c.save(); coinsCoupes(c, x, y, 172, 258, 18); c.clip(); dessinerCouvert(c, im, x, y, 172, 258); c.restore(); }
-    }
-  }
-  // pied
-  c.fillStyle = T.pied[0]; c.fillRect(0, H - 120, W, 120);
-  c.font = "400 44px Anton"; c.fillStyle = T.pied[1]; c.fillText("MARVEL · LE PARCOURS", 80, H - 46);
-  c.font = "700 26px Inter"; c.textAlign = "right"; c.fillText(new Date().toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" }).toUpperCase(), W - 80, H - 50); c.textAlign = "left";
-  return new Promise(ok => cv.toBlob(b => ok(b), "image/png"));
-}
-let blJeton = 0;
-async function majBilan(){
-  const z = document.getElementById("bl-apercu"), jeton = ++blJeton;
-  z.classList.add("charge"); document.getElementById("bl-note").textContent = "";
-  const b = await dessinerBilan();
-  if(jeton !== blJeton) return;   // un autre coloris a été choisi entre-temps
-  z.classList.remove("charge");
-  if(!b){ bilanBlob = null; z.innerHTML = `<span class="bl-attente">Impossible de créer l'image sur cet appareil.</span>`; return; }
-  bilanBlob = b; if(bilanUrl) URL.revokeObjectURL(bilanUrl); bilanUrl = URL.createObjectURL(b);
-  z.innerHTML = `<img src="${bilanUrl}" alt="Mon bilan Marvel">`;
-}
-function ouvrirBilan(){
-  ouvrirFeuille("bilan");
-  const z = document.getElementById("bl-apercu"); z.innerHTML = `<span class="bl-attente">Création de ton bilan…</span>`;
-  majBilan();
-}
-const nomBilan = () => "bilan-marvel-" + (profilActif().nom || "moi").toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".png";
-document.addEventListener("click", async e => {
-  if(e.target.closest("[data-bilan]")){ ouvrirBilan(); return; }
-  const th = e.target.closest("[data-bl-theme]");
-  if(th && th.dataset.blTheme !== blTheme){
-    blTheme = th.dataset.blTheme; try{ localStorage.setItem("mt-bilan-theme", blTheme); }catch(x){}
-    document.querySelectorAll("[data-bl-theme]").forEach(b => { b.classList.toggle("on", b === th); b.setAttribute("aria-checked", b === th); });
-    majBilan(); return;
-  }
-  if(e.target.closest("[data-bl-partager]") && bilanBlob){
-    const f = new File([bilanBlob], nomBilan(), { type:"image/png" });
-    if(navigator.canShare && navigator.canShare({ files:[f] })){ try{ await navigator.share({ files:[f], title:"Mon bilan Marvel" }); }catch(x){} }
-    else enregistrerBilan();
-    return;
-  }
-});
-function enregistrerBilan(){
-  const a = document.createElement("a"); a.href = bilanUrl; a.download = nomBilan(); document.body.appendChild(a); a.click(); a.remove();
-  document.getElementById("bl-note").textContent = "Image enregistrée.";
-}
 
 /* ═══════════ SPOILERS ═══════════ */
 /* Pour chaque film du MCU : l'essentiel à retenir pour la suite de l'histoire. **Nom** = mort (en gras rouge).
