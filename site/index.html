@@ -2834,6 +2834,45 @@ body{font-synthesis:none}
 /* Accueil : titre « À suivre » sur plusieurs lignes sans chevauchement (accents, ombre) */
 .suivant-titre{line-height:.96;text-wrap:balance}
 .suivant-titre.long{font-size:clamp(38px,calc(11.5 * var(--vw)),54px)}
+
+/* ══════ V3.1.3 ══════ */
+/* Parcours : le trait reste jaune jusqu'au dernier titre vu (plus de vert) */
+.pas.vu:has(+ .pas:not(.vu))::before{background:linear-gradient(var(--vu) 50%,rgba(255,255,255,.16) 50%)}
+/* Bienvenue : les bandes disparaissent avec l'écran, elles ne restent plus sur l'accueil */
+#splash.part .bv-bandes,#splash.part .bv-trame{transition:opacity .25s ease;opacity:0}
+/* Parcours : compteur à côté de l'étiquette, bouton Chronologie à côté du titre */
+.pc-ligne{display:flex;align-items:center;gap:12px}
+.pc-compte{margin:0;font:400 22px/1 var(--titre);letter-spacing:.01em;text-transform:none;color:#fff}
+.pc-compte i{font-style:normal;font-size:14px;color:rgba(255,255,255,.45)}
+.pc-titre{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.pc-titre .titre-l{min-width:0}
+.pc-chrono{flex:0 0 auto;display:flex;align-items:center;gap:9px;margin-bottom:4px;padding:7px 12px 7px 7px;background:rgba(242,162,58,.1);box-shadow:inset 0 0 0 1px rgba(242,162,58,.45);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);text-align:left}
+.pc-chrono img{width:30px;height:30px;border-radius:50%}
+.pc-chrono span{display:flex;flex-direction:column;font:400 16px/1 var(--titre);letter-spacing:.04em;text-transform:uppercase;color:#F2A23A}
+.pc-chrono small{margin-bottom:3px;font:600 9.5px/1 var(--cond);letter-spacing:.14em;color:rgba(255,255,255,.55)}
+.pc-chrono:active{transform:scale(.96)}
+/* Profil : photo cerclée de blanc */
+.pr-av{box-shadow:0 0 0 3px var(--fond),0 0 0 5.5px #fff,0 14px 34px rgba(0,0,0,.6)}
+.pr-id .surtitre{margin-bottom:10px}
+.pr-id .titre-l{margin-top:0}
+/* Mon bilan : tout tient dans l'écran, sans défiler */
+#bilan{overflow:hidden}
+.bl{display:flex;flex-direction:column;height:100%;height:100dvh;padding:calc(var(--haut) + 62px) 22px calc(var(--bas) + 16px)}
+.bl-tete .titre-l{margin-top:10px;font-size:clamp(30px,calc(9 * var(--vw)),42px)}
+.bl-scene{flex:1 1 auto;min-height:0;width:auto;margin:16px 0 0;display:flex;justify-content:center;align-items:center}
+.bl-apercu{height:100%;width:auto;max-width:100%;aspect-ratio:9/16;transform:rotateY(-7deg) rotateX(3deg) rotate(1deg)}
+.bl-coloris{margin-top:16px}
+.bl-actions{margin-top:12px}
+.bl-actions .btn-rouge,.bl-enr{height:52px}
+.bl-enr{width:52px}
+.bl-note{margin-top:8px}
+.bl-note:empty{display:none}
+.pc-ligne .surtitre{display:inline-block;padding:6px 10px 5px;background:var(--rouge-vif);color:#fff;font:600 12px/1 var(--cond);letter-spacing:.2em;transform:skewX(-12deg)}
+.pc-ligne .pc-chrono{margin:0 0 0 auto;padding:5px 11px 5px 5px;gap:7px}
+.pc-ligne .pc-chrono img{width:24px;height:24px}
+.pc-ligne .pc-chrono span{font-size:15px}
+.pc-ligne .pc-chrono span::after{content:" ›"}
+.pc-ligne .pc-chrono span{display:block;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -3357,7 +3396,7 @@ function ici(){ return etat[profil][univers]; }
 const univDe = id => String(id)[0] === "x" ? "multi" : "mcu";
 const vusDe = id => etat[profil][univDe(id)].vus;
 function stats(p, u){
-  const l = tous(u), e = etat[p][u].vus;
+  const e = etat[p][u].vus, l = tous(u).filter(i => e[i.id] || !pasSorti(i));   // Doomsday, Vision Quest… comptent à leur sortie
   const c = x => x.filter(i=>e[i.id]).length;
   const films = l.filter(i=>i.k==="film"), series = l.filter(i=>i.k==="serie"), ess = l.filter(i=>i.dd);
   const vus = c(l);
@@ -3375,7 +3414,7 @@ function fmtDuree(m){
 function restant(u){
   const e = etat[profil][u].vus;
   let t = 0, te = 0;
-  tous(u).forEach(i => { if(!e[i.id]){ t += i.d||0; if(i.dd) te += i.d||0; } });
+  tous(u).forEach(i => { if(!e[i.id] && !pasSorti(i)){ t += i.d||0; if(i.dd) te += i.d||0; } });
   return {t, te};
 }
 function prochain(){ const e = ici().vus; return tous(univers).find(i=>!e[i.id] && !pasSorti(i)) || null; }
@@ -4078,8 +4117,6 @@ function majAccueil(complet){
   const s = stats(profil, univers), r = restant(univers), nx = prochain();
   const h = document.getElementById("acc-hero"); if(!h) return;
   h.innerHTML = `
-    <div class="score-v3"><div class="score"><b data-compteur="${s.pct}">${complet ? 0 : s.pct}</b><i>%</i></div>
-      <div><p class="score-l">Parcours · ${s.vus} / ${s.total}</p><span class="barre-v3">${Array.from({ length:25 }, (_, k) => `<i${k < Math.round(s.pct / 4) ? ` class="on"` : ""}></i>`).join("")}</span></div></div>
     ${nx ? `<div class="suivant">
       <span class="tag-v3"><span>À suivre${(() => { const g = BIB[univers].find(g => g.items.includes(nx)); return g ? " · " + esc(g.groupe.split(" · ")[0].split(" / ")[0]) : ""; })()}</span></span>
       <h2 class="suivant-titre${nx.t.length > 16 ? " long" : ""}">${esc(nx.t)}</h2>
@@ -4097,14 +4134,14 @@ function majAccueil(complet){
       cartes.push({aff:affiche(i), t:i.t, d:dateFr(SORTIES[i.t]) + " · " + (i.k==="film" ? "au cinéma" : "Disney+"), tag:jours(SORTIES[i.t]), id:i.id}); });
   }
   const chap = BIB[univers].map((g, gi) => {
-    const v = g.items.filter(i => ici().vus[i.id]).length, p = Math.round(v / g.items.length * 100);
+    const dispo = g.items.filter(i => ici().vus[i.id] || !pasSorti(i)), v = dispo.filter(i => ici().vus[i.id]).length, p = dispo.length ? Math.round(v / dispo.length * 100) : 0;
     const [nom, sous] = g.groupe.split(" · ");
     const img = (g.items.find(i => i.affiche) || g.items[0]);
     const pi = pierreDe(univers, gi);
-    return `<button class="chapitre${v === g.items.length ? " fini" : ""}${pi ? " pierre" : ""}" data-chap="${gi}"${pi ? ` style="--pierre:${pi[1]}"` : ""}>
+    return `<button class="chapitre${v === dispo.length ? " fini" : ""}${pi ? " pierre" : ""}" data-chap="${gi}"${pi ? ` style="--pierre:${pi[1]}"` : ""}>
       <img src="${affiche(img)}" data-hd="${hdUrl(img, "w780")}" alt="" loading="lazy" decoding="async"><span class="ch-voile"></span>
       <span class="ch-txt"><span class="surtitre">${esc(sous || g.note)}</span><b>${pi ? gemme() : ""}${esc(nom.split(" / ")[0])}</b>
-      <span class="ch-bas"><span class="filet-prog"><i style="width:${p}%"></i></span><small>${v} / ${g.items.length}</small></span></span></button>`;
+      <span class="ch-bas"><span class="filet-prog"><i style="width:${p}%"></i></span><small>${v} / ${dispo.length}</small></span></span></button>`;
   }).join("");
   document.getElementById("acc-suite").innerHTML = `
     <section class="bloc">
@@ -4113,6 +4150,13 @@ function majAccueil(complet){
     </section>
     ${cartes.length ? `<section class="bloc"><div class="bloc-tete"><p class="surtitre">À l'affiche et bientôt</p></div>
       ${cartes.map(c => `<button class="sortie"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em><i>J–</i>${c.tag}</em>` : ""}</button>`).join("")}</section>` : ""}
+    <section class="bloc">
+      <div class="chiffres">
+        <div><b>${s.filmsVus}<i>/${s.films}</i></b><span>Films</span></div>
+        <div><b>${s.seriesVus}<i>/${s.series}</i></b><span>Séries</span></div>
+        <div><b>${s.pct}<i>%</i></b><span>Parcours</span></div>
+      </div>
+    </section>
     <div id="reprendre"></div>
     <div class="reseaux">${RESEAUX.map(x => `<a href="${x[1]}" target="_blank" rel="noopener" aria-label="${x[0]}">${x[2]}</a>`).join("")}</div>`;
   rendreReprendre();
@@ -4133,8 +4177,9 @@ function filtreOk(it){
 function rendreParcours(versId){
   document.getElementById("v-parcours").innerHTML = `
     <div class="colonne pc">
-      <div class="pc-tete"><p class="surtitre">${univers === "mcu" ? "Ordre de sortie" : "Par franchise"}</p>
-        <h1 class="titre-l">Le parcours</h1><p class="meta pc-compte" id="pc-compte"></p></div>
+      <div class="pc-tete"><div class="pc-ligne"><p class="surtitre">${univers === "mcu" ? "Ordre de sortie" : "Par franchise"}</p><span class="pc-compte" id="pc-compte"></span>
+          ${univers === "mcu" ? `<button class="pc-chrono" id="btn-tva"><img src="${img(ICO.tva)}" alt=""><span>Chronologie</span></button>` : ""}</div>
+        <h1 class="titre-l">Le parcours</h1></div>
 
       <div class="pc-outils">
         <div class="onglets" id="pc-onglets">${listeFiltres().map(f => `<button data-filtre="${f[0]}" class="${f[0] === filtre ? "on" : ""}">${f[1]}</button>`).join("")}</div>
@@ -4187,12 +4232,12 @@ function majParcours(){
   if(vue !== "parcours") return;
   if(filtre === "bonus"){ majBonus(); return; }
   // Les compteurs suivent le filtre choisi (Tout, Films, Séries, Av. Doomsday) : on ne compte que ce qui est affiché.
-  const e = ici().vus, nx = prochain(), liste = tous(univers).filter(filtreOk);
+  const e = ici().vus, nx = prochain(), compte = i => e[i.id] || !pasSorti(i), liste = tous(univers).filter(filtreOk).filter(compte);
   const vusL = liste.filter(i => e[i.id]).length, resteL = liste.reduce((t, i) => t + (e[i.id] ? 0 : i.d || 0), 0);
   const c = document.getElementById("pc-compte");
-  if(c) c.textContent = `${vusL} sur ${liste.length} vus${resteL ? "" : " · parcours terminé"}`;
+  if(c) c.innerHTML = `${vusL}<i>/${liste.length}</i>`;
   document.querySelectorAll("#pc-liste .etape").forEach(sec => {
-    const l = BIB[univers][+sec.dataset.groupe].items.filter(filtreOk), v = l.filter(i => e[i.id]).length;
+    const l = BIB[univers][+sec.dataset.groupe].items.filter(filtreOk).filter(compte), v = l.filter(i => e[i.id]).length;
     sec.classList.toggle("fini", v === l.length);
     sec.querySelector(".etape-compte").innerHTML = `${v}<i>/${l.length}</i>`;
     requestAnimationFrame(() => { sec.querySelector(".filet-prog i").style.width = (l.length ? Math.round(v / l.length * 100) : 0) + "%"; });
@@ -4260,18 +4305,13 @@ function rendreProfil(){
     <div class="colonne">
       <div class="pr-tete">
         <button class="pr-av" data-avatar aria-label="Changer d'icône"><img src="${avatar(profilActif().avatar)}" alt=""><span><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span></button>
-        <div class="pr-id"><h1 class="titre-l">${esc(profilActif().nom)}</h1></div>
+        <div class="pr-id"><p class="surtitre">Profil</p><h1 class="titre-l">${esc(profilActif().nom)}</h1></div>
       </div>
-      <div class="pr-chiffres"><span><b>${a.vus + b.vus}</b>${a.vus + b.vus > 1 ? "titres vus" : "titre vu"}</span><span><b>${fmtDuree(minutesVues()) || "0h"}</b>regardées</span><span><b>${typeof nbPossedees === "function" ? nbPossedees() : 0}</b>cartes</span></div>
       <section class="bloc pr-lignes">
         ${[["MCU", a, ra], ["Multivers", b, rb]].map(([nom, st, re]) => `<div class="pr-univ">
           <div class="haut"><b>${nom}</b><em>${st.pct}<i>%</i></em></div>
           <span class="filet-prog"><i data-largeur="${st.pct}%" style="width:0"></i></span>
           <small>${st.vus} sur ${st.total} titres · ${re.t ? fmtDuree(re.t) + " restantes" : "terminé"}</small></div>`).join("")}
-        ${(() => { const t = etatTva(), pct = t.liste.length ? Math.round(t.n / t.liste.length * 100) : 0;   // la chronologie se suit étape par étape : on compte les étapes
-          return `<button class="pr-univ pr-tva" id="btn-tva"><div class="haut"><b><img src="${img(ICO.tva)}" alt="">Chronologie</b><em>${t.n}<i>/${t.liste.length}</i></em></div>
-          <span class="filet-prog"><i data-largeur="${pct}%" style="width:0"></i></span>
-          <small>Tout le MCU dans l'ordre des événements<span class="chev">›</span></small></button>`; })()}
       </section>
       <section class="bloc pr-plus">
         <button class="pr-bilan" data-bilan><span class="tag-v3 jaune"><span>Nouveau</span></span><b>Mon bilan Marvel</b><small>Tes stats en une image à partager en story</small><i>›</i></button>
@@ -4299,7 +4339,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 20h45</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 21h26</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -4446,7 +4486,7 @@ function rendreCheminBonus(){
 }
 function majBonus(){
   const l = tousBonus(), v = nbBonusVus(), c = document.getElementById("bonus-compte"), pc = vue === "parcours" && filtre === "bonus" && document.getElementById("pc-compte");
-  if(pc) pc.textContent = `${v} sur ${l.length} bonus vus`;
+  if(pc) pc.innerHTML = `${v}<i>/${l.length}</i>`;
   if(c) c.textContent = `${v} sur ${l.length} vus · ${fmtDuree(l.filter(it => !vusDe(it.id)[it.id]).reduce((t, it) => t + (it.d || 0), 0)) || "0 min"} restantes`;
   document.querySelectorAll("[data-bonus-g]").forEach(sec => {
     const b = listeBonus(+sec.dataset.bonusG), n = b.filter(it => vusDe(it.id)[it.id]).length;
@@ -7558,8 +7598,7 @@ try{ blTheme = BL_THEMES[localStorage.getItem("mt-bilan-theme")] ? localStorage.
 document.body.insertAdjacentHTML("beforeend", `<div class="feuille" id="bilan"><button class="fermer-v" data-fermer aria-label="Fermer"><svg viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></button>
   <div class="bl-fond" id="bl-fond"></div>
   <div class="bl">
-    <div class="bl-tete"><p class="tag-v3"><span>Mon bilan Marvel</span></p><h1 class="titre-l">Prêt à<br>partager</h1>
-      <p class="bl-intro">Ton image se met à jour à chaque titre coché. Poste-la en story ou envoie-la à tes potes.</p></div>
+    <div class="bl-tete"><p class="tag-v3"><span>Mon bilan Marvel</span></p><h1 class="titre-l">Prêt à partager</h1></div>
     <div class="bl-scene"><div class="bl-apercu" id="bl-apercu"><span class="bl-attente">Création de ton bilan…</span></div></div>
     <div class="bl-coloris" role="radiogroup" aria-label="Coloris">${Object.entries(BL_THEMES).map(([k, t]) =>
       `<button role="radio" data-bl-theme="${k}" class="${k === blTheme ? "on" : ""}" aria-checked="${k === blTheme}"><i style="--c:rgb(${t.lueur})"></i>${t.nom}</button>`).join("")}</div>
