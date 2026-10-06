@@ -2994,6 +2994,10 @@ body{font-synthesis:none}
 #splash.part .bv-onde{animation:none;opacity:0}
 #splash.part .bv-lueur,#splash.part .bv-fond::before{animation:none;opacity:0;transition:opacity .15s ease}
 #splash.part .bv-bandes,#splash.part .bv-trame{transition:opacity .15s ease}
+/* Bande-annonce : icône clap (trait), Regarder et Bande-annonce côte à côte dans la fiche */
+.btn svg.ico-clap{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fiche-actions .duo .btn{flex:1 1 0;min-width:0;padding:0 10px}
+.fiche-actions .duo .btn:only-child{flex:1 1 100%}
 </style>
 </head>
 <body>
@@ -3188,6 +3192,7 @@ const CLE_SESSION = "mt-session";
 const CLE_COMPTE = c => "mt-compte-" + c;
 const SVG = {
   jouer:`<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></svg>`,
+  clap:`<svg class="ico-clap" viewBox="0 0 24 24"><path d="M4 9.5h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 9.5 3.3 6.3a1 1 0 0 1 .8-1.2l13.6-2.9a1 1 0 0 1 1.2.8l.6 2.9z"/><path d="M8.1 4.3l2.6 3.3M13 3.3l2.6 3.3"/></svg>`,   // bande-annonce
   coche:`<svg viewBox="0 0 24 24"><path d="M5.5 12.5l4.2 4.2 8.8-9.2"/></svg>`,
   info:`<svg viewBox="0 0 24 24"><path d="M11 10.5h2V18h-2zM12 5.6a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z"/></svg>`,
   grille:`<svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>`,
@@ -4244,7 +4249,7 @@ function majAccueil(complet){
       <p class="meta">${nx.a} · ${typeTitre(nx)} · ${fmtDuree(nx.d)}${nx.dd ? ` · <b class="doom">Av. Doomsday</b>` : ""}</p>
       <div class="suivant-actions">
         ${plexCle(nx) ? `<button class="btn btn-blanc" data-film="${nx.id}">${SVG.jouer}Regarder</button>` : `<button class="btn btn-blanc" data-fiche="${nx.id}">Voir la fiche</button>`}
-        ${nx.ba ? `<button class="btn btn-ligne" data-ba="${nx.id}">${SVG.jouer}Bande-annonce</button>` : ""}
+        ${nx.ba ? `<button class="btn btn-ligne" data-ba="${nx.id}">${SVG.clap}Bande-annonce</button>` : ""}
       </div></div>` : `<div class="suivant"><p class="surtitre">Parcours terminé</p><h2 class="suivant-titre">Tout est vu</h2></div>`}`;
 
   const cartes = [];
@@ -4456,7 +4461,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h28</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h51</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -4629,9 +4634,11 @@ function ouvrirFiche(id, opt = {}){
       <h2 class="fiche-titre">${esc(it.t)}</h2>
       <p class="meta">${it.a} · ${typeTitre(it)} · ${fmtDuree(it.d)}${it.dd ? ` · <b class="doom">Av. Doomsday</b>` : ""}${it.v ? " · à venir" : ""}</p>
       <div class="fiche-actions">
-        ${plexCle(it) ? `<button class="btn btn-blanc large" id="btn-film">${SVG.jouer}${it.k === "film" ? "Regarder le film" : "Regarder"}</button>`
-          : plexSerie(it) ? `<button class="btn btn-blanc large" id="btn-serie" disabled>${SVG.jouer}Épisodes…</button>` : ""}
-        ${it.ba ? `<button class="btn ${plexCle(it) || plexSerie(it) ? "btn-ligne" : "btn-blanc"} large" id="btn-ba">${SVG.jouer}${it.ba.nom || "Bande-annonce"} <em>${it.ba.langue}</em></button>` : ""}
+        <div class="duo">
+          ${plexCle(it) ? `<button class="btn btn-blanc large" id="btn-film">${SVG.jouer}Regarder</button>`
+            : plexSerie(it) ? `<button class="btn btn-blanc large" id="btn-serie" disabled>${SVG.jouer}Épisodes…</button>` : ""}
+          ${it.ba ? `<button class="btn ${plexCle(it) || plexSerie(it) ? "btn-ligne" : "btn-blanc"} large" id="btn-ba">${SVG.clap}Bande-annonce</button>` : ""}
+        </div>
       </div>
       ${pasSorti(it) ? "" : blocNote(it)}
       <p class="resume">${esc(it.s)}</p>
