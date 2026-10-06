@@ -2984,6 +2984,10 @@ body{font-synthesis:none}
 .ad-info em{font-style:normal;color:#fff;text-transform:none}
 .ad-tete2 .ad-filet{margin-top:14px}
 .ad-liste{margin-top:22px}
+/* Bienvenue → accueil : nom, prochain titre et icône disparaissent avant que le fond ne laisse voir l'accueil (plus de superposition) */
+#splash.part .bv-texte{transition:opacity .18s ease,transform .3s ease}
+#splash.part .bv-centre{transition:transform .45s cubic-bezier(.5,0,.2,1),opacity .25s ease}
+#splash.part .bv-fond,#splash.part .bv-aff{animation-delay:.22s}
 </style>
 </head>
 <body>
@@ -3049,7 +3053,7 @@ body{font-synthesis:none}
 <div id="portail" hidden><span class="portail-disque"></span><span class="portail-anneau"></span><span class="portail-anneau"></span><span class="portail-anneau"></span>
   <div class="portail-in"><span class="portail-fond" id="portail-fond"></span><div class="portail-texte"><p class="surtitre rouge" id="portail-sur"></p><h2 id="portail-titre"></h2><span class="portail-trait"></span><p id="portail-sous"></p></div></div></div>
 <div id="splash" hidden><span class="bv-aff"><img id="bv-aff" alt=""></span><span class="bv-fond"></span><span class="bv-trame"></span><span class="bv-bandes"><i></i><i></i></span>
-  <div class="bv-centre"><span class="bv-lueur"></span><img class="bv-av" id="bv-av" src="" alt=""><svg class="bv-anneau" viewBox="0 0 160 160" aria-hidden="true"><rect class="piste" x="1" y="1" width="158" height="158" rx="40" pathLength="566"/><rect class="prog" x="1" y="1" width="158" height="158" rx="40" pathLength="566"/></svg><span class="bv-onde"></span></div>
+  <div class="bv-centre"><span class="bv-lueur"></span><img class="bv-av" id="bv-av" src="" alt=""><svg class="bv-anneau" viewBox="0 0 160 160" aria-hidden="true"><rect class="piste" x="1" y="1" width="158" height="158" rx="40"/><rect class="prog" x="1" y="1" width="158" height="158" rx="40"/></svg><span class="bv-onde"></span></div>
   <div class="bv-texte"><p class="surtitre rouge" id="bv-sur"></p><h2 id="bv-nom"></h2>
     <div class="bv-stats" id="bv-stats"></div>
     <div class="bv-suite" id="bv-suite"></div></div></div>
@@ -4446,7 +4450,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 22h53</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h14</p>
     </div>
     <div class="fin-page"></div>`;
 }
