@@ -2989,6 +2989,7 @@ body{font-synthesis:none}
 #splash.part .bv-centre{transition:transform .45s cubic-bezier(.5,0,.2,1),opacity .25s ease}
 #splash.part .bv-fond,#splash.part .bv-aff{animation-delay:.22s}
 .ad-logo2{margin:0 auto 22px}
+#avdoom-in{padding-top:calc(var(--haut) + 84px)}
 </style>
 </head>
 <body>
@@ -4451,7 +4452,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h18</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h19</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -8711,7 +8712,6 @@ function ouvrirAvDoom(){
   const { l, n, reste, pct } = chiffresAvDoom();
   document.getElementById("avdoom-in").innerHTML = `
     <div class="ad-tete2">
-      <img class="ad-logo2" src="${img(IMG.logoDoom)}" alt="Avengers: Doomsday">
       <div class="pc-ligne"><span class="tag-vert">Liste officielle</span><span class="pc-compte" id="ad-n">${n}<i>/${l.length}</i></span></div>
       <h1 class="titre-l">Avant Doomsday</h1>
       <p class="ad-info" id="ad-reste">${reste ? `Avant le 16 décembre · <em>${fmtDuree(reste)}</em> à rattraper` : `<em>Tu es prêt.</em>`}</p>
