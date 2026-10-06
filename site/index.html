@@ -2676,7 +2676,7 @@ body{font-synthesis:none}
 
 /* ══════ PROFIL ══════ */
 .pr-tete{position:relative;align-items:center;gap:18px;padding:calc(var(--haut) + 84px) 0 6px}
-.pr-tete::before{content:"";position:absolute;right:-22px;top:calc(var(--haut) + 40px);width:190px;height:170px;pointer-events:none;
+.pr-tete::before{display:none;content:"";position:absolute;right:-22px;top:calc(var(--haut) + 40px);width:190px;height:170px;pointer-events:none;
   background:radial-gradient(circle,rgba(255,42,47,.55) 1.6px,transparent 2.2px) 0 0/11px 11px;-webkit-mask-image:linear-gradient(225deg,#000 10%,transparent 70%);mask-image:linear-gradient(225deg,#000 10%,transparent 70%)}
 .pr-av{width:86px;height:86px;border-radius:50%;box-shadow:0 0 0 3px var(--fond),0 0 0 5.5px var(--rouge-vif),0 14px 34px rgba(0,0,0,.6)}
 .pr-av img{border-radius:50%}
@@ -2687,7 +2687,7 @@ body{font-synthesis:none}
 .pr-chiffres{display:grid;grid-template-columns:repeat(3,1fr);margin-top:22px;padding:14px 0;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet)}
 .pr-chiffres span{display:flex;flex-direction:column;align-items:center;gap:6px;font:600 11px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
 .pr-chiffres span+span{border-left:1px solid var(--filet)}
-.pr-chiffres b{font:400 26px/1 var(--titre);letter-spacing:.01em;color:var(--jaune);transform:skewX(-8deg)}
+.pr-chiffres b{font:400 26px/1 var(--titre);letter-spacing:.01em;color:#fff;transform:skewX(-8deg)}
 .pc-chiffres b{text-transform:none}
 
 /* ══════ MES CARTES ══════ */
@@ -2760,7 +2760,7 @@ body{font-synthesis:none}
 .d-img{height:calc(100% - var(--pan,300px) + 250px);-webkit-mask-image:none;mask-image:none}
 .entree-voile{background:linear-gradient(180deg,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 16%,rgba(0,0,0,0) calc(100% - var(--pan,300px) - 120px),rgba(7,7,10,.72) calc(100% - var(--pan,300px) + 10px),var(--fond) calc(100% - var(--pan,300px) + 130px))}
 #entree{background:var(--fond)}
-.defile-legende{bottom:calc(var(--pan,300px) + 6px);text-align:left;left:24px;right:24px}
+.defile-legende{bottom:calc(var(--pan,300px) + 18px);text-align:left;left:24px;right:24px}
 .defile-legende small{font:600 11px var(--cond);letter-spacing:.22em;color:rgba(255,255,255,.75)}
 .defile-legende b{font:400 clamp(24px,calc(7 * var(--vw)),34px)/.95 var(--titre);transform:skewX(-8deg);transform-origin:0 100%;text-shadow:3px 4px 0 rgba(0,0,0,.5),0 4px 24px rgba(0,0,0,.8)}
 .panneau{padding:0 24px calc(var(--bas) + 22px)}
@@ -2810,10 +2810,6 @@ body{font-synthesis:none}
 
 .pr-chiffres b{text-transform:none}
 
-/* Profil : sauvegarde automatique, une simple ligne */
-.note.pr-sync{display:flex;align-items:center;gap:9px;padding:0;border:0;margin-top:18px;font:500 12px/1.4 var(--texte);color:rgba(255,255,255,.5)}
-.note.pr-sync .pt{width:7px;height:7px;box-shadow:0 0 8px var(--vert)}
-.note.pr-sync.off .pt{background:rgba(255,255,255,.3);box-shadow:none}
 .pr-lignes{padding-top:8px}
 /* Parcours : compteur sobre */
 .pc-compte{margin-top:12px;font:600 13px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
@@ -2822,6 +2818,22 @@ body{font-synthesis:none}
 /* En-tête : MCU et Multivers dans deux cases de même largeur, la lame est visible en entier → centrage net */
 #barre .univers{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
 #barre .univers button{min-width:86px;text-align:center;justify-content:center}
+
+/* En-tête : le sélecteur se place au milieu de l'espace entre le logo et la photo de profil */
+#barre .univers{position:static;left:auto;bottom:auto;margin:0;transform:skewX(-12deg)}
+/* Profil : un seul accent ; les chiffres en blanc, la couleur reste sur les barres */
+.pr-univ .haut em{color:#fff}
+.pr-univ .haut em i{color:rgba(255,255,255,.45);opacity:1}
+.pr-tva em{color:#fff}
+/* Fiche : bouton Spoiler à la charte (étiquette rouge inclinée) */
+.spoil-btn{gap:8px;padding:8px 13px 7px;border-radius:0;background:var(--rouge-vif);box-shadow:4px 4px 0 rgba(0,0,0,.45);transform:skewX(-12deg);font:400 15px/1 var(--titre);letter-spacing:.12em;color:#fff}
+.spoil-btn i{width:7px;height:7px;border-radius:0;background:#fff;box-shadow:none;animation:spClic 1.6s ease-in-out infinite}
+@keyframes spClic{50%{opacity:.25}}
+/* Fiche : Regarder et Bande-annonce, deux grands boutons */
+.fiche-actions #btn-ba{width:100%}
+/* Accueil : titre « À suivre » sur plusieurs lignes sans chevauchement (accents, ombre) */
+.suivant-titre{line-height:.96;text-wrap:balance}
+.suivant-titre.long{font-size:clamp(38px,calc(11.5 * var(--vw)),54px)}
 </style>
 </head>
 <body>
@@ -4054,7 +4066,6 @@ function rendreAccueil(){
       <video id="hero-video-fond" class="fond-flou" muted playsinline loop preload="auto" aria-hidden="true"></video>
       <span class="hero-voile"></span>
       <div class="hero-in">
-        <p class="surtitre hero-sur">${univers==="mcu" ? "Marvel Cinematic Universe" : "Marvel Multiverse"}</p>
         <div class="ecran-cine"><video id="hero-video" muted playsinline loop preload="auto" aria-hidden="true"></video><button class="son" data-son-vue aria-label="Son"></button></div>
         <div class="hero-bas" id="acc-hero"></div>
       </div>
@@ -4071,7 +4082,7 @@ function majAccueil(complet){
       <div><p class="score-l">Parcours · ${s.vus} / ${s.total}</p><span class="barre-v3">${Array.from({ length:25 }, (_, k) => `<i${k < Math.round(s.pct / 4) ? ` class="on"` : ""}></i>`).join("")}</span></div></div>
     ${nx ? `<div class="suivant">
       <span class="tag-v3"><span>À suivre${(() => { const g = BIB[univers].find(g => g.items.includes(nx)); return g ? " · " + esc(g.groupe.split(" · ")[0].split(" / ")[0]) : ""; })()}</span></span>
-      <h2 class="suivant-titre">${esc(nx.t)}</h2>
+      <h2 class="suivant-titre${nx.t.length > 16 ? " long" : ""}">${esc(nx.t)}</h2>
       <p class="meta">${nx.a} · ${typeTitre(nx)} · ${fmtDuree(nx.d)}${nx.dd ? ` · <b class="doom">Av. Doomsday</b>` : ""}</p>
       <div class="suivant-actions">
         ${plexCle(nx) ? `<button class="btn btn-blanc" data-film="${nx.id}">${SVG.jouer}Regarder</button>` : `<button class="btn btn-blanc" data-fiche="${nx.id}">Voir la fiche</button>`}
@@ -4102,13 +4113,6 @@ function majAccueil(complet){
     </section>
     ${cartes.length ? `<section class="bloc"><div class="bloc-tete"><p class="surtitre">À l'affiche et bientôt</p></div>
       ${cartes.map(c => `<button class="sortie"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em><i>J–</i>${c.tag}</em>` : ""}</button>`).join("")}</section>` : ""}
-    <section class="bloc">
-      <div class="chiffres">
-        <div><b>${s.filmsVus}<i>/${s.films}</i></b><span>Films</span></div>
-        <div><b>${s.seriesVus}<i>/${s.series}</i></b><span>Séries</span></div>
-        <div><b>${s.vus}<i>/${s.total}</i></b><span>Total</span></div>
-      </div>
-    </section>
     <div id="reprendre"></div>
     <div class="reseaux">${RESEAUX.map(x => `<a href="${x[1]}" target="_blank" rel="noopener" aria-label="${x[0]}">${x[2]}</a>`).join("")}</div>`;
   rendreReprendre();
@@ -4294,9 +4298,8 @@ function rendreProfil(){
         ${lignePlex("changer", "Changer de profil", esc(profilActif().nom))}
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
-        <p class="note pr-sync" id="pr-sync"><i class="pt"></i><span></span></p>
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 20h21</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 20h42</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -4471,10 +4474,7 @@ function ouvrirFiche(id, opt = {}){
       <div class="fiche-actions">
         ${plexCle(it) ? `<button class="btn btn-blanc large" id="btn-film">${SVG.jouer}${it.k === "film" ? "Regarder le film" : "Regarder"}</button>`
           : plexSerie(it) ? `<button class="btn btn-blanc large" id="btn-serie" disabled>${SVG.jouer}Épisodes…</button>` : ""}
-        <div class="duo">
-          ${it.ba ? `<button class="btn btn-ligne" id="btn-ba">${SVG.jouer}${it.ba.nom || "Bande-annonce"} <em>${it.ba.langue}</em></button>` : ""}
-          <button class="btn btn-ligne${vu ? " actif" : ""}${pasSorti(it) && !vu ? " bloque" : ""}" id="btn-vu">${vu ? "✓  Vu" : pasSorti(it) ? "Pas encore sorti" : "Marquer vu"}</button>
-        </div>
+        ${it.ba ? `<button class="btn ${plexCle(it) || plexSerie(it) ? "btn-ligne" : "btn-blanc"} large" id="btn-ba">${SVG.jouer}${it.ba.nom || "Bande-annonce"} <em>${it.ba.langue}</em></button>` : ""}
       </div>
       ${pasSorti(it) ? "" : blocNote(it)}
       <p class="resume">${esc(it.s)}</p>
@@ -8244,6 +8244,11 @@ function quitterApp(){
 
 /* ═══════════ ENTRÉE : IDENTIFIANT, PROFILS, CRÉATION ═══════════ */
 const ECRANS_ENTREE = ["p-connexion","p-profils","p-creation"];
+/* La légende de l'affiche suit la hauteur du panneau (un message d'erreur ou d'info l'agrandit). */
+if(window.ResizeObserver){
+  const ro = new ResizeObserver(() => { const pan = document.querySelector("#entree .panneau.on"); if(pan) document.getElementById("entree").style.setProperty("--pan", pan.offsetHeight + "px"); });
+  document.querySelectorAll("#entree .panneau").forEach(x => ro.observe(x));
+}
 function montrerEcran(id){
   ECRANS_ENTREE.forEach(e => document.getElementById(e).classList.toggle("on", e === id));
   const f = document.getElementById("entree");
