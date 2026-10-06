@@ -2998,6 +2998,21 @@ body{font-synthesis:none}
 .btn svg.ico-clap{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .fiche-actions .duo .btn{flex:1 1 0;min-width:0;padding:0 10px}
 .fiche-actions .duo .btn:only-child{flex:1 1 100%}
+
+/* ══════ Parcours : chemin logique ══════
+   Le segment entre deux titres est jaune si le titre du dessus est coché, gris sinon.
+   Chaque ligne porte la moitié basse de son segment (--l-b) et la moitié haute de celui du dessus (--l-h). */
+.chemin .pas.suivant{margin-top:0}
+.chemin .pas::before{width:2px;left:17.5px;transition:none;background:linear-gradient(var(--l-h,rgba(255,255,255,.16)) 50%,var(--l-b,rgba(255,255,255,.16)) 50%) !important}
+.chemin .pas.vu{--l-b:var(--vu)}
+.chemin .pas.vu + .pas{--l-h:var(--vu)}
+.chemin .pas:first-child::before{background:var(--l-b,rgba(255,255,255,.16)) !important}
+.chemin .pas:last-child::before{background:var(--l-h,rgba(255,255,255,.16)) !important}
+.chemin .pas:only-child::before{display:none}
+/* Le rond « À suivre » est plein : le trait ne passe plus au travers */
+.chemin .pas.suivant .noeud{background:#1d0a0c}
+/* Coche en blanc (essai) */
+.pas.vu .noeud svg,.vu .coche svg,.coche.on svg{stroke:#fff}
 </style>
 </head>
 <body>
@@ -4461,7 +4476,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h51</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h56</p>
     </div>
     <div class="fin-page"></div>`;
 }
