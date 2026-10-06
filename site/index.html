@@ -2990,6 +2990,10 @@ body{font-synthesis:none}
 #splash.part .bv-fond,#splash.part .bv-aff{animation-delay:.22s}
 .ad-logo2{margin:0 auto 22px}
 #avdoom-in{padding-top:calc(var(--haut) + 84px)}
+/* Bienvenue → accueil : plus d'iris ni de halos ronds qui passent sur l'accueil */
+#splash.part .bv-onde{animation:none;opacity:0}
+#splash.part .bv-lueur,#splash.part .bv-fond::before{animation:none;opacity:0;transition:opacity .15s ease}
+#splash.part .bv-bandes,#splash.part .bv-trame{transition:opacity .15s ease}
 </style>
 </head>
 <body>
@@ -4427,7 +4431,7 @@ function rendreProfil(){
         ${[["MCU", a, ra], ["Multivers", b, rb]].map(([nom, st, re]) => `<div class="pr-univ">
           <div class="haut"><b>${nom}</b><em>${st.pct}<i>%</i></em></div>
           <span class="filet-prog"><i data-largeur="${st.pct}%" style="width:0"></i></span>
-          <small>${st.vus} sur ${st.total} titres · ${re.t ? fmtDuree(re.t) + " restantes" : "terminé"}</small></div>`).join("")}
+          <small>${st.vus} sur ${st.total} titres${re.t ? "" : " · terminé"}</small></div>`).join("")}
       </section>
       <section class="bloc">
         <div class="bloc-tete"><img class="titre-plex" src="${LOGO_PLEX}" alt="Plex"></div>
@@ -4452,7 +4456,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h19</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h28</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -4600,7 +4604,7 @@ function rendreCheminBonus(){
 function majBonus(){
   const l = tousBonus(), v = nbBonusVus(), c = document.getElementById("bonus-compte"), pc = vue === "parcours" && filtre === "bonus" && document.getElementById("pc-compte");
   if(pc) pc.innerHTML = `${v}<i>/${l.length}</i>`;
-  if(c) c.textContent = `${v} sur ${l.length} vus · ${fmtDuree(l.filter(it => !vusDe(it.id)[it.id]).reduce((t, it) => t + (it.d || 0), 0)) || "0 min"} restantes`;
+  if(c) c.textContent = `${v} sur ${l.length} vus`;
   document.querySelectorAll("[data-bonus-g]").forEach(sec => {
     const b = listeBonus(+sec.dataset.bonusG), n = b.filter(it => vusDe(it.id)[it.id]).length;
     sec.classList.toggle("fini", n === b.length);
@@ -8714,7 +8718,7 @@ function ouvrirAvDoom(){
     <div class="ad-tete2">
       <div class="pc-ligne"><span class="tag-vert">Liste officielle</span><span class="pc-compte" id="ad-n">${n}<i>/${l.length}</i></span></div>
       <h1 class="titre-l">Avant Doomsday</h1>
-      <p class="ad-info" id="ad-reste">${reste ? `Avant le 16 décembre · <em>${fmtDuree(reste)}</em> à rattraper` : `<em>Tu es prêt.</em>`}</p>
+      <p class="ad-info" id="ad-reste">${reste ? "À voir avant le 16 décembre" : "<em>Tu es prêt.</em>"}</p>
       <span class="filet-prog ad-filet"><i id="ad-filet" style="width:${pct}%"></i></span>
     </div>
     <ol class="ad-liste">${l.map((it, k) => `<li class="ad-pas${vusDe(it.id)[it.id] ? " vu" : ""}" data-id="${it.id}" style="--k:${k}">
@@ -8726,7 +8730,7 @@ function ouvrirAvDoom(){
 }
 /* Après une coche : chiffres de la page et du bloc « Ta préparation » à jour, sans tout redessiner. */
 function majAvDoom(){
-  const { l, n, reste, pct } = chiffresAvDoom(), t = reste ? `Avant le 16 décembre · <em>${fmtDuree(reste)}</em> à rattraper` : `<em>Tu es prêt.</em>`;
+  const { l, n, reste, pct } = chiffresAvDoom(), t = reste ? "À voir avant le 16 décembre" : "<em>Tu es prêt.</em>";
   const q = id => document.getElementById(id);
   if(q("ad-n")){ q("ad-n").innerHTML = `${n}<i>/${l.length}</i>`; q("ad-reste").innerHTML = t; q("ad-filet").style.width = pct + "%"; }
   if(q("prep-filet")){ const f = q("prep-filet").querySelector("i"); f.style.width = f.dataset.largeur = pct + "%";
