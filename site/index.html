@@ -4299,7 +4299,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 20h42</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 20h45</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -8800,7 +8800,7 @@ function bienvenue(p, source, ms){
 }
 
 /* Servie par le site (Netlify) : vrai manifeste + service worker (app gardée en mémoire, ouverture instantanée, hors ligne).
-   Une mise à jour s'installe en arrière-plan ; un bandeau propose de recharger. */
+   La page vient du réseau à chaque ouverture ; si une mise à jour arrive pendant l'utilisation, un bandeau propose de recharger. */
 const surSite = /^https?:$/.test(location.protocol) && "serviceWorker" in navigator;
 if(surSite){
   const l = document.createElement("link"); l.rel = "manifest"; l.href = "manifest.webmanifest"; document.head.appendChild(l);
@@ -8808,6 +8808,8 @@ if(surSite){
   navigator.serviceWorker.register("sw.js").catch(() => {});
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if(!avait || document.querySelector(".toast-maj")) return;
+    // encore sur l'écran d'ouverture (rien en cours) : on passe tout de suite à la nouvelle version
+    if(!document.getElementById("entree").hidden || document.body.classList.contains("porte")){ location.reload(); return; }
     const t = document.createElement("button"); t.className = "toast-maj";
     t.innerHTML = `<b>Nouvelle version prête</b><span>Recharger</span>`;
     t.onclick = () => location.reload();
