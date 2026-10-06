@@ -843,48 +843,130 @@ C({
 });
 
 // =================== VENOM ===================
+// Gueule énorme, crocs irréguliers, bave et langue
+const venomMaw = (x, y, W = 62, H = 46) => {
+  const d = `M${x - W},${y - 10}Q${x - W * 0.5},${y - 2} ${x},${y - 4}Q${x + W * 0.5},${y - 2} ${x + W},${y - 10}Q${x + W * 0.9},${y + H * 0.7} ${x},${y + H}Q${x - W * 0.9},${y + H * 0.7} ${x - W},${y - 10}Z`;
+  const R = B.rng(77);
+  let teeth = '';
+  const n = 13;
+  for (let i = 0; i < n; i++) {
+    const k = i / (n - 1), tx = x - W * 0.95 + k * W * 1.9;
+    const top = y - 10 + Math.abs(k - 0.5) * -6 + 6;
+    const L = 12 + R() * 14 + (i === 2 || i === n - 3 ? 10 : 0);
+    teeth += path(`M${f(tx - 4.5)},${f(top - 8)}L${f(tx + 4.5)},${f(top - 8)}L${f(tx + R() * 2 - 1)},${f(top + L)}Z`, `fill="#f2efe2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
+    const bot = y + H - Math.abs(k - 0.5) * H * 0.9 - 4;
+    const L2 = 10 + R() * 12;
+    teeth += path(`M${f(tx - 4)},${f(bot + 10)}L${f(tx + 4)},${f(bot + 10)}L${f(tx + R() * 2 - 1)},${f(bot - L2)}Z`, `fill="#e6e2d2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
+  }
+  let drool = '';
+  for (const [k, l] of [[-0.6, 26], [-0.2, 34], [0.35, 22], [0.7, 30]]) drool += line(`M${f(x + W * k)},${f(y - 2)}Q${f(x + W * k + 3)},${f(y + l * 0.6)} ${f(x + W * k + 1)},${f(y + l)}`, 2, '#cfe6f0', 'opacity="0.85"');
+  return path(d, `fill="#1a0408"`) + clip(d, ellipse([x, y + H * 0.55], W * 0.6, H * 0.4, `fill="#6a0f1e" filter="url(#soft)"`) + teeth + drool) +
+    path(d, `fill="none" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"`);
+};
+const SYMB = { base: '#15151d', dark: '#030306', light: '#3c4466' };
+const gloss = (pts, w = 3, op = 0.55) => line(smooth(pts, false), w, '#b8d0ff', `opacity="${op}"`);
 C({
-  id: 'venom', name: 'Venom', group: 'spider', ring: '#f2f2f6',
-  sky: '#0b0f1c',
+  id: 'venom', name: 'Venom', group: 'spider', ring: '#e8e8f0',
+  sky: '#05060c',
   bg: J => {
     let ten = '';
     const R = B.rng(23);
-    for (let i = 0; i < 9; i++) {
-      const a = R() * 360, c = [200 + Math.cos(a) * 60, 230 + Math.sin(a) * 40];
-      ten += line(smooth([c, add(c, polar(70, a + 30)), add(c, polar(130, a - 20)), add(c, polar(200, a + 20))], false), 14 - i * 0.6, '#06070c');
+    for (let i = 0; i < 14; i++) {
+      const a = 180 + R() * 180, c = [200 + Math.cos(a * Math.PI / 180) * 40, 250];
+      ten += line(smooth([c, add(c, polar(80, a + 25)), add(c, polar(150, a - 25)), add(c, polar(240, a + 15))], false), 16 - i * 0.7, '#020205');
     }
-    return B.radial('vn', '#2a3a6a', '#05060c', 0.5, 0.4, 0.7) + B.city({ far: '#1a2240', near: '#0a0d1a', win: '#7ad0ff', base1: 380, base2: 430, seed: 33 }) + ten;
+    let rain = '';
+    for (let i = 0; i < 60; i++) rain += `M${f(R() * 420)},${f(R() * 400)}l-5,16`;
+    return B.radial('vn', '#2a1438', '#020206', 0.5, 0.35, 0.7) + B.city({ far: '#140e22', near: '#06040c', win: '#9a6aff', base1: 380, base2: 430, seed: 33 }) +
+      path(rain, `stroke="#8a8ab0" stroke-width="1" opacity="0.35"`) + ten;
   },
-  suit: '#15161e', neckCol: '#15161e', sleeve: '#15161e', glove: '#15161e', bu: 6, bl: 3,
+  behind: J => {
+    let t = '';
+    const R = B.rng(5);
+    for (let i = 0; i < 8; i++) {
+      const s = i % 2 ? 1 : -1, p0 = J.toG([s * 120, 10 + i * 6]);
+      t += line(smooth([p0, add(p0, [s * (40 + R() * 30), -40 - R() * 40]), add(p0, [s * (60 + R() * 40), -110 - R() * 50]), add(p0, [s * (30 + R() * 50), -170 - R() * 40])], false), 9 - i * 0.6, INK);
+    }
+    return t;
+  },
+  suit: SYMB, neckCol: SYMB, sleeve: SYMB, glove: SYMB, bu: 9, bl: 5, armK: 1.25, swK: 1.2, headK: 1.0,
   torso: T => {
-    const sp = (s, a) => path(smooth([[0, 30], [s * 30, 10], [s * 80, -20], [s * 70, 20], [s * 30, 40], [s * 16, 80], [s * 50, 150], [s * 36, 160], [s * 4, 100]]), `fill="#f4f4f8" stroke="${INK}" stroke-width="2"`);
-    return pecs(T, '#3a3e58', 0.8) + abs(T, '#3a3e58', 0.7) + sp(-1) + sp(1) + ellipse([0, 60], 20, 34, `fill="#f4f4f8" stroke="${INK}" stroke-width="2"`);
+    const sp = s => path(smooth([[0, 34], [s * 34, 6], [s * 96, -26], [s * 84, 22], [s * 34, 46], [s * 20, 96], [s * 62, 170], [s * 44, 176], [s * 4, 110]]), `fill="#ecebf2" stroke="${INK}" stroke-width="2.4"`);
+    return pecs(T, '#000000', 0.9) + abs(T, '#000000', 0.8) + sp(-1) + sp(1) + ellipse([0, 64], 22, 38, `fill="#ecebf2" stroke="${INK}" stroke-width="2.4"`) +
+      gloss([[-T.sw * 0.38, 40], [-T.sw * 0.3, 30], [-T.sw * 0.18, 34]], 5) + gloss([[-30, 120], [-26, 140], [-30, 160]], 3, 0.4);
   },
+  dU: (L, r) => gloss([[L * 0.15, -r * 0.55], [L * 0.5, -r * 0.75], [L * 0.85, -r * 0.5]], 4, 0.5),
+  dL: (L, r) => gloss([[L * 0.15, -r * 0.5], [L * 0.6, -r * 0.6]], 3, 0.45),
   head: {
-    t: 0.05, expr: 'furious', skin: '#15161e', ears: false, shape: { jaw: 1.22, wid: 1.12, chin: 1.12, cran: 1.0 },
+    t: 0.06, expr: 'furious', skin: SYMB, ears: false, shape: { jaw: 1.36, wid: 1.16, chin: 1.3, cran: 0.94, cheek: 1.1 },
     mask: {
-      type: 'full', color: '#191a24', lens: 'venom', ang: 0, ls: 1.08, border: 4.5, shine: false, dy: -8,
-      mouth: ({ F }) => {
-        const [x, y] = [F.cx + 2, 30];
-        const d = `M${x - 48},${y - 8}Q${x},${y - 2} ${x + 48},${y - 8}Q${x + 40},${y + 34} ${x},${y + 40}Q${x - 40},${y + 34} ${x - 48},${y - 8}Z`;
-        let teeth = '';
-        for (let i = 0; i < 10; i++) {
-          const tx = x - 44 + i * 9.6;
-          teeth += path(`M${f(tx - 4)},${y - 8}L${f(tx + 4.8)},${y - 8}L${f(tx + 0.5)},${y + 8 + (i % 2) * 3}Z`, `fill="#fbfbf6" stroke="${INK}" stroke-width="1.4"`);
-          teeth += path(`M${f(tx - 2)},${y + 38}L${f(tx + 6)},${y + 38}L${f(tx + 2)},${y + 24 - (i % 2) * 3}Z`, `fill="#fbfbf6" stroke="${INK}" stroke-width="1.4"`);
-        }
-        return path(d, `fill="#3a0a14" stroke="${INK}" stroke-width="3"`) + clip(d, teeth);
-      },
+      type: 'full', color: SYMB, lens: 'venom', ang: 10, ls: 1.12, border: 5, shine: false, dy: -10, modelK: 0.4,
+      pattern: ({ F }) => gloss([[F.cx - 34, -50], [F.cx - 16, -60], [F.cx + 6, -60]], 5, 0.6) + gloss([[F.cx - 44, -10], [F.cx - 42, 10]], 3, 0.4),
     },
     front: ({ F }) => {
-      const x = F.cx + 6, y = 52;
-      return shade(smooth([[x - 12, y - 18], [x + 10, y - 16], [x + 18, y + 10], [x + 30, y + 40], [x + 44, y + 56], [x + 30, y + 58], [x + 12, y + 34], [x - 6, y + 10]]), '#d84a7a', { s: 4, lw: 3, inner: line(`M${x},${y - 10}Q${x + 14},${y + 20} ${x + 34},${y + 50}`, 2, '#9a2a50') });
+      const x = F.cx + 3, y = 26;
+      return venomMaw(x, y) +
+        shade(smooth([[x - 14, y + 14], [x + 10, y + 12], [x + 20, y + 40], [x + 14, y + 72], [x + 26, y + 96], [x + 44, y + 104], [x + 30, y + 112], [x + 4, y + 96], [x - 2, y + 64], [x - 10, y + 36]]), '#c8325e', {
+          s: 5, lw: 3.2, inner: line(`M${x + 2},${y + 22}Q${x + 6},${y + 60} ${x + 12},${y + 92}`, 2.2, '#7a1434'),
+        });
     },
   },
   pose: {
-    N: [200, 280], tilt: 0, sw: 250, ww: 170, nw: 30, hs: 1.12, nl: 4,
-    armL: { a1: 150, a2: -70, L1: 76, L2: 70, hand: 'open', talons: true, clawCol: '#f4f4f8', hs: 1.7, layer: 'front', r: [36, 28, 27, 20] },
-    armR: { a1: 30, a2: -110, L1: 76, L2: 70, hand: 'open', talons: true, clawCol: '#f4f4f8', hs: 1.7, layer: 'front', r: [36, 28, 27, 20] },
+    N: [200, 282], tilt: 0, sw: 262, ww: 176, nw: 34, hs: 1.28, nl: -14,
+    armL: { a1: 156, a2: -82, L1: 76, L2: 72, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'front', r: [38, 30, 29, 21], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
+    armR: { a1: 24, a2: -98, L1: 76, L2: 72, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'front', r: [38, 30, 29, 21], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
+  },
+});
+
+// =================== CARNAGE ===================
+const CARN = { base: '#c4141e', dark: '#4a0208', light: '#ff5a4a' };
+const carnStreaks = (seed, n = 10, w = 120, h = 220, y0 = 0) => {
+  const R = B.rng(seed);
+  let o = '';
+  for (let i = 0; i < n; i++) {
+    const x = (R() - 0.5) * w * 2, y = y0 + R() * h;
+    o += line(smooth([[x, y], [x + 10 + R() * 20, y + 20 + R() * 20], [x - 6 + R() * 12, y + 50 + R() * 30], [x + 14, y + 90 + R() * 30]], false), 3 + R() * 4, '#14040a', 'opacity="0.85"');
+  }
+  return o;
+};
+C({
+  id: 'carnage', name: 'Carnage', group: 'spider', ring: '#c4141e',
+  sky: '#14020a',
+  bg: J => {
+    const R = B.rng(13);
+    let spl = '';
+    for (let i = 0; i < 14; i++) {
+      const c = [R() * 400, R() * 300], r = 6 + R() * 22;
+      spl += circle(c, r, `fill="#a8101c" opacity="0.6"`);
+      for (let k = 0; k < 4; k++) spl += circle(add(c, polar(r + 4 + R() * 14, R() * 360)), 1.5 + R() * 3, `fill="#a8101c" opacity="0.6"`);
+    }
+    let ten = '';
+    for (let i = 0; i < 12; i++) {
+      const a = 180 + R() * 180, c = [200, 250];
+      ten += line(smooth([c, add(c, polar(90, a + 30)), add(c, polar(170, a - 30)), add(c, polar(260, a + 10))], false), 12 - i * 0.6, i % 2 ? '#8a0a14' : '#14040a');
+    }
+    return B.radial('cg', '#5a0a14', '#050104', 0.5, 0.4, 0.72) + spl + B.city({ far: '#2a060c', near: '#0a0204', win: '#ff3a3a', base1: 390, base2: 430, seed: 57 }) + ten;
+  },
+  suit: CARN, neckCol: CARN, sleeve: CARN, glove: CARN, bu: 7, bl: 4, armK: 1.15, swK: 1.15, headK: 1.0,
+  torso: T => pecs(T, '#000000', 0.7) + abs(T, '#000000', 0.6) + carnStreaks(3, 14, T.sw * 0.5, 230, 0),
+  dU: (L, r) => line(`M${f(L * 0.1)},${f(-r * 0.3)}Q${f(L * 0.4)},${f(r * 0.5)} ${f(L * 0.9)},${f(-r * 0.2)}`, 4, '#14040a'),
+  dL: (L, r) => line(`M${f(L * 0.2)},${f(r * 0.3)}Q${f(L * 0.5)},${f(-r * 0.5)} ${f(L)},${f(r * 0.2)}`, 4, '#14040a'),
+  head: {
+    t: -0.12, expr: 'furious', skin: CARN, ears: false, shape: { jaw: 1.24, wid: 1.08, chin: 1.2, cran: 0.98, cheek: 1.06 },
+    mask: {
+      type: 'full', color: CARN, lens: 'venom', ang: 12, ls: 1.0, border: 5, shine: false, dy: -10, modelK: 0.6,
+      pattern: ({ F }) => carnStreaks(9, 14, 50, 140, -80),
+    },
+    front: ({ F }) => venomMaw(F.cx + 2, 24, 56, 40),
+  },
+  pose: {
+    N: [196, 276], tilt: -8, htilt: 10, sw: 220, ww: 150, nw: 28, hs: 1.24, nl: -8,
+    armL: {
+      a1: 104, a2: -84, L1: 58, L2: 60, hand: 'none', layer: 'front', r: [32, 25, 24, 18],
+      // bras transformé en lame
+      prop: arm => ({ front: shade(smooth([add(arm.W, polar(20, arm.ang + 90)), add(arm.W, polar(70, arm.ang + 20)), add(arm.W, polar(150, arm.ang - 2)), add(arm.W, polar(60, arm.ang - 14)), add(arm.W, polar(18, arm.ang - 90))], true, 1 / 8), CARN, { s: 4, lw: 3, inner: carnStreaks(4, 3, 40, 60, 0) }) }),
+    },
+    armR: { a1: 52, a2: -112, L1: 72, L2: 64, hand: 'claw', clawCol: '#e8202e', clawLen: 70, hs: 1.5, hrot: 10, layer: 'front', r: [32, 25, 24, 18] },
   },
 });
 
@@ -1331,37 +1413,45 @@ C({
 });
 
 // =================== LE FAUVE ===================
+const furTufts = (pts, col) => path(poly(pts), `fill="${col}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"`);
 C({
   id: 'le-fauve', name: 'Le Fauve', group: 'xmen', ring: '#2a4ab8',
-  sky: '#14204a',
+  sky: '#0a1030',
   bg: J => {
-    const fl = (x, y, s, col) => g(path('M-8,-30H8V-8L22,22Q24,30 14,30H-14Q-24,30 -22,22L-8,-8Z', `fill="${col}" stroke="${INK}" stroke-width="2.4"`) + path('M-16,12H16L22,24Q22,30 14,30H-14Q-22,30 -20,24Z', `fill="#fff" opacity="0.4"`), `transform="translate(${x} ${y}) scale(${s})"`);
-    return xbg('bs', '#3a6ad8', '#0a1438') + `<text x="30" y="90" font-family="serif" font-size="26" fill="#bfe0ff" opacity="0.35" font-style="italic">E=mc²</text><text x="250" y="70" font-family="serif" font-size="22" fill="#bfe0ff" opacity="0.35" font-style="italic">∑ x² + π</text><text x="40" y="190" font-family="serif" font-size="20" fill="#bfe0ff" opacity="0.3" font-style="italic">∫ f(x) dx</text>` +
-      fl(60, 330, 1.6, '#3ad86a') + fl(340, 320, 1.4, '#ff5a8a');
+    let grid = '';
+    for (let i = -10; i <= 10; i++) grid += `M200,190L${200 + i * 60},420`;
+    for (let y = 250; y < 420; y += 26) grid += `M0,${y}H400`;
+    return B.radial('bs', '#2a4ab8', '#03061a', 0.5, 0.4, 0.72) + B.xlogo([200, 150], 130, '#f5c518', 0.18, '#0a1030') +
+      path(grid, `stroke="#5a8aff" stroke-width="1.4" opacity="0.3"`) + B.debris([200, 210], 12, '#4a5a8a', 41, 140, 200) +
+      [0, 1, 2].map(k => B.bolt([[30 + k * 30, 30], [140 + k * 30, 110]], '#e8f0ff', 5, '#7ab0ff')).join('');
   },
-  suit: '#2a4ab8', skin: '#3a5ac8', neckCol: '#3a5ac8', sleeve: '#3a5ac8', glove: '#3a5ac8', bu: 6, bl: 3,
+  suit: '#2a48b0', skin: '#3150b8', neckCol: '#3150b8', sleeve: '#3150b8', glove: '#3150b8', bu: 8, bl: 4, armK: 1.3, swK: 1.2, headK: 0.92,
   torso: T => {
     let fur = '';
-    for (let i = 0; i < 14; i++) fur += line(`M${-80 + (i % 7) * 26},${40 + Math.floor(i / 7) * 70}l6,12l6,-10`, 2, '#1a2a7a');
-    return pecs(T, '#14206a', 0.8) + abs(T, '#14206a', 0.6) + fur + `<rect x="-90" y="214" width="180" height="40" fill="#1a1a24" stroke="${INK}" stroke-width="2.4"/>`;
+    const R = B.rng(3);
+    for (let i = 0; i < 26; i++) { const x = -T.sw * 0.45 + R() * T.sw * 0.9, y = 10 + R() * 220; fur += `M${f(x)},${f(y)}l${f(3 + R() * 3)},${f(9 + R() * 5)}l${f(3 + R() * 3)},${f(-8 - R() * 4)}`; }
+    return pecs(T, '#0a1450', 0.9) + abs(T, '#0a1450', 0.75) + line(fur, 1.8, '#14206a', 'opacity="0.8"') +
+      `<rect x="-120" y="222" width="240" height="40" fill="#141420" stroke="${INK}" stroke-width="2.4"/>` + line('M-120,230H120', 4, '#f5c518');
   },
+  dU: (L, r) => line(`M${f(L * 0.2)},${f(-r * 0.4)}l5,10l5,-8M${f(L * 0.55)},${f(-r * 0.2)}l5,10l5,-8M${f(L * 0.4)},${f(r * 0.3)}l5,10l5,-8`, 1.8, '#14206a'),
   head: {
-    t: -0.2, expr: 'smirk', skin: '#3a5ac8', mouth: 'smile', mouthW: 1.3, shape: { jaw: 1.2, wid: 1.1, chin: 1.0, cheek: 1.06 }, lines: ['cheek', 'fold'],
-    eyes: { iris: '#f5c518' }, brows: { th: 6, col: '#14206a' },
+    t: -0.16, expr: 'furious', skin: '#3150b8', mouth: 'roar', mouthW: 1.25, shape: { jaw: 1.3, wid: 1.14, chin: 1.08, cheek: 1.12, cran: 0.92 }, lines: ['cheek', 'fold', 'forehead'],
+    eyes: { iris: '#f5c518', lid: 4, s: 0.95 }, brows: { th: 9, col: '#0e1650', w: 1.2 },
     mid: ({ F }) => {
       const [x, y] = F.mouth;
-      return path(`M${x - 10},${y - 1}l3,8l3,-7Z M${x + 6},${y - 1}l3,8l3,-8Z`, `fill="#fff" stroke="${INK}" stroke-width="1.2"`) +
-        // lunettes
-        [0, 1].map(i => circle([F.eye[i][0], -1], 13 * F.esc[i], `fill="#bfe6ff" fill-opacity="0.25" stroke="${INK}" stroke-width="2.6"`)).join('') + line(`M${f(F.eye[0][0] + 13)},-2L${f(F.eye[1][0] - 12)},-2`, 2.6);
+      return path(`M${x - 12},${y - 7}l3,14l4,-14Z M${x + 7},${y - 7}l3,14l4,-14Z`, `fill="#f2efe2" stroke="${INK}" stroke-width="1.4"`) +
+        path(`M${x - 11},${y + 18}l3,-11l4,11Z M${x + 6},${y + 18}l3,-11l4,11Z`, `fill="#e6e2d2" stroke="${INK}" stroke-width="1.4"`);
     },
-    back: ({ t }) => hair([[-50, -40], [-66, -10], [-70, 30], [-56, 50], [-44, 30], [0, 40], [44, 30], [56, 50], [70, 30], [66, -10], [50, -40]], '#14206a', { s: 6 }),
-    front: ctx => hairCap(ctx, '#1a2a8a', F => [[F.cx + 50, -4], [F.cx + 40, -20], [F.cx + 30, -32], [F.cx + 16, -26], [F.cx + 4, -40], [F.cx - 10, -28], [F.cx - 24, -40], [F.cx - 38, -24], [F.cx - 50, -6]], { cut: -4, puff: 12, top: [[-20, -96], [0, -88], [20, -100]] }) +
-      [-1, 1].map(s => shade(poly([[s * 40, -30], [s * 58, -60], [s * 54, -20]]), '#3a5ac8', { s: 2, lw: 2.6 })).join(''),
+    back: () => hair([[-52, -46], [-74, -14], [-82, 26], [-66, 60], [-50, 40], [0, 50], [50, 40], [66, 60], [82, 26], [74, -14], [52, -46]], '#14206a', { s: 6 }),
+    front: ctx => hairCap(ctx, '#1a2a8a', F => [[F.cx + 52, 6], [F.cx + 46, -14], [F.cx + 34, -30], [F.cx + 18, -24], [F.cx + 6, -36], [F.cx - 8, -24], [F.cx - 22, -36], [F.cx - 38, -22], [F.cx - 52, 4]], { cut: 6, puff: 13 }) +
+      // favoris en touffes sur les joues
+      furTufts([[-46, -4], [-60, 14], [-52, 16], [-62, 34], [-50, 32], [-52, 50], [-38, 36]], '#1f2f8a') + furTufts([[46, -4], [60, 14], [52, 16], [62, 34], [50, 32], [52, 50], [38, 36]], '#1a2878') +
+      [-1, 1].map(s => shade(poly([[s * 42, -28], [s * 62, -64], [s * 56, -18]]), '#3150b8', { s: 2, lw: 2.6 })).join(''),
   },
   pose: {
-    N: [204, 276], tilt: 8, htilt: -8, sw: 240, ww: 160, nw: 30, hs: 1.1, nl: 6,
-    armL: { a1: 160, a2: -118, L1: 74, L2: 66, hand: 'open', talons: true, clawCol: '#f4f4f8', hs: 1.6, layer: 'mid', r: [36, 28, 27, 20] },
-    armR: { a1: 50, a2: 110, L1: 74, L2: 66, hand: 'fist', hs: 1.6, layer: 'mid', r: [36, 28, 27, 20] },
+    N: [204, 278], tilt: 8, htilt: -8, sw: 250, ww: 168, nw: 32, hs: 1.18, nl: -10,
+    armL: { a1: 132, a2: -92, L1: 72, L2: 66, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'front', r: [36, 28, 27, 20], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
+    armR: { a1: 62, a2: -106, L1: 62, L2: 34, hand: 'f-fist', hs: 1.6, ha: 6, layer: 'front', r: [36, 30, 30, 26] },
   },
 });
 

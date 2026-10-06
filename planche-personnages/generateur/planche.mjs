@@ -40,7 +40,7 @@ h2{font-family:Bangers;font-size:72px;letter-spacing:4px;margin:60px 0 22px;colo
 figure{margin:0;text-align:center}
 figure img{width:300px;height:300px;display:block;margin:0 auto;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
 figcaption{font-family:Bangers;font-size:40px;letter-spacing:2px;margin-top:10px;color:#fff;-webkit-text-stroke:1.5px #120d1a}
-</style></head><body><h1>Personnages Marvel</h1><div class="sub">50 héros et vilains · style comics · chacun dans sa pose et son décor</div>${sections}</body></html>`;
+</style></head><body><h1>Personnages Marvel</h1><div class="sub">51 héros et vilains · style comics · chacun dans sa pose et son décor</div>${sections}</body></html>`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 3400, height: 1000 } });

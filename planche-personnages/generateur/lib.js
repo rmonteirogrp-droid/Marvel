@@ -40,8 +40,8 @@ export function tone(c, o = {}) {
   if (typeof c === 'object') return c;
   return {
     base: c,
-    dark: mix(darken(c, o.dk ?? 0.42), '#2b1d5c', o.cool ?? 0.18),
-    light: mix(c, '#fff6e0', o.lt ?? 0.42),
+    dark: mix(darken(c, o.dk ?? 0.5), '#24164e', o.cool ?? 0.2),
+    light: mix(c, '#fff6e0', o.lt ?? 0.32),
   };
 }
 
@@ -100,17 +100,30 @@ export function shade(d, c, o = {}) {
   const a = o.rot || 0;
   const s = o.s ?? 7, h = o.h ?? 2.6;
   const [sx, sy] = rot([-s * (o.sxk ?? 1), -s], -a);
+  const [rx, ry] = [sx * 0.3, sy * 0.3];
   const [hx, hy] = rot([h, h], -a);
-  const A = uid(), B = uid();
+  const A = uid(), B = uid(), M = uid(), G1 = uid(), G2 = uid();
   const lw = o.lw ?? 3.2;
+  // direction de la lumière dans le repère local -> centre des dégradés « aérographe »
+  const [lx, ly] = rot([-0.7071, -0.7071], -a);
+  const paint = o.paint !== false;
+  const hatch = o.hatch ?? (s >= 4);
+  const refl = mix(c.dark, c.base, 0.42);
   return (
     `<clipPath id="${A}"><path d="${d}"/></clipPath>` +
     `<clipPath id="${B}"><path d="${d}" transform="translate(${f(hx)} ${f(hy)})"/></clipPath>` +
+    (paint ? `<radialGradient id="${G1}" cx="${f(0.5 + lx * 0.32)}" cy="${f(0.5 + ly * 0.32)}" r="0.62"><stop offset="0" stop-color="#fffbe8" stop-opacity="${o.sheen ?? 0.34}"/><stop offset="1" stop-color="#fffbe8" stop-opacity="0"/></radialGradient>` +
+      `<radialGradient id="${G2}" cx="${f(0.5 + lx * 0.25)}" cy="${f(0.5 + ly * 0.25)}" r="0.75"><stop offset="0.45" stop-color="#0a0418" stop-opacity="0"/><stop offset="1" stop-color="#0a0418" stop-opacity="${o.dim ?? 0.38}"/></radialGradient>` : '') +
+    (hatch ? `<mask id="${M}"><rect x="-3000" y="-3000" width="6000" height="6000" fill="#fff"/><path d="${d}" fill="#000" transform="translate(${f(sx * 0.85)} ${f(sy * 0.85)})"/></mask>` : '') +
     `<g clip-path="url(#${A})">` +
     `<path d="${d}" fill="${o.noHi ? c.base : c.light}"/>` +
-    `<path d="${d}" fill="${c.dark}" transform="translate(${f(hx)} ${f(hy)})"/>` +
-    `<g clip-path="url(#${B})"><path d="${d}" fill="${c.base}" transform="translate(${f(sx)} ${f(sy)})"/></g>` +
+    `<g clip-path="url(#${B})">` +
+    `<path d="${d}" fill="${refl}"/>` +
+    `<path d="${d}" fill="${c.dark}" transform="translate(${f(rx)} ${f(ry)})"/>` +
+    `<path d="${d}" fill="${c.base}" transform="translate(${f(sx)} ${f(sy)})"/></g>` +
     (o.inner || '') +
+    (paint ? `<path d="${d}" fill="url(#${G2})"/><path d="${d}" fill="url(#${G1})"/>` : '') +
+    (hatch ? `<g mask="url(#${M})"><path d="${d}" fill="url(#hatch)" transform="translate(${f(rx)} ${f(ry)})"/></g>` : '') +
     `</g>` +
     (lw ? `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${lw}" stroke-linejoin="round"/>` : '')
   );
@@ -249,7 +262,7 @@ const EXPR = {
 
 export function eye(c, sc, side, o = {}) {
   const [x, y] = c;
-  const w = 12 * sc * (o.w ?? 1), h = 6.4 * sc * (o.h ?? 1);
+  const w = 10.8 * sc * (o.w ?? 1), h = 5.3 * sc * (o.h ?? 1);
   const lid = (o.lid || 0) * sc;
   const inner = side < 0 ? w : -w; // coin intérieur côté nez
   const iris = o.iris || '#5a3d26';
@@ -268,8 +281,8 @@ export function eye(c, sc, side, o = {}) {
   }
   out += path(d, `fill="#fbf6ee"`);
   out += clip(d,
-    circle([x + lx + (o.t || 0) * 2.5, y + ly + 0.8], 4.9 * sc, `fill="${iris}"`) +
-    circle([x + lx + (o.t || 0) * 2.5, y + ly + 0.8], 2.3 * sc, `fill="${INK}"`) +
+    circle([x + lx + (o.t || 0) * 2.5, y + ly + 0.8], 4.3 * sc, `fill="${iris}"`) +
+    circle([x + lx + (o.t || 0) * 2.5, y + ly + 0.8], 2 * sc, `fill="${INK}"`) +
     circle([x + lx + (o.t || 0) * 2.5 - 1.6 * sc, y + ly - 1], 1.2 * sc, `fill="#fff"`) +
     path(`M${P(pIn)}Q${P([top[0], top[1] + 4])} ${P(pOut)}L${P(pOut)}L${f(pOut[0])},${f(y - 20)}L${f(pIn[0])},${f(y - 20)}Z`, `fill="#000" opacity="0.18"`)
   );
@@ -298,10 +311,19 @@ export function mouth(type, c, o = {}) {
   const w = (o.w ?? 1) * 13;
   const lip = o.lip || '#a8514a';
   switch (type) {
-    case 'grit':
-      return path(`M${x - w},${y - 2}Q${x},${y - 6} ${x + w},${y - 2}L${x + w - 1},${y + 4}Q${x},${y + 8} ${x - w + 1},${y + 4}Z`, `fill="#fffaf0" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"`) +
-        line(`M${x - w + 1},${y + 1}Q${x},${y + 2} ${x + w - 1},${y + 1}M${x - w * 0.5},${y - 4}L${x - w * 0.5},${y + 6}M${x},${y - 4.5}L${x},${y + 6.5}M${x + w * 0.5},${y - 4}L${x + w * 0.5},${y + 6}`, 1.3) +
-        line(`M${x - w * 0.8},${y + 11}Q${x},${y + 13} ${x + w * 0.8},${y + 11}`, 1.6, INK, 'opacity="0.6"');
+    case 'grit': {
+      // dents serrées, lèvres retroussées
+      const tw = w * 1.05;
+      const d = `M${x - tw},${y - 1}Q${x},${y - 6} ${x + tw},${y - 1}Q${x + tw * 0.7},${y + 6} ${x},${y + 6.5}Q${x - tw * 0.7},${y + 6} ${x - tw},${y - 1}Z`;
+      return path(d, `fill="#2a0a0e"`) +
+        clip(d, path(`M${x - tw},${y - 8}H${x + tw}V${y + 1.2}Q${x},${y + 2.4} ${x - tw},${y + 1.2}Z`, `fill="#e6dccb"`) +
+          path(`M${x - tw},${y + 9}H${x + tw}V${y + 2.8}Q${x},${y + 4} ${x - tw},${y + 2.8}Z`, `fill="#d6cbb8"`) +
+          line(`M${x - tw * 0.55},${y - 4}V${y + 6}M${x - tw * 0.18},${y - 5}V${y + 7}M${x + tw * 0.18},${y - 5}V${y + 7}M${x + tw * 0.55},${y - 4}V${y + 6}`, 0.9, '#7a6a5a') +
+          ellipse([x + tw * 0.75, y + 1], tw * 0.3, 6, `fill="#2a0a0e" opacity="0.7" filter="url(#soft)"`)) +
+        path(d, `fill="none" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"`) +
+        brush([[x - tw - 3, y + 1], [x - tw * 0.4, y - 7], [x + tw * 0.4, y - 7], [x + tw + 3, y + 1]], 1.2, 1.2, INK, 2.6) +
+        line(`M${x - w * 0.7},${y + 12}Q${x},${y + 14} ${x + w * 0.7},${y + 12}`, 1.6, INK, 'opacity="0.55"');
+    }
     case 'roar':
     case 'shout': {
       const hh = type === 'roar' ? 17 : 12;
@@ -350,7 +372,7 @@ export function lens(c, sc, side, shape, o = {}) {
   else if (shape === 'narrow')
     pts = [[-13, -2 + ang], [0, -7], [14, -8], [16, -2], [9, 4], [-6, 4], [-13, 2]];
   else if (shape === 'venom')
-    pts = [[-10, 2 + ang], [4, -18], [22, -26], [30, -20], [24, 6], [6, 18], [-8, 12]];
+    pts = [[-12, 6 + ang], [2, -6], [16, -20], [34, -34], [30, -14], [26, 2], [12, 14], [-4, 16]];
   else if (shape === 'slit')
     pts = [[-12, -1 + ang], [2, -5], [15, -6], [12, 2], [-4, 3]];
   const s = sc * (o.s ?? 1);
@@ -359,6 +381,28 @@ export function lens(c, sc, side, shape, o = {}) {
   const d = shape === 'narrow' || shape === 'slit' ? poly(P2) : smooth(P2, true, 1 / 7);
   return path(d, `fill="${o.fill || '#ffffff'}" stroke="${INK}" stroke-width="${o.border ?? 5}" stroke-linejoin="round"`) +
     (o.shine === false ? '' : path(d, `fill="#b9d4ff" opacity="0.35" transform="translate(${f(x)} ${f(y)}) scale(0.55) translate(${f(-x + side * 4)} ${f(-y + 6)})"`));
+}
+
+
+// Modelé « peint » du visage : ombres et lumières douces (aérographe).
+export function faceModel(F, skin, t, k = 1) {
+  const D = (o) => `fill="${skin.dark}" opacity="${f(o * k)}" filter="url(#soft)"`;
+  const L = (o) => `fill="${skin.light}" opacity="${f(o * k)}" filter="url(#soft)"`;
+  let o = '';
+  o += ellipse([F.cx - 10, -42], 20, 9, L(0.55));
+  o += ellipse([F.cx + 42, -24], 8, 15, D(0.45));
+  F.eye.forEach((e, i) => {
+    o += ellipse([e[0], -5], 17 * F.esc[i], 10, D(i ? 0.75 : 0.55));
+    o += ellipse([e[0] - 3, -21], 13 * F.esc[i], 3.5, L(0.5));
+  });
+  o += path(`M${f(F.cx - 35)},10Q${f(F.cx - 30)},30 ${f(F.cx - 20)},42`, `fill="none" stroke="${skin.dark}" stroke-width="9" opacity="${f(0.38 * k)}" filter="url(#soft)"`);
+  o += path(`M${f(F.cx + 35)},10Q${f(F.cx + 30)},30 ${f(F.cx + 21)},42`, `fill="none" stroke="${skin.dark}" stroke-width="11" opacity="${f(0.55 * k)}" filter="url(#soft)"`);
+  o += ellipse([F.cx - 25, 8], 10, 5, L(0.5));
+  o += path(`M${f(F.nose[0] - 4)},-6L${f(F.nose[0] - 3)},16`, `stroke="${skin.light}" stroke-width="3.4" stroke-linecap="round" opacity="${f(0.75 * k)}" filter="url(#soft)"`);
+  o += ellipse([F.nose[0], 28], 9, 3, D(0.55));
+  o += ellipse([F.mouth[0], 47], 10, 3.6, D(0.5));
+  o += ellipse([F.mouth[0] - 3, 53], 8, 3, L(0.45));
+  return o;
 }
 
 // Construit la tête complète. h : description du personnage.
@@ -393,6 +437,7 @@ export function head(h) {
   face += path(smooth([[F.cx + 30 - t * 4, -26], [F.cx + 48, -8], [F.cx + 44, 26], [F.cx + 30, 52], [F.cx + 22, 30], [F.cx + 26, 6]]), `fill="${skin.dark}" opacity="0.55"`);
   if (!h.mask || h.mask.type === 'cowl' || h.mask.type === 'domino') {
     face += path(smooth([[F.nose[0] + 2, 4], [F.nose[0] + 7, 16], [F.nose[0] + 2, 24], [F.nose[0] - 3, 18], [F.nose[0] - 1, 8]]), `fill="${skin.dark}" opacity="0.8"`);
+    face += faceModel(F, skin, t, h.modelK ?? 1);
   }
   out += shade(hd, skin, { s: 9, h: 3, lw: 0, inner: face });
   if (!h.mask || h.mask.type === 'cowl' || h.mask.type === 'domino') out += features(ctx);
@@ -446,7 +491,7 @@ function maskLayer(ctx) {
   const col = tone(m.color);
   let out = '';
   if (m.type === 'full') {
-    let inner = m.pattern ? m.pattern(ctx) : '';
+    let inner = faceModel(F, col, t, m.modelK ?? 0.8) + (m.pattern ? m.pattern(ctx) : '');
     out += shade(hd, col, { s: 10, h: 3, lw: 0, inner });
     const ang = m.ang ?? ex.brow * 0.5;
     for (let i = 0; i < 2; i++) {
@@ -475,8 +520,9 @@ function maskLayer(ctx) {
       if (m.eyes === 'lens') out += lens(c, sc * (m.ls || 0.85), s, m.lens || 'narrow', { ang: ex.brow * 0.5, border: 3.6, shine: false });
       else {
         // trou des yeux : peau + œil
-        out += path(smooth([[c[0] - 15 * sc, c[1] - 1], [c[0] - 2 * s * sc, c[1] - 10 * sc + ex.brow * 0.3 * (s === -1 ? 1 : 1)], [c[0] + 15 * sc, c[1] - 2], [c[0] + 8 * sc, c[1] + 8 * sc], [c[0] - 8 * sc, c[1] + 8 * sc]]), `fill="${ctx.skin.base}" stroke="${INK}" stroke-width="2"`);
-        out += eye(c, sc * 0.95, s, { ...(h.eyes || {}), lid: (h.eyes?.lid ?? ex.lid), t });
+        const inX = c[0] - s * 13 * sc, outX = c[0] + s * 15 * sc;
+        out += path(smooth([[inX, c[1] - 3 + ex.brow * 0.25], [c[0], c[1] - 8 * sc + ex.brow * 0.2], [outX, c[1] - 6], [c[0] + s * 8 * sc, c[1] + 6 * sc], [c[0] - s * 8 * sc, c[1] + 6 * sc]], true, 1 / 8), `fill="${ctx.skin.dark}" stroke="${INK}" stroke-width="2.2"`);
+        out += eye(c, sc * 0.9, s, { ...(h.eyes || {}), lid: (h.eyes?.lid ?? ex.lid) + 1.5, t });
         out += brow([c[0], c[1] + 1], sc, s, ex.brow, { col: col.dark, th: 4 });
       }
     }
@@ -494,7 +540,7 @@ function maskLayer(ctx) {
 export function torsoPts(T) {
   const { sw, ww, nw } = T;
   const s = sw / 2;
-  return sym([[0, -4], [nw, -6], [nw + (s - nw) * 0.55, 6], [s, 24], [s + 3, 50], [s - 8, 92], [ww / 2 + 4, 140], [ww / 2, 175], [ww / 2 + 8, 260], [0, 262]]);
+  return sym([[0, -4], [nw, -30], [nw + (s - nw) * 0.35, -12], [nw + (s - nw) * 0.75, 6], [s, 30], [s + 2, 56], [s - 8, 96], [ww / 2 + 4, 140], [ww / 2, 175], [ww / 2 + 8, 260], [0, 262]]);
 }
 
 // Barbe : 'full' (barbe pleine), 'goatee' (bouc), 'stubble' (barbe de trois jours), 'mous' (moustache seule)

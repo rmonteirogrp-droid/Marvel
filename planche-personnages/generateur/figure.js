@@ -1,12 +1,12 @@
 // Assemble un personnage : torse, cou, bras, mains, tête, accessoires, décor.
 import {
   INK, f, P, add, sub, rot, polar, angle, dist, g, tr, path, line, circle, smooth, poly, shade, segment, hand, handFront,
-  head, headCtx, headPts, feat, torsoPts, tone, resetIds, uid, clip, mix,
+  head, headCtx, headPts, feat, torsoPts, tone, resetIds, uid, clip, mix, ellipse,
 } from './lib.js';
 
 function buildArm(a, S, side, c, J) {
   const L1 = a.L1 ?? c.L1 ?? 82, L2 = a.L2 ?? c.L2 ?? 76;
-  const r = a.r || c.armR || [25, 19, 18, 14];
+  const r = (a.r || c.armR || [25, 19, 18, 14]).map(v => v * (c.armK ?? 1.16));
   const E = add(S, polar(L1, a.a1));
   const W = add(E, polar(L2, a.a2));
   const upper = a.upper || c.sleeve || c.suit;
@@ -21,7 +21,7 @@ function buildArm(a, S, side, c, J) {
   if (front) handSvg = g(handFront(ht.slice(2), glove, { a: a.ha ?? 0, s: a.hs ?? 1.15, rot: a.ha ?? 0 }), tr(add(W, a.hoff || [0, 0])));
   else if (ht !== 'none') {
     const ha = a.a2 + (a.hrot || 0);
-    handSvg = g(hand(ht, glove, { flip, s: a.hs ?? c.handS ?? 1.45, rot: ha, clawCol: a.clawCol, clawLen: a.clawLen, fingers: a.fingers, talons: a.talons }), tr(W, ha));
+    handSvg = g(hand(ht, glove, { flip, s: (a.hs ?? c.handS ?? 1.45) * 1.08, rot: ha, clawCol: a.clawCol, clawLen: a.clawLen, fingers: a.fingers, talons: a.talons }), tr(W, ha));
   }
   const arm = { S, E, W, a, side, ang: a.a2 };
   J.arms[side < 0 ? 0 : 1] = arm;
@@ -30,18 +30,29 @@ function buildArm(a, S, side, c, J) {
   return { layer: a.layer || 'mid', svg: (pr.back || '') + body + (a.handUnder ? '' : '') + (pr.mid || '') + handSvg + (pr.front || ''), arm };
 }
 
+// Modelé doux du torse : trapèzes, clavicules, dessous des pectoraux, flancs.
+function bodyModel(T, col) {
+  const s = T.sw / 2;
+  const D = o => `fill="${col.dark}" opacity="${o}" filter="url(#soft)"`;
+  const L = o => `fill="${col.light}" opacity="${o}" filter="url(#soft)"`;
+  return ellipse([-s * 0.45, -2], s * 0.28, 9, L(0.45)) + ellipse([s * 0.5, 4], s * 0.26, 10, D(0.4)) +
+    ellipse([-s * 0.35, 92], s * 0.32, 9, D(0.45)) + ellipse([s * 0.38, 94], s * 0.32, 10, D(0.6)) +
+    ellipse([-s * 0.38, 58], s * 0.22, 14, L(0.35)) + ellipse([s * 0.82, 130], 16, 60, D(0.5)) + ellipse([-s * 0.8, 130], 12, 50, D(0.3));
+}
+
 export function figure(c) {
   const p = c.pose;
   const N = p.N || [200, 262];
   const tilt = p.tilt || 0;
-  const T = { sw: p.sw || 176, ww: p.ww || 126, nw: p.nw || 18 };
+  const sw0 = p.sw || 176;
+  const T = { sw: sw0 * (c.swK ?? 1.14), ww: (p.ww || 126) * 1.06, nw: (p.nw || 18) * 1.35 };
   const toG = v => add(N, rot(v, tilt));
-  const hs = p.hs ?? 1.14;
+  const hs = (p.hs ?? 1.14) * (c.headK ?? 0.86);
   const ht = tilt + (p.htilt || 0);
-  const H = add(toG([p.hx || 0, -(p.nl ?? 16) - 50 * hs]), p.hoff || [0, 0]);
+  const H = add(toG([p.hx || 0, -(p.nl ?? 16) * 0.4 - 50 * hs]), p.hoff || [0, 0]);
   const toH = q => rot(sub(q, H), -ht).map(v => v / hs);
   const J = { N, tilt, T, toG, H, hs, ht, arms: [], c };
-  const sh = [toG([-T.sw / 2 + 12, 30]), toG([T.sw / 2 - 12, 30])];
+  const sh = [toG([-sw0 / 2 + 12, 30]), toG([sw0 / 2 - 12, 30])];
   J.sh = sh;
   const arms = [];
   if (p.armL) arms.push(buildArm(p.armL, sh[0], -1, c, J));
@@ -50,14 +61,14 @@ export function figure(c) {
 
   // torse
   const td = smooth(torsoPts(T), true, 1 / 6.5);
-  const torso = g(shade(td, c.suit, { rot: tilt, s: 16, h: 3, inner: c.torso ? c.torso(T, J) : '' }) + (c.torsoOver ? c.torsoOver(T, J) : ''), tr(N, tilt));
+  const torso = g(shade(td, c.suit, { rot: tilt, s: 16, h: 3, inner: (c.torso ? c.torso(T, J) : '') + bodyModel(T, tone(c.suit)) }) + (c.torsoOver ? c.torsoOver(T, J) : ''), tr(N, tilt));
 
   // cou (dans le repère de la tête)
   const t = c.head.t || 0;
   const F = feat(t);
   const b1 = toH(toG([-T.nw - 3, 10])), b2 = toH(toG([T.nw + 3, 10]));
   const nx = F.cx * 0.45;
-  const nd = smooth([[nx - 21, 20], [nx + 21, 20], [(nx + 21 + b2[0]) / 2 + 2, (20 + b2[1]) / 2], b2, [(b1[0] + b2[0]) / 2, b2[1] + 6], b1, [(nx - 21 + b1[0]) / 2 - 2, (20 + b1[1]) / 2]], true, 1 / 8);
+  const nd = smooth([[nx - 25, 20], [nx + 25, 20], [(nx + 25 + b2[0]) / 2 + 2, (20 + b2[1]) / 2], b2, [(b1[0] + b2[0]) / 2, b2[1] + 6], b1, [(nx - 25 + b1[0]) / 2 - 2, (20 + b1[1]) / 2]], true, 1 / 8);
   const neckCol = tone(c.neckCol || c.head.skin || '#f1c39b', { cool: 0.25 });
   const hp = smooth(headPts(t, c.head.shape || {}));
   const neck = c.noNeck ? '' : shade(nd, neckCol, {
@@ -86,6 +97,8 @@ const DEFS = `
 <filter id="blur6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
 <filter id="blur14" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
 <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.10 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+<pattern id="hatch" width="4.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><rect width="1.1" height="4.2" fill="#0a0418" opacity="0.42"/></pattern>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter>
 <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="3.5" cy="3.5" r="1.6" fill="#000"/></pattern>
 <pattern id="dotsW" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="3.5" cy="3.5" r="1.6" fill="#fff"/></pattern>
 <radialGradient id="vig" cx="0.5" cy="0.45" r="0.6"><stop offset="0.62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.5"/></radialGradient>
