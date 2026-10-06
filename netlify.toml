@@ -21,3 +21,8 @@
   for = "/p/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+# Images, vidéos et sons de l'app : le nom du fichier est son empreinte, il ne change jamais.
+[[headers]]
+  for = "/m/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

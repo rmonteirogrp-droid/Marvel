@@ -1,0 +1,9 @@
+{
+  "name": "marvel-parcours",
+  "private": true,
+  "description": "Fonction de sauvegarde en ligne (Netlify Functions + Blobs)",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.3"
+  }
+}
