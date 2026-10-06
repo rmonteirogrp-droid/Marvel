@@ -4383,8 +4383,8 @@ function rendreDoomsday(){
     <div class="colonne">
       <section class="bloc">
         <div class="bloc-tete"><p class="surtitre">Ta préparation</p></div>
-        ${(() => { const { l, pct } = chiffresAvDoom(), nx = l.find(i => !vusDe(i.id)[i.id]) || l[l.length - 1];
-          return `<button class="ddc" data-avdoom>${nx ? `<img class="ddc-aff" id="prep-aff" src="${affiche(nx)}" alt="">` : ""}
+        ${(() => { const { pct } = chiffresAvDoom(), dd = tous("mcu").find(i => i.t === "Avengers: Doomsday");   // l'affiche du film attendu
+          return `<button class="ddc" data-avdoom>${dd ? `<img class="ddc-aff" src="${affiche(dd)}" alt="">` : ""}
             <span class="ddc-txt"><span class="tag-vert">Liste officielle</span><b>Avant Doomsday</b></span><i>›</i>
             <span class="ddc-barre" id="prep-filet"><i data-largeur="${pct}%" style="width:0"></i></span></button>`; })()}
       </section>
@@ -4451,7 +4451,7 @@ function rendreProfil(){
         <button class="ligne-r danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><span class="chev">›</span></button>
         ${lignePlex("deco", "Changer d'identifiant")}
       </section>
-      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h15</p>
+      <p class="note" style="text-align:center;margin-top:28px;opacity:.5">Version du 6 octobre 2026 à 23h18</p>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -8730,7 +8730,7 @@ function majAvDoom(){
   const q = id => document.getElementById(id);
   if(q("ad-n")){ q("ad-n").innerHTML = `${n}<i>/${l.length}</i>`; q("ad-reste").innerHTML = t; q("ad-filet").style.width = pct + "%"; }
   if(q("prep-filet")){ const f = q("prep-filet").querySelector("i"); f.style.width = f.dataset.largeur = pct + "%";
-    const nx = l.find(i => !vusDe(i.id)[i.id]); if(nx && q("prep-aff")) q("prep-aff").src = affiche(nx); }
+  }
 }
 
 /* ═══════════ OUVERTURE ═══════════ */
