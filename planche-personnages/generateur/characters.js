@@ -1,5 +1,5 @@
 // Les personnages : costume, tête, pose et décor de chacun.
-import { INK, f, P, add, sub, polar, rot, lerp, path, line, circle, ellipse, smooth, poly, g, tr, shade, tone, mix, brush, clip, sym, beard, hairCap, headPts, capsule, eye, angle } from './lib.js';
+import { INK, f, P, add, sub, polar, rot, lerp, path, line, circle, ellipse, smooth, poly, g, tr, shade, tone, mix, brush, clip, sym, beard, hairCap, headPts, capsule, eye, angle, faceModel } from './lib.js';
 import * as B from './bg.js';
 import * as PR from './props.js';
 import { headToG } from './figure.js';
@@ -136,23 +136,7 @@ C({
   torso: wolvTorso,
   dU: (L, r) => `<rect x="-40" y="-60" width="${f(L * 0.28 + 40)}" height="120" fill="#21409a"/>` + line(`M${f(L * 0.28)},-60V60`, 2.2),
   dL: (L, r) => `<rect x="${f(L * 0.72)}" y="-60" width="80" height="120" fill="#21409a"/>` + line(`M${f(L * 0.72)},-60V60`, 2.2),
-  head: {
-    t: 0.12, expr: 'furious', skin: '#efbf94', mouth: 'grit', mouthW: 1.15,
-    shape: { jaw: 1.12, chin: 1.05 }, lines: ['fold'],
-    back: () => '',
-    mask: {
-      type: 'cowl', color: '#f5c518', top: 14, side: 33,
-      pattern: ({ F, t }) =>
-        // zones noires autour des yeux qui montent en ailerons
-        [-1, 1].map(s => path(smooth([[F.cx + s * 4, -6], [F.cx + s * 20, -20], [F.cx + s * 46, -40], [F.cx + s * 52, -10], [F.cx + s * 40, 10], [F.cx + s * 18, 8]]), `fill="#1a1a22"`)).join(''),
-      over: ({ F, t }) => [-1, 1].map(s => {
-        const b = F.cx * 0.3 + s * 36;
-        return shade(smooth([[b - s * 4, -40], [b + s * 18, -86], [b + s * 26, -96], [b + s * 22, -70], [b + s * 12, -30]]), '#1a1a22', { s: 3, lw: 3 });
-      }).join(''),
-      eyes: 'lens', lens: 'narrow', ls: 0.95,
-    },
-    front: ({ F }) => [-1, 1].map(s => path(poly([[F.cx + s * 34, 14], [F.cx + s * 42, 6], [F.cx + s * 40, 38], [F.cx + s * 30, 30]]), `fill="#1d1712" stroke="${INK}" stroke-width="1.6"`)).join(''),
-  },
+  head: { t: 0, skin: '#e8b88a', ears: false, custom: wolvHead },
   pose: {
     N: [200, 266], sw: 196, ww: 138, nw: 22, hs: 1.1, htilt: 4,
     armL: { a1: 116, a2: -102, L1: 72, L2: 66, hand: 'claw', hs: 1.3, clawLen: 62, hrot: -6, layer: 'front', r: [27, 21, 20, 15] },
@@ -292,6 +276,28 @@ const bust = (T, col = INK, op = 0.5) => line(`M${f(-T.sw * 0.34)},62Q${f(-T.sw 
 
 
 // =================== BLACK WIDOW ===================
+
+// Chevelure ondulée volumineuse (dos), bords en vagues et mèches
+const wavyHair = (col, o = {}) => () => {
+  const W = o.w ?? 62, L = o.len ?? 80, up = o.up ?? 0;
+  const R = [[0, -78], [30, -74], [50, -58], [W, -30], [W + 6, 0], [W + 2, 20], [W + 10, 40], [W + 4, 58], [W + 8, L - 10], [W - 6, L + 4 - up], [W - 18, L - 8], [W - 30, L + 2 - up], [W - 40, L - 16], [W * 0.3, 52]];
+  const pts = [...R, [0, 60], ...R.slice(1).reverse().map(([x, y]) => [-x, y])].map(([x, y]) => [x, y - (y > 0 ? up * (y / L) : 0)]);
+  const ct = tone(col, { lt: 0.3 });
+  let st = '';
+  for (const sgn of [-1, 1]) st += line(smooth([[sgn * (W - 10), -20], [sgn * (W - 4), 10], [sgn * (W - 2), 40], [sgn * (W - 12), L - 14 - up]], false), 2, ct.dark) + line(smooth([[sgn * (W - 22), 10], [sgn * (W - 16), 40], [sgn * (W - 26), L - 20 - up]], false), 1.6, ct.light, 'opacity="0.7"');
+  return shade(smooth(pts, true, 1 / 7), ct, { s: 7, lw: 3, inner: st });
+};
+// Frange balayée sur le côté (raie profonde), avec mèches
+const sweptFringe = (col, o = {}) => ({ F, t, h }) => {
+  const ct = tone(col, { lt: 0.3 });
+  const hp = headPts(t, h.shape || {});
+  const top = hp.filter(([x, y]) => y < -30).map(([x, y]) => [x * 1.12, y * 1.1 - 4]);
+  const cx = F.cx;
+  const d = smooth([[cx + 50, 18], [cx + 52, -20], ...top.filter(([x]) => x > 0).sort((a, b) => b[0] - a[0]), ...top.filter(([x]) => x <= 0).sort((a, b) => b[0] - a[0]), [cx - 54, -16], [cx - 56, 22], [cx - 46, 14], [cx - 40, -10], [cx - 24, -24], [cx - 4, -30], [cx + 14, -42], [cx + 22, -50], [cx + 30, -36], [cx + 40, -14], [cx + 42, 12]], true, 1 / 7);
+  const st = line(smooth([[cx + 20, -62], [cx - 6, -46], [cx - 30, -30], [cx - 46, -6]], false), 2, ct.light, 'opacity="0.8"') + line(smooth([[cx + 26, -58], [cx + 6, -40], [cx - 22, -26]], false), 1.8, ct.dark) + line(smooth([[cx + 30, -50], [cx + 40, -30], [cx + 46, 0]], false), 1.8, ct.dark);
+  return shade(d, ct, { s: 6, lw: 3, inner: st }) + (o.extra ? o.extra(F) : '');
+};
+
 C({
   id: 'black-widow', name: 'Black Widow', group: 'avengers', ring: '#c8202e',
   sky: '#2a0a10',
@@ -311,8 +317,8 @@ C({
   head: {
     t: -0.22, expr: 'smirk', skin: '#f6d0b0', mouth: 'lipsmirk', lip: '#b8323c', mouthW: 0.85,
     shape: FEM, eyes: femEyes('#3d7a4a'), brows: { th: 3.4, arch: 3 }, eyeSocket: false,
-    back: longHair('#c7361f', { w: 56, len: 78, skew: 4 }),
-    front: ctx => hairCap(ctx, '#c7361f', F => [[F.cx + 46, -2], [F.cx + 30, -34], [F.cx + 10, -44], [F.cx - 16, -40], [F.cx - 36, -24], [F.cx - 48, 6]], { cut: 8, puff: 7, inner: ct => strands([[[-10, -60], [10, -50], [30, -36]], [[-30, -54], [-34, -34], [-44, -10]]], ct.dark) }),
+    back: wavyHair('#c8381e', { w: 60, len: 84 }),
+    front: sweptFringe('#c8381e'),
   },
   pose: {
     N: [196, 262], tilt: 4, htilt: -2, sw: 150, ww: 96, nw: 14, hs: 1.1,
@@ -370,14 +376,7 @@ C({
     return line('M-50,70L0,120L50,70M-40,140L0,180L40,140M0,120V250', 2.2, '#9a6bff', 'filter="url(#glow)"') + pecs(T, '#6a6880', 0.6) + n;
   },
   dL: (L, r) => line(`M0,0L${f(L)},0`, 1.6, '#9a6bff', 'opacity="0.8"'),
-  head: {
-    t: 0.12, expr: 'angry', skin: '#1d1b26', ears: false, shape: { jaw: 1.02, chin: 1.04 },
-    mask: {
-      type: 'full', color: '#23212e', lens: 'narrow', ls: 1.1, ang: 6, border: 4,
-      pattern: ({ F }) => line(`M${f(F.cx)},-64V-26M${f(F.cx - 6)},-26L${f(F.cx)},-10L${f(F.cx + 6)},-26M${f(F.cx - 40)},-6Q${f(F.cx - 26)},-24 ${f(F.cx - 6)},-14M${f(F.cx + 40)},-6Q${f(F.cx + 26)},-24 ${f(F.cx + 6)},-14M${f(F.cx - 34)},30Q${f(F.cx)},44 ${f(F.cx + 34)},30`, 2.2, '#b9bccb'),
-    },
-    front: ({ F, t }) => [-1, 1].map(s => shade(poly([[s * 22 - t * 6, -58], [s * 34 - t * 6, -80], [s * 42 - t * 6, -48]]), '#23212e', { s: 2, lw: 3 })).join(''),
-  },
+  head: { t: 0, skin: '#1e1c28', ears: false, custom: pantherHead },
   pose: {
     N: [200, 266], tilt: 2, sw: 186, ww: 124, nw: 20,
     armL: { a1: 140, a2: -96, L1: 74, L2: 70, hand: 'open', talons: true, hs: 1.4, layer: 'front', r: [26, 20, 19, 14], fingers: [[-26, 19], [-9, 22], [8, 21], [24, 17]] },
@@ -445,6 +444,114 @@ C({
 });
 
 // =================== ANT-MAN ===================
+// ---------- têtes sur mesure (2e passe) ----------
+// Plaques de roche ombrées une à une (la Chose)
+const rockShaded = (x0, y0, w, h, seed, cell = 22, base = '#e07a2a') => {
+  const R = B.rng(seed);
+  const pts = [];
+  for (let y = y0, r = 0; y <= y0 + h + cell; y += cell, r++) {
+    const row = [];
+    for (let x = x0 - cell; x <= x0 + w + cell; x += cell) row.push([x + (R() - 0.5) * cell * 0.55 + (r % 2) * cell * 0.5, y + (R() - 0.5) * cell * 0.45]);
+    pts.push(row);
+  }
+  const t = tone(base);
+  let o = '';
+  for (let j = 0; j < pts.length - 1; j++) for (let i = 0; i < pts[j].length - 1; i++) {
+    const q = [pts[j][i], pts[j][i + 1], pts[j + 1][i + 1], pts[j + 1][i]];
+    const c = [(q[0][0] + q[2][0]) / 2, (q[0][1] + q[2][1]) / 2];
+    const sh = q.map(p => lerp(c, p, 0.86));
+    const col = mix(t.base, i % 3 ? '#ffb070' : '#a84a14', 0.12 + R() * 0.18);
+    o += path(poly(sh), `fill="${col}"`) + path(`M${P(sh[3])}L${P(sh[0])}L${P(sh[1])}`, `fill="none" stroke="${t.light}" stroke-width="2.4" opacity="0.8"`) +
+      path(`M${P(sh[1])}L${P(sh[2])}L${P(sh[3])}`, `fill="none" stroke="${t.dark}" stroke-width="3" opacity="0.9"`);
+  }
+  return `<rect x="${x0 - 40}" y="${y0 - 40}" width="${w + 80}" height="${h + 80}" fill="#5a2006"/>` + o;
+};
+
+// Ant-Man (casque du film)
+function antHead() {
+  const RED = { base: '#b81e28', dark: '#4a0610', light: '#ff6a5a' }, SIL = { base: '#b8c0c8', dark: '#4a525c', light: '#f2f6fa' };
+  const dome = smooth([[0, -74], [30, -70], [50, -52], [58, -22], [56, 10], [48, 36], [30, 56], [0, 64], [-30, 56], [-48, 36], [-56, 10], [-58, -22], [-50, -52], [-30, -70]], true, 1 / 6.5);
+  let o = '';
+  // tubes d'antenne derrière
+  for (const s of [-1, 1]) o += line(`M${s * 56},-6Q${s * 76},-44 ${s * 60},-96`, 6, INK) + line(`M${s * 56},-6Q${s * 76},-44 ${s * 60},-96`, 3, '#c8d0d8');
+  o += shade(dome, RED, { s: 10, lw: 3.4, inner: line('M-40,-40Q-20,-62 0,-66', 6, '#ff9a8a', 'opacity="0.6" filter="url(#soft)"') });
+  // crête centrale argentée
+  o += shade(smooth([[-7, -73], [7, -73], [9, -30], [0, -20], [-9, -30]], true, 1 / 8), SIL, { s: 2, lw: 2.4, hatch: false });
+  // disques latéraux
+  for (const s of [-1, 1]) o += circle([s * 56, -6], 15, `fill="${SIL.base}" stroke="${INK}" stroke-width="2.8"`) + circle([s * 56, -6], 8, `fill="${SIL.dark}" stroke="${INK}" stroke-width="1.6"`) + circle([s * 53, -9], 3, `fill="#fff" opacity="0.8"`);
+  // grandes lentilles rouges
+  for (const s of [-1, 1]) {
+    const L = smooth([[s * 6, -6], [s * 14, -20], [s * 34, -24], [s * 44, -12], [s * 40, 6], [s * 22, 10], [s * 8, 4]], true, 1 / 9);
+    o += path(L, `fill="#2a0408" stroke="${INK}" stroke-width="3.4"`) +
+      path(smooth([[s * 9, -6], [s * 16, -18], [s * 33, -21], [s * 41, -12], [s * 38, 4], [s * 22, 7], [s * 10, 3]], true, 1 / 9), `fill="#e8402a"`) +
+      path(smooth([[s * 14, -14], [s * 22, -19], [s * 32, -18], [s * 22, -10]], true, 1 / 8), `fill="#ffd0b0" opacity="0.8"`);
+  }
+  // masque respiratoire argenté à lamelles
+  const mask = smooth([[-36, 14], [-14, 10], [0, 14], [14, 10], [36, 14], [32, 40], [16, 58], [0, 62], [-16, 58], [-32, 40]], true, 1 / 7);
+  let slats = '';
+  for (let x = -24; x <= 24; x += 8) slats += line(`M${x},${24 + Math.abs(x) * 0.1}V${52 - Math.abs(x) * 0.4}`, 2.4, '#3a424c');
+  o += shade(mask, SIL, { s: 5, lw: 3, hatch: false, inner: slats + line('M-30,20H30', 2, '#3a424c') });
+  return o;
+};
+
+// Groot : visage d'écorce, grands yeux doux, couronne de brindilles
+function grootHead() {
+  const W = { base: '#8a5e36', dark: '#3a2410', light: '#c8955e' };
+  const shape = smooth([[0, -80], [22, -84], [40, -72], [50, -46], [50, -14], [46, 20], [36, 46], [20, 64], [0, 70], [-20, 64], [-36, 46], [-46, 20], [-50, -14], [-50, -46], [-40, -72], [-22, -84]], true, 1 / 6.5);
+  let o = '';
+  // brindilles et feuilles au sommet
+  const tw = (a, b) => line(`M${P(a)}L${P(b)}`, 7, INK) + line(`M${P(a)}L${P(b)}`, 4, '#6a4426');
+  const lf = (c, ang, k = 1) => g(path('M0,0Q9,-9 20,0Q9,9 0,0Z', `fill="#5ac83a" stroke="${INK}" stroke-width="1.6"`) + line('M2,0H17', 1, '#2a7a1a'), `transform="translate(${f(c[0])} ${f(c[1])}) rotate(${ang}) scale(${k})"`);
+  o += tw([-24, -74], [-46, -112]) + tw([-36, -96], [-62, -104]) + tw([4, -82], [8, -122]) + tw([24, -76], [48, -110]) + tw([38, -96], [64, -98]);
+  o += lf([-46, -112], -120) + lf([-62, -104], -170) + lf([8, -122], -80, 1.1) + lf([48, -110], -60) + lf([64, -98], -10) + lf([-20, -110], -100, 0.9);
+  // grain de l'écorce
+  const R = B.rng(17);
+  let grain = '';
+  for (let i = 0; i < 26; i++) { const x = -48 + R() * 96, y = -80 + R() * 40; grain += `M${f(x)},${f(y)}q${f(R() * 8 - 4)},${f(30 + R() * 20)} ${f(R() * 6 - 3)},${f(60 + R() * 60)}`; }
+  let inner = line(grain, 1.6, W.dark, 'opacity="0.55"');
+  inner += ellipse([-30, -50], 5, 8, `fill="${W.dark}" opacity="0.6"`) + ellipse([34, 30], 4, 7, `fill="${W.dark}" opacity="0.5"`);
+  // arcade lourde + ombre sous l'arcade
+  inner += ellipse([0, -4], 46, 12, `fill="${W.dark}" opacity="0.6" filter="url(#soft)"`);
+  o += shade(shape, W, { s: 9, lw: 3.4, inner });
+  o += line('M-44,-14Q-24,-28 -4,-18M44,-14Q24,-28 4,-18', 5, W.dark) + line('M-44,-16Q-24,-30 -4,-20M44,-16Q24,-30 4,-20', 2, W.light, 'opacity="0.7"');
+  // grands yeux doux
+  for (const s of [-1, 1]) {
+    const c = [s * 20, -2];
+    o += ellipse(c, 14, 12, `fill="#f4ead6" stroke="${INK}" stroke-width="2.4"`) + circle([c[0] + s * 1, c[1] + 1], 8.5, `fill="#6a3a14"`) + circle([c[0] + s * 1, c[1] + 1], 4, `fill="${INK}"`) + circle([c[0] - 2, c[1] - 2], 2, `fill="#fff"`);
+    o += brush([[c[0] - s * 12, c[1] - 6], [c[0], c[1] - 11], [c[0] + s * 12, c[1] - 6]], 3, 1.5);
+  }
+  // nez écrasé, sourire doux
+  o += path(smooth([[-10, 14], [0, 8], [10, 14], [8, 22], [0, 24], [-8, 22]], true, 1 / 7), `fill="${W.base}" stroke="${INK}" stroke-width="2"`) + ellipse([-4, 20], 2.4, 1.6, `fill="${INK}"`) + ellipse([4, 20], 2.4, 1.6, `fill="${INK}"`);
+  o += line('M-18,36Q0,46 18,36', 2.6) + line('M-20,34Q-22,38 -18,40M20,34Q22,38 18,40', 1.6);
+  // fibres d'écorce sur le menton
+  o += line('M-14,50l-2,12M-4,52l0,14M6,52l1,13M15,49l3,11', 1.6, W.dark);
+  return o;
+};
+
+// La Chose : tête de roche, arcade massive, yeux bleus enfoncés
+function thingHead() {
+  const shape = smooth([[0, -58], [30, -60], [52, -48], [58, -20], [60, 12], [56, 42], [40, 62], [0, 70], [-40, 62], [-56, 42], [-60, 12], [-58, -20], [-52, -48], [-30, -60]], true, 1 / 7);
+  let o = clip(shape, rockShaded(-70, -70, 140, 150, 11, 19)) + path(shape, `fill="none" stroke="${INK}" stroke-width="3.6"`);
+  // ombre sous l'arcade
+  o += ellipse([0, -2], 50, 14, `fill="#3a1404" opacity="0.75" filter="url(#soft)"`);
+  // yeux bleus enfoncés, regard dur
+  for (const s of [-1, 1]) {
+    const c = [s * 20, -2];
+    o += path(`M${c[0] - 11},${c[1]}Q${c[0]},${c[1] - 5} ${c[0] + 11},${c[1]}Q${c[0]},${c[1] + 4} ${c[0] - 11},${c[1]}Z`, `fill="#f2ead8" stroke="${INK}" stroke-width="1.8"`) + circle([c[0], c[1] - 0.5], 3.4, `fill="#2a6ad8"`) + circle([c[0], c[1] - 0.5], 1.6, `fill="${INK}"`);
+  }
+  // arcade sourcilière massive
+  o += shade(smooth([[-56, -18], [-34, -30], [-10, -24], [0, -18], [10, -24], [34, -30], [56, -18], [48, -8], [26, -14], [8, -10], [0, -6], [-8, -10], [-26, -14], [-48, -8]], true, 1 / 8), '#d8702a', { s: 4, lw: 3, hatch: false, inner: line('M-40,-24L-34,-14M-14,-24L-18,-12M14,-24L18,-12M40,-24L34,-14', 2, '#7a2a08') });
+  // nez de roche
+  o += shade(poly([[-8, -2], [8, -2], [12, 16], [0, 22], [-12, 16]]), '#d8702a', { s: 3, lw: 2.4, hatch: false });
+  // mâchoire serrée, grimace
+  const M = 'M-30,36Q0,30 30,36L28,46Q0,52 -28,46Z';
+  let teeth = '';
+  for (let i = -4; i <= 4; i++) teeth += line(`M${i * 6.5},33V49`, 1.1, '#5a4a30');
+  o += path(M, `fill="#ece4cc"`) + clip(M, teeth + line('M-30,41Q0,44 30,41', 1.4, '#5a4a30')) + path(M, `fill="none" stroke="${INK}" stroke-width="2.6"`);
+  o += shade(smooth([[-36, 30], [-14, 26], [0, 28], [14, 26], [36, 30], [30, 36], [0, 33], [-30, 36]], true, 1 / 8), '#d8702a', { s: 2, lw: 2.2, hatch: false });
+  return o;
+};
+
 C({
   id: 'ant-man', name: 'Ant-Man', group: 'avengers', ring: '#c41e2a',
   sky: '#b9e07a',
@@ -454,17 +561,7 @@ C({
   torso: T => [-1, 1].map(s => path(`M${s * 20},10L${s * 70},10L${s * 50},140L${s * 26},140Z`, `fill="#2a2a32" stroke="${INK}" stroke-width="2"`)).join('') +
     `<rect x="-70" y="180" width="140" height="18" fill="#9aa3ad" stroke="${INK}" stroke-width="2.2"/>` + circle([0, 189], 12, `fill="#c41e2a" stroke="${INK}" stroke-width="2"`) +
     line('M-26,40V140M26,40V140', 2, '#7a121a'),
-  head: {
-    t: -0.12, expr: 'determined', skin: '#c41e2a', ears: false, shape: { wid: 1.06, cran: 1.02, jaw: 1.04 },
-    mask: {
-      type: 'full', color: '#b51e28', lens: 'round', ls: 1.35, lensFill: '#ff8a6a', border: 4.5,
-      pattern: ({ F }) => shade(smooth([[F.cx - 34, 16], [F.cx + 34, 16], [F.cx + 30, 44], [F.cx + 14, 58], [F.cx - 14, 58], [F.cx - 30, 44]]), '#b8c0c8', {
-        s: 4, inner: line(`M${f(F.cx - 20)},30H${f(F.cx + 20)}M${f(F.cx - 18)},38H${f(F.cx + 18)}M${f(F.cx - 14)},46H${f(F.cx + 14)}`, 2, '#5a626c'),
-      }) + shade(smooth([[F.cx - 6, -66], [F.cx + 6, -66], [F.cx + 8, -20], [F.cx, -12], [F.cx - 8, -20]]), '#b8c0c8', { s: 2, lw: 2.4 }),
-    },
-    front: ({ F, t }) => [-1, 1].map(s => shade(smooth([[s * 44 - t * 4, -18], [s * 54 - t * 4, -12], [s * 54 - t * 4, 10], [s * 44 - t * 4, 14]]), '#b8c0c8', { s: 2, lw: 2.6 }) +
-      line(`M${f(s * 52 - t * 4)},-14Q${f(s * 64)},-60 ${f(s * 46)},-96`, 3, INK)).join(''),
-  },
+  head: { t: 0, skin: '#b81e28', ears: false, custom: antHead },
   pose: {
     N: [196, 270], tilt: -5, sw: 182, ww: 128, nw: 20,
     armL: { a1: 140, a2: 100, L1: 72, L2: 66, hand: 'fist', layer: 'back', r: [25, 19, 18, 14] },
@@ -685,7 +782,7 @@ const tenRings = arm => {
   let out = '';
   for (let i = 0; i < 5; i++) {
     const p = lerp(arm.E, arm.W, 0.3 + i * 0.13);
-    out += g(ellipse([0, 0], 5, 22, `fill="none" stroke="#5fd8ff" stroke-width="7" opacity="0.5" filter="url(#blur6)"`) + ellipse([0, 0], 5, 21, `fill="none" stroke="${INK}" stroke-width="6"`) + ellipse([0, 0], 5, 21, `fill="none" stroke="#9ff0ff" stroke-width="3.4"`), tr(p, arm.ang));
+    out += g(ellipse([0, 0], 6, 28, `fill="none" stroke="#3ac8ff" stroke-width="10" opacity="0.6" filter="url(#blur6)"`) + ellipse([0, 0], 6, 27, `fill="none" stroke="${INK}" stroke-width="7"`) + ellipse([0, 0], 6, 27, `fill="none" stroke="#bff6ff" stroke-width="4"`), tr(p, arm.ang));
   }
   return out;
 };
@@ -703,12 +800,12 @@ C({
   head: {
     t: -0.3, expr: 'determined', skin: '#f0c8a0', mouth: 'flat', shape: { jaw: 1.0 },
     eyes: { iris: '#2a1a12', h: 0.85 },
-    front: ctx => hairCap(ctx, '#121014', F => [[F.cx + 46, -8], [F.cx + 34, -26], [F.cx + 18, -38], [F.cx + 2, -30], [F.cx - 14, -44], [F.cx - 30, -34], [F.cx - 46, -14]], { cut: -8, puff: 7 }),
+    front: ctx => hairCap(ctx, '#121014', F => [[F.cx + 44, -18], [F.cx + 40, -30], [F.cx + 26, -44], [F.cx + 8, -48], [F.cx - 6, -40], [F.cx - 20, -48], [F.cx - 36, -36], [F.cx - 44, -20]], { cut: -16, puff: 12, cy: -20, inner: ct => strands([[[-30, -70], [0, -82], [30, -72]], [[-20, -60], [6, -74], [34, -60]]], ct.light) }),
   },
   pose: {
     N: [210, 268], tilt: -8, htilt: 4, sw: 176, ww: 120, nw: 18,
-    armL: { a1: 168, a2: 196, L1: 66, L2: 56, hand: 'f-palm', hs: 1.15, ha: -62, layer: 'front', r: [24, 18, 17, 13], prop: arm => ({ mid: tenRings(arm) }) },
-    armR: { a1: 98, a2: -60, L1: 72, L2: 60, hand: 'fist', layer: 'mid', r: [24, 18, 17, 13], prop: arm => ({ mid: tenRings(arm) }) },
+    armL: { a1: 142, a2: -122, L1: 64, L2: 56, hand: 'f-palm', hs: 1.2, ha: -16, layer: 'front', r: [24, 18, 17, 13], prop: arm => ({ mid: tenRings(arm) }) },
+    armR: { a1: 60, a2: -150, L1: 66, L2: 56, hand: 'fist', layer: 'front', r: [24, 18, 17, 13], prop: arm => ({ mid: tenRings(arm) }) },
   },
 });
 
@@ -875,7 +972,7 @@ const venomMaw = (x, y, W = 62, H = 46, tongue = '') => {
 const SYMB = { base: '#0f0f15', dark: '#020204', light: '#2c3350' };
 const gloss = (pts, w = 3, op = 0.55) => line(smooth(pts, false), w, '#b8d0ff', `opacity="${op}"`);
 // Tête du Venom « film » : goutte allongée, yeux blancs fuyants, gueule haute à crocs fins, langue enroulée
-const venomHead = () => {
+function venomHead() {
   const skull = smooth([[0, -74], [26, -70], [44, -52], [52, -24], [54, 6], [50, 34], [42, 66], [26, 94], [0, 106], [-26, 94], [-42, 66], [-50, 34], [-54, 6], [-52, -24], [-44, -52], [-26, -70]], true, 1 / 6.5);
   const id = 'vh';
   let o = `<defs><linearGradient id="${id}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.6" stop-color="#e4ecf4"/><stop offset="1" stop-color="#9fb2c6"/></linearGradient>` +
@@ -1015,7 +1112,7 @@ C({
 });
 
 // Tête du Bouffon Vert (comics) : visage long et ridé, oreilles pointues, nez crochu, rictus, bonnet violet
-const goblinHead = () => {
+function goblinHead() {
   const SK = { base: '#6fae3c', dark: '#2f5a1a', light: '#a8d86a' };
   const face = smooth([[0, -40], [30, -40], [46, -24], [50, 0], [44, 24], [32, 46], [16, 64], [0, 76], [-16, 64], [-32, 46], [-44, 24], [-50, 0], [-46, -24], [-30, -40]], true, 1 / 6.5);
   let o = '';
@@ -1107,16 +1204,16 @@ C({
   head: {
     t: 0.2, expr: 'angry', skin: '#efc6a2', mouth: 'grit', shape: { jaw: 1.06 }, lines: ['fold'],
     mask: {
-      type: 'cowl', color: '#b81e24', top: 12, side: 30, eyes: 'lens', lens: 'narrow', ls: 0.95,
-      over: ({ F, t }) => [-1, 1].map(s => shade(smooth([[F.cx * 0.4 + s * 20, -56], [F.cx * 0.4 + s * 30, -84], [F.cx * 0.4 + s * 36, -96], [F.cx * 0.4 + s * 38, -76], [F.cx * 0.4 + s * 34, -52]]), '#b81e24', { s: 2, lw: 2.8 })).join(''),
+      type: 'cowl', color: '#a8141e', top: 10, side: 31, eyes: 'lens', lens: 'narrow', ls: 1.0, lensFill: '#4a0408',
+      over: ({ F, t }) => [-1, 1].map(s => shade(smooth([[F.cx * 0.4 + s * 18, -58], [F.cx * 0.4 + s * 24, -76], [F.cx * 0.4 + s * 34, -90], [F.cx * 0.4 + s * 32, -72], [F.cx * 0.4 + s * 32, -56]], true, 1 / 8), '#a8141e', { s: 2, lw: 2.8, hatch: false })).join('') + line(`M${f(F.cx - 30)},-40Q${f(F.cx)},-30 ${f(F.cx + 30)},-40`, 1.6, '#5a060c'),
     },
   },
   pose: {
     N: [196, 268], tilt: 6, htilt: -4, sw: 180, ww: 124, nw: 19,
     armL: { a1: 120, a2: 40, L1: 72, L2: 60, hand: 'fist', layer: 'front', r: [25, 19, 18, 14] },
     armR: {
-      a1: -30, a2: -60, L1: 72, L2: 60, hand: 'grip', layer: 'back', r: [25, 19, 18, 14],
-      prop: arm => ({ mid: PR.staff(add(arm.W, polar(-50, -30)), add(arm.W, polar(80, -30)), '#b81e24', 10) }),
+      a1: -40, a2: -100, L1: 70, L2: 60, hand: 'grip', layer: 'back', r: [25, 19, 18, 14],
+      prop: arm => ({ mid: PR.staff(add(arm.W, polar(-40, -10)), add(arm.W, polar(110, -10)), '#7a0a10', 10) }),
     },
   },
 });
@@ -1227,13 +1324,7 @@ C({
   suit: '#7a5230', skin: '#8a5e36', neckCol: '#7a5230', sleeve: '#7a5230', glove: '#7a5230',
   torso: T => bark(18, 5) + line('M-40,20Q-30,90 -40,200M40,20Q30,90 40,200M0,40Q8,120 0,220', 3, '#4a2e18'),
   dU: (L, r) => line(`M0,${f(-r * 0.3)}H${f(L)}M0,${f(r * 0.4)}H${f(L)}`, 2, '#4a2e18'), dL: (L, r) => line(`M0,${f(-r * 0.3)}H${f(L)}M0,${f(r * 0.4)}H${f(L)}`, 2, '#4a2e18'),
-  head: {
-    t: -0.15, expr: 'calm', skin: '#8a5e36', mouth: 'smile', mouthW: 0.9, ears: false, shape: { jaw: 0.9, chin: 0.92, cran: 1.06, wid: 0.98 },
-    eyes: { iris: '#5a3a1a', s: 1.12, h: 1.2 }, brows: { th: 5, col: '#4a2e18', ang: -3 }, nose: false, eyeSocket: true,
-    mid: ({ F }) => bark(10, 9) + line(`M${f(F.cx - 30)},-40Q${f(F.cx - 20)},-50 ${f(F.cx - 6)},-44M${f(F.cx + 30)},-42Q${f(F.cx + 20)},-52 ${f(F.cx + 6)},-46`, 2, '#3a2414'),
-    front: () => twig([-20, -60], [-40, -100]) + twig([-30, -84], [-56, -96]) + twig([16, -62], [30, -104]) + twig([28, -90], [50, -100]) + leaf([-40, -100], -110) + leaf([-56, -96], -160) + leaf([30, -104], -70) + leaf([50, -100], -20) +
-      circle([42, -70], 7, `fill="#ff9ad0" stroke="${INK}" stroke-width="1.6"`) + circle([42, -70], 2.6, `fill="#ffe14a"`),
-  },
+  head: { t: 0, skin: '#8a5e36', ears: false, custom: grootHead },
   pose: {
     N: [200, 268], tilt: 3, htilt: -4, sw: 176, ww: 116, nw: 22,
     armL: { a1: 120, a2: 80, L1: 76, L2: 66, hand: 'open', hs: 1.4, layer: 'mid', r: [24, 18, 17, 13], fingers: [[-26, 26], [-9, 30], [8, 29], [24, 24]] },
@@ -1242,7 +1333,7 @@ C({
 });
 
 // Tête de Rocket (film) : museau de raton laveur, truffe, bandeau noir, oreilles rondes, joues touffues
-const rocketHead = () => {
+function rocketHead() {
   const FUR = { base: '#8c7158', dark: '#4a3626', light: '#c2a688' };
   let o = '';
   // oreilles arrondies
@@ -1502,19 +1593,23 @@ C({
   id: 'jean-grey', name: 'Jean Grey', group: 'xmen', ring: '#f5a21a',
   sky: '#3a0a06',
   bg: J => {
-    // oiseau de feu stylisé
-    const bird = path('M200,170Q120,60 10,40Q90,110 70,140Q130,130 160,190Q140,240 110,330Q170,280 200,240Q230,280 290,330Q260,240 240,190Q270,130 330,140Q310,110 390,40Q280,60 200,170Z', `fill="#ffb02a" opacity="0.55" stroke="#ffe08a" stroke-width="3"`);
-    return B.radial('jg', '#ff7a1a', '#2a0402', 0.5, 0.45, 0.72) + g(bird, 'filter="url(#glow)"') + B.flames(420, 120, ['#c81a0a', '#ff6a1a', '#ffc04a'], 9, false);
+    // grand oiseau de feu : ailes faites de flammes
+    let wings = '';
+    for (const sgn of [-1, 1]) for (let i = 0; i < 7; i++) {
+      const ang = sgn < 0 ? 180 + 20 + i * 16 : -20 - i * 16;
+      wings += B.flame(add([200, 200], polar(40, ang)), 150 - i * 8, 46, ang + 90 + sgn * 6, ['#e8300a', '#ff8a1a', '#ffe14d'], false);
+    }
+    return B.radial('jg', '#ff8a1a', '#2a0402', 0.5, 0.45, 0.72) + g(wings, 'opacity="0.85"') + circle([200, 200], 70, `fill="#ffe08a" opacity="0.5" filter="url(#blur14)"`) + B.flames(420, 110, ['#c81a0a', '#ff6a1a', '#ffc04a'], 9, false);
   },
   front: J => B.aura(J.arms[1].W, 34, '#ffb02a', 0.8) + B.flame(add(J.arms[1].W, [0, -6]), 50, 34, 10),
   suit: '#2f8a3a', neckCol: '#2f8a3a', sleeve: '#2f8a3a', glove: '#f5c518',
-  torso: T => path('M-50,20Q-30,50 0,70Q30,50 50,20Q40,90 0,110Q-40,90 -50,20Z', `fill="#f5c518" stroke="${INK}" stroke-width="2.4"`) + bust(T, '#14501c', 0.6) +
+  torso: T => g(path('M0,0C-10,-18 -40,-30 -70,-26C-50,-14 -40,-4 -36,8C-24,4 -12,8 -6,18C-14,30 -16,46 -10,62L0,52L10,62C16,46 14,30 6,18C12,8 24,4 36,8C40,-4 50,-14 70,-26C40,-30 10,-18 0,0Z', `fill="#f5c518" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"`), 'transform="translate(0 50) scale(0.8)"') + bust(T, '#14501c', 0.6) +
     `<rect x="-60" y="176" width="120" height="14" fill="#f5c518" stroke="${INK}" stroke-width="2"/>`,
   head: {
     t: 0.15, expr: 'determined', skin: '#f6d0b0', mouth: 'lips', lip: '#b8323c', mouthW: 0.82,
     shape: FEM, eyes: femEyes('#2f8a3a', { type: 'glow', glow: '#ffd27a' }), brows: { th: 3.4, arch: 2, col: '#8a2414' }, eyeSocket: false,
-    back: longHair('#d8381a', { w: 72, len: 120, skew: -10, top: -56 }),
-    front: ctx => hairCap(ctx, '#d8381a', F => [[F.cx + 52, 24], [F.cx + 40, -20], [F.cx + 20, -42], [F.cx - 4, -36], [F.cx - 26, -46], [F.cx - 48, -18], [F.cx - 52, 20]], { cut: 22, puff: 12 }),
+    back: wavyHair('#d8381a', { w: 70, len: 110, up: 10 }),
+    front: sweptFringe('#d8381a'),
   },
   pose: {
     N: [196, 268], tilt: 2, sw: 152, ww: 98, nw: 14, hs: 1.1,
@@ -1602,9 +1697,9 @@ C({
     return B.radial('mg', '#7a1a5a', '#14040e', 0.5, 0.42, 0.72) + fl + B.debris([200, 200], 14, '#8a8a96', 31, 120, 190);
   },
   front: J => J.arms.map(a => B.aura(a.W, 30, '#ff5ab8', 0.6) + [0, 1, 2].map(k => circle(a.W, 20 + k * 12, `fill="none" stroke="#ff9ad8" stroke-width="2" opacity="0.7" stroke-dasharray="8 6"`)).join('')).join(''),
-  cape: J => PR.cape(J, '#6a2a8a', { spread: 1.6 }),
-  suit: '#b81e3a', neckCol: '#b81e3a', sleeve: '#b81e3a', glove: '#6a2a8a',
-  torso: T => pecs(T, '#6a0a1a', 0.7) + path('M-60,0L0,80L60,0', `fill="none" stroke="#6a2a8a" stroke-width="10"`) + `<rect x="-70" y="190" width="140" height="18" fill="#6a2a8a" stroke="${INK}" stroke-width="2"/>`,
+  cape: J => PR.cape(J, '#6a2a8a', { spread: 1.2 }),
+  suit: '#b81e3a', neckCol: '#b81e3a', sleeve: '#b81e3a', glove: '#6a2a8a', swK: 1.0, armK: 1.0, bu: 1.5, bl: 1,
+  torso: T => pecs(T, '#6a0a1a', 0.35) + path('M-46,0L0,64L46,0', `fill="none" stroke="#6a2a8a" stroke-width="7"`) + `<rect x="-70" y="190" width="140" height="18" fill="#6a2a8a" stroke="${INK}" stroke-width="2"/>`,
   head: {
     t: 0.1, expr: 'angry', skin: '#efc6a2', mouth: 'frown', shape: { jaw: 1.08, chin: 1.06 }, lines: ['fold', 'forehead'],
     eyes: { iris: '#4a6a9a', lid: 3 },
@@ -1615,9 +1710,9 @@ C({
     },
   },
   pose: {
-    N: [200, 268], tilt: 0, sw: 182, ww: 126, nw: 18,
-    armL: { a1: -160, a2: -118, L1: 72, L2: 62, hand: 'open', hs: 1.3, layer: 'back', r: [25, 19, 18, 14] },
-    armR: { a1: -20, a2: -62, L1: 72, L2: 62, hand: 'open', hs: 1.3, layer: 'back', r: [25, 19, 18, 14] },
+    N: [200, 270], tilt: 0, sw: 148, ww: 98, nw: 14, hs: 1.24,
+    armL: { a1: -160, a2: -118, L1: 72, L2: 62, hand: 'open', hs: 1.25, layer: 'back', r: [20, 15, 14, 11] },
+    armR: { a1: -20, a2: -62, L1: 72, L2: 62, hand: 'open', hs: 1.25, layer: 'back', r: [20, 15, 14, 11] },
   },
 });
 
@@ -1676,14 +1771,9 @@ C({
     g(circle([0, 0], 60, `fill="#fff" stroke="${INK}" stroke-width="5"`) + `<text x="0" y="30" text-anchor="middle" font-family="Impact, sans-serif" font-size="90" fill="#2a6ad8" stroke="${INK}" stroke-width="3">4</text>`, 'transform="translate(320 80) rotate(10) scale(0.9)" opacity="0.5"') +
     B.debris([200, 220], 14, '#c86a2a', 8, 120, 200) + B.rocks(['#5a5a6e', '#3a3a4e'], 81, 8, 340),
   suit: '#e0782a', skin: '#e0782a', neckCol: '#e0782a', sleeve: '#e0782a', glove: '#e0782a', bu: 6, bl: 4,
-  dU: (L, r) => rockPlates(-10, -r, L + 20, r * 2, 5, '#8a3a0a', 16), dL: (L, r) => rockPlates(-10, -r, L + 20, r * 2, 7, '#8a3a0a', 16),
-  torso: T => rockPlates(-T.sw / 2 - 20, -10, T.sw + 40, 280, 3, '#8a3a0a', 26) + `<rect x="-120" y="222" width="240" height="60" fill="#2a4ab8" stroke="${INK}" stroke-width="2.6"/>`,
-  head: {
-    t: -0.1, expr: 'furious', skin: '#e0782a', mouth: 'grit', mouthW: 1.4, ears: false, shape: { jaw: 1.24, wid: 1.12, chin: 1.0, cran: 0.86, cheek: 1.08 },
-    eyes: { iris: '#3a7ad8', s: 0.92, lid: 3.5 }, brows: { th: 10, col: '#b85a1a', w: 1.25 }, nose: false,
-    mid: ({ F, hd }) => clip(hd, rockPlates(-60, -80, 120, 160, 11, '#8a3a0a', 20)) + path(smooth([[F.nose[0] - 12, 10], [F.nose[0] + 12, 10], [F.nose[0] + 14, 24], [F.nose[0], 28], [F.nose[0] - 14, 24]]), `fill="#c8661e" stroke="${INK}" stroke-width="2.2"`) +
-      path(smooth([[F.cx - 50, -24], [F.cx, -36], [F.cx + 50, -24], [F.cx + 44, -12], [F.cx, -20], [F.cx - 44, -12]]), `fill="#c8661e" stroke="${INK}" stroke-width="2.4"`),
-  },
+  dU: (L, r) => rockShaded(-10, -r - 10, L + 20, r * 2 + 20, 5, 17), dL: (L, r) => rockShaded(-10, -r - 10, L + 20, r * 2 + 20, 7, 16),
+  torso: T => rockShaded(-T.sw / 2 - 30, -40, T.sw + 60, 300, 3, 26) + `<rect x="-120" y="222" width="240" height="60" fill="#2a4ab8" stroke="${INK}" stroke-width="2.6"/>`,
+  head: { t: 0, skin: '#e07a2a', ears: false, custom: thingHead },
   pose: {
     N: [202, 280], tilt: -4, sw: 260, ww: 190, nw: 34, hs: 1.12, nl: 0,
     armL: { a1: 120, a2: -10, L1: 74, L2: 66, hand: 'fist', hs: 1.75, layer: 'mid', r: [40, 32, 32, 26] },
@@ -1746,20 +1836,7 @@ C({
   torso: T => shade(smooth([[-T.sw / 2 - 10, 0], [0, 10], [T.sw / 2 + 10, 0], [T.sw / 2 + 10, 280], [-T.sw / 2 - 10, 280]]), '#1f6a2e', { s: 8, lw: 2.4 }) +
     shade(poly([[-40, 30], [40, 30], [44, 290], [-44, 290]]), '#7a828e', { s: 5, lw: 2.4 }) + line('M-40,80H40M-40,130H40M-40,180H40', 2, '#4a525e') +
     `<rect x="-50" y="200" width="100" height="16" fill="#c9a54a" stroke="${INK}" stroke-width="2"/>` + circle([0, 208], 11, `fill="#c9a54a" stroke="${INK}" stroke-width="2"`),
-  head: {
-    t: 0, expr: 'angry', skin: '#9aa3ad', ears: false, shape: { jaw: 1.06, chin: 1.0, wid: 0.98 },
-    back: () => shade(smooth([[-62, 60], [-70, -10], [-54, -72], [0, -96], [54, -72], [70, -10], [62, 60], [0, 70]]), '#1f6a2e', { s: 8 }),
-    mask: {
-      type: 'full', color: '#9aa3ad', lens: 'slit', ls: 1.05, lensFill: '#1a1a22', border: 3, shine: false, ang: 4,
-      pattern: ({ F }) => line(`M${f(F.cx)},-40V12M${f(F.cx - 40)},-14H${f(F.cx + 40)}M${f(F.cx - 30)},12Q${f(F.cx - 20)},28 ${f(F.cx - 26)},48M${f(F.cx + 30)},12Q${f(F.cx + 20)},28 ${f(F.cx + 26)},48`, 2.4, '#5a626e') +
-        path(`M${f(F.cx - 16)},34H${f(F.cx + 16)}V40H${f(F.cx - 16)}Z`, `fill="#1a1a22" stroke="${INK}" stroke-width="1.6"`) +
-        [[-32, -30], [32, -30], [-36, 24], [36, 24], [-20, 50], [20, 50]].map(([x, y]) => circle([F.cx + x, y], 2.6, `fill="#5a626e"`)).join(''),
-    },
-    front: () => {
-      const d = smooth([[-60, 60], [-64, -10], [-50, -66], [0, -88], [50, -66], [64, -10], [60, 60], [48, 50], [52, -10], [42, -50], [0, -66], [-42, -50], [-52, -10], [-48, 50]]);
-      return shade(d, '#1f6a2e', { s: 5, lw: 3 });
-    },
-  },
+  head: { t: 0, skin: '#9aa3ad', ears: false, custom: doomHead },
   pose: {
     N: [200, 270], tilt: 0, sw: 186, ww: 130, nw: 20,
     armL: { a1: 120, a2: 90, L1: 72, L2: 62, hand: 'fist', layer: 'mid', r: [26, 20, 19, 14] },
@@ -1768,6 +1845,102 @@ C({
 });
 
 // =================== ULTRON ===================
+
+// Ultron (version film) : visage métallique anguleux, yeux et bouche rougeoyants
+function ultronHead() {
+  const M = { base: '#a8b2bc', dark: '#3a424c', light: '#eef3f8' };
+  const shape = poly([[0, -76], [24, -72], [42, -58], [50, -34], [50, -6], [44, 22], [32, 44], [16, 58], [0, 62], [-16, 58], [-32, 44], [-44, 22], [-50, -6], [-50, -34], [-42, -58], [-24, -72]]);
+  let inner = '';
+  // facettes : bandes chromées claires et sombres
+  inner += path('M-50,-34L-20,-40L-14,-10L-44,22Z', `fill="${M.dark}" opacity="0.35"`) + path('M50,-34L20,-40L14,-10L44,22Z', `fill="${M.dark}" opacity="0.55"`);
+  inner += path('M-24,-72L0,-76L0,-44L-18,-40Z', `fill="${M.light}" opacity="0.6"`) + path('M-30,30L-10,24L-8,50L-16,58Z', `fill="${M.dark}" opacity="0.45"`);
+  let o = shade(shape, M, { s: 8, lw: 3.4, hatch: false, inner });
+  // joints / plaques
+  o += line('M0,-76V-44M-20,-40L-14,-10L-44,22M20,-40L14,-10L44,22M-14,-10H14M-30,32L-12,26M30,32L12,26M-8,50L0,62L8,50', 1.8, '#2a3038');
+  // yeux rouges incandescents, inclinés
+  for (const s of [-1, 1]) {
+    const d = poly([[s * 6, -12], [s * 18, -22], [s * 38, -26], [s * 34, -16], [s * 16, -8]]);
+    o += path(d, `fill="#ff1a0a" filter="url(#glow)"`) + path(d, `fill="#ff3a1a" stroke="${INK}" stroke-width="2"`) + path(poly([[s * 12, -12], [s * 20, -17], [s * 32, -20], [s * 22, -13]]), `fill="#ffd27a"`);
+  }
+  // bouche lumineuse
+  const m = poly([[-22, 32], [-12, 30], [-6, 33], [0, 31], [6, 33], [12, 30], [22, 32], [12, 37], [0, 36], [-12, 37]]);
+  o += path(m, `fill="#ff1a0a" filter="url(#glow)"`) + path(m, `fill="#ff3a1a" stroke="${INK}" stroke-width="2"`) + line('M-14,33.5H14', 1.2, '#ffd27a');
+  return o;
+}
+
+// Docteur Fatalis : capuche verte, masque d'acier riveté
+function doomHead() {
+  const HOOD = { base: '#1f6a2e', dark: '#082810', light: '#4aa85a' }, STEEL = { base: '#9aa3ad', dark: '#3a424c', light: '#e6ecf2' };
+  let o = shade(smooth([[-70, 70], [-74, 0], [-60, -64], [0, -96], [60, -64], [74, 0], [70, 70], [0, 84]], true, 1 / 6), HOOD, { s: 10, lw: 3.2, inner: line('M-52,-50Q-66,0 -60,60M52,-50Q66,0 60,60', 3, HOOD.dark) });
+  o += path(smooth([[-56, 64], [-58, -4], [-46, -58], [0, -78], [46, -58], [58, -4], [56, 64], [0, 76]], true, 1 / 6), `fill="#020a04"`);
+  // masque
+  const mask = smooth([[0, -60], [30, -56], [44, -36], [46, -4], [42, 26], [32, 48], [14, 60], [0, 62], [-14, 60], [-32, 48], [-42, 26], [-46, -4], [-44, -36], [-30, -56]], true, 1 / 7);
+  let inner = ellipse([-14, -34], 18, 10, `fill="${STEEL.light}" opacity="0.7" filter="url(#soft)"`) + ellipse([30, 10], 12, 30, `fill="${STEEL.dark}" opacity="0.6" filter="url(#soft)"`);
+  o += shade(mask, STEEL, { s: 8, lw: 3.4, hatch: false, inner });
+  // arête du nez, plaques et rivets
+  o += shade(poly([[-6, -30], [6, -30], [8, 14], [0, 20], [-8, 14]]), STEEL, { s: 3, lw: 2, hatch: false });
+  o += line('M-44,-16H-14M44,-16H14M-36,26L-14,20M36,26L14,20M0,40V62', 2, '#3a424c');
+  for (const [x, y] of [[-34, -40], [34, -40], [-40, 8], [40, 8], [-26, 46], [26, 46], [-8, 52], [8, 52]]) o += circle([x, y], 2.6, `fill="#5a626e" stroke="${INK}" stroke-width="0.8"`);
+  // fentes des yeux, regard menaçant
+  for (const s of [-1, 1]) o += path(poly([[s * 8, -8], [s * 34, -14], [s * 34, -6], [s * 10, -2]]), `fill="#060a08" stroke="${INK}" stroke-width="1.6"`) + path(poly([[s * 14, -7], [s * 28, -10], [s * 28, -7], [s * 14, -5]]), `fill="#5aff7a" opacity="0.7" filter="url(#glow)"`);
+  // fente de la bouche
+  o += path('M-16,32H16V37H-16Z', `fill="#060a08" stroke="${INK}" stroke-width="1.4"`);
+  return o;
+};
+
+// Black Panther : masque félin, yeux blancs acérés, lignes de vibranium
+function pantherHead() {
+  const BK = { base: '#1e1c28', dark: '#050408', light: '#5a5870' };
+  let o = '';
+  for (const s of [-1, 1]) o += shade(poly([[s * 18, -60], [s * 32, -88], [s * 44, -52]]), BK, { s: 2, lw: 3, hatch: false });
+  const shape = smooth([[0, -70], [28, -66], [46, -48], [52, -20], [50, 10], [42, 36], [26, 54], [0, 62], [-26, 54], [-42, 36], [-50, 10], [-52, -20], [-46, -48], [-28, -66]], true, 1 / 6.5);
+  let inner = ellipse([-18, -46], 20, 9, `fill="${BK.light}" opacity="0.6" filter="url(#soft)"`) + ellipse([34, 6], 10, 26, `fill="#000" opacity="0.6" filter="url(#soft)"`);
+  o += shade(shape, BK, { s: 9, lw: 3.4, hatch: false, inner });
+  // lignes de vibranium argentées
+  o += line('M0,-70V-30M-6,-30L0,-18L6,-30M-46,-4Q-30,-26 -8,-16M46,-4Q30,-26 8,-16M-40,22Q-22,30 -14,48M40,22Q22,30 14,48M-14,48Q0,56 14,48', 2.4, '#c8ccd8');
+  o += line('M-18,-50L-10,-36M18,-50L10,-36', 1.6, '#8a8ea0');
+  // yeux blancs en amande, acérés
+  for (const s of [-1, 1]) {
+    const d = poly([[s * 8, -8], [s * 20, -18], [s * 38, -20], [s * 42, -12], [s * 30, -4], [s * 14, -2]]);
+    o += path(d, `fill="#f4f8ff" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"`);
+  }
+  // relief de la bouche (masque sculpté)
+  o += line('M-12,30Q0,26 12,30', 2, '#5a5870') + line('M-8,36Q0,38 8,36', 1.6, '#3a3850');
+  return o;
+};
+
+// Wolverine (classique) : masque jaune à grands ailerons, rouflaquettes, rictus
+function wolvHead() {
+  const SK = { base: '#e8b88a', dark: '#8a5434', light: '#ffe2c4' }, Y = { base: '#f5c518', dark: '#8a5a06', light: '#fff2a0' };
+  let o = '';
+  // ailerons noirs qui partent vers l'arrière
+  for (const s of [-1, 1]) o += shade(smooth([[s * 30, -50], [s * 56, -94], [s * 74, -118], [s * 68, -80], [s * 56, -40], [s * 46, -20]], true, 1 / 8), '#16161e', { s: 4, lw: 3, hatch: false, inner: line(`M${s * 40},-44Q${s * 56},-80 ${s * 68},-104`, 2, '#4a4a5a') });
+  const face = smooth([[0, -66], [28, -62], [46, -44], [52, -16], [54, 14], [52, 40], [40, 60], [20, 70], [0, 72], [-20, 70], [-40, 60], [-52, 40], [-54, 14], [-52, -16], [-46, -44], [-28, -62]], true, 1 / 6.5);
+  // peau (bas du visage)
+  o += shade(face, SK, { s: 9, lw: 0, inner: faceModel({ cx: 0, nose: [0, 21], mouth: [0, 38], eye: [[-18, -4], [18, -4]], esc: [1, 1] }, SK, 0, 0.8) });
+  // masque jaune + zones noires autour des yeux
+  const cowl = `M-60,-90H60V4Q44,4 32,10Q18,4 0,6Q-18,4 -32,10Q-44,4 -60,4Z`;
+  o += clip(face, shade(cowl, Y, { s: 8, lw: 2.6, inner: ellipse([-18, -44], 22, 10, `fill="${Y.light}" opacity="0.6" filter="url(#soft)"`) }) +
+    path(smooth([[-4, -4], [-16, -22], [-40, -40], [-60, -50], [-60, 2], [-40, 4], [-18, 4]], true, 1 / 8), `fill="#16161e"`) + path(smooth([[4, -4], [16, -22], [40, -40], [60, -50], [60, 2], [40, 4], [18, 4]], true, 1 / 8), `fill="#16161e"`) +
+    line('M-60,4Q-44,4 -32,10Q-18,4 0,6Q18,4 32,10Q44,4 60,4', 2.6));
+  o += path(face, `fill="none" stroke="${INK}" stroke-width="3.4"`);
+  // yeux blancs, plissés de rage
+  for (const s of [-1, 1]) o += path(poly([[s * 6, -4], [s * 16, -12], [s * 34, -18], [s * 36, -10], [s * 22, -2]]), `fill="#ffffff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"`);
+  // rouflaquettes
+  for (const s of [-1, 1]) o += path(poly([[s * 40, 8], [s * 54, 6], [s * 54, 40], [s * 44, 58], [s * 42, 42], [s * 34, 50], [s * 36, 28]]), `fill="#1e1610" stroke="${INK}" stroke-width="1.6"`);
+  o += clip(face, path('M-36,40Q0,76 36,40L40,80H-40Z', `fill="#2a1e16" opacity="0.16"`));
+  // nez et rictus de fauve
+  o += line('M-7,22Q0,27 7,22', 2.2) + path('M-3,10Q3,16 1,22', 'fill="none" stroke="#8a5434" stroke-width="2"');
+  o += line('M-14,18Q-24,30 -22,44M14,18Q24,30 22,44', 1.6, '#8a5434');
+  const M = 'M-17,38Q0,33 17,38Q15,47 0,49Q-15,47 -17,38Z';
+  let t = `<rect x="-20" y="32" width="40" height="9" fill="#f0e8d6"/><rect x="-20" y="42" width="40" height="10" fill="#e2d8c2"/>`;
+  for (let i = -2; i <= 2; i++) t += line(`M${i * 6.5},35V49`, 0.9, '#6a5a44');
+  t += path('M-12,39l2,6l2,-6Z M8,39l2,6l2,-6Z', `fill="#fff" stroke="${INK}" stroke-width="0.8"`);
+  o += path(M, `fill="#2a0a0a"`) + clip(M, t + line('M-17,42Q0,44 17,42', 1.2, '#6a5a44')) + path(M, `fill="none" stroke="${INK}" stroke-width="2.4"`);
+  o += brush([[-21, 36], [-10, 31], [0, 30], [10, 31], [21, 36]], 1.4, 1.4, INK, 3) + line('M-10,58Q0,61 10,58', 1.6, '#8a5434');
+  return o;
+};
+
 C({
   id: 'ultron', name: 'Ultron', group: 'ff', ring: '#c41e2a',
   sky: '#140406',
@@ -1777,15 +1950,7 @@ C({
   suit: '#a8b0ba', neckCol: '#5a5f6b', sleeve: '#a8b0ba', forearm: '#a8b0ba', glove: '#a8b0ba',
   torso: T => line('M0,10V200M-60,40L-20,80M60,40L20,80M-50,120H50M-40,160H40', 2.4, '#5a626e') + circle([0, 70], 16, `fill="#ff3a3a" stroke="${INK}" stroke-width="2.6" filter="url(#glow)"`) + pecs(T, '#5a626e', 0.8),
   dU: (L, r) => line(`M${f(L * 0.3)},-30V30M${f(L * 0.7)},-30V30`, 2, '#5a626e'), dL: (L, r) => line(`M${f(L * 0.5)},-30V30`, 2, '#5a626e'),
-  head: {
-    t: 0.1, expr: 'furious', skin: '#a8b0ba', ears: false, shape: { jaw: 1.0, chin: 0.94, cran: 1.06, wid: 0.96 },
-    mask: {
-      type: 'full', color: '#a8b0ba', lens: 'slit', ls: 1.2, lensFill: '#ff3a3a', border: 3.4, shine: false, ang: 6,
-      pattern: ({ F }) => line(`M${f(F.cx)},-66V-26M${f(F.cx - 20)},-60L${f(F.cx - 30)},-30M${f(F.cx + 20)},-60L${f(F.cx + 30)},-30M${f(F.cx - 40)},10L${f(F.cx - 24)},44M${f(F.cx + 40)},10L${f(F.cx + 24)},44`, 2.2, '#5a626e') +
-        [0, 1].map(i => path(`M${f(F.eye[i][0] - 18)},-4H${f(F.eye[i][0] + 18)}`, `stroke="#ff3a3a" stroke-width="12" opacity="0.55" filter="url(#blur6)"`)).join(''),
-      mouth: ({ F }) => path(`M${f(F.mouth[0] - 18)},28Q${f(F.mouth[0])},20 ${f(F.mouth[0] + 18)},28L${f(F.mouth[0] + 12)},44Q${f(F.mouth[0])},40 ${f(F.mouth[0] - 12)},44Z`, `fill="#ff3a3a" stroke="${INK}" stroke-width="2.4" filter="url(#glow)"`),
-    },
-  },
+  head: { t: 0, skin: '#a8b2bc', ears: false, custom: ultronHead },
   pose: {
     N: [200, 270], tilt: 4, sw: 182, ww: 120, nw: 20,
     armL: { a1: 150, a2: 170, L1: 72, L2: 62, hand: 'open', hs: 1.35, layer: 'mid', r: [24, 18, 17, 13] },

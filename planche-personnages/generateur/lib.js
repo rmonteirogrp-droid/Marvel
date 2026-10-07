@@ -518,7 +518,7 @@ function maskLayer(ctx) {
       const s = i ? 1 : -1;
       const c = F.eye[i];
       const sc = F.esc[i];
-      if (m.eyes === 'lens') out += lens(c, sc * (m.ls || 0.85), s, m.lens || 'narrow', { ang: ex.brow * 0.5, border: 3.6, shine: false });
+      if (m.eyes === 'lens') out += lens(c, sc * (m.ls || 0.85), s, m.lens || 'narrow', { ang: ex.brow * 0.5, border: 3.6, shine: false, fill: m.lensFill });
       else {
         // trou des yeux : peau + œil
         const inX = c[0] - s * 13 * sc, outX = c[0] + s * 15 * sc;
