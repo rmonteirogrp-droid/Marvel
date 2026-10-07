@@ -1014,6 +1014,48 @@ C({
   },
 });
 
+// Tête du Bouffon Vert (comics) : visage long et ridé, oreilles pointues, nez crochu, rictus, bonnet violet
+const goblinHead = () => {
+  const SK = { base: '#6fae3c', dark: '#2f5a1a', light: '#a8d86a' };
+  const face = smooth([[0, -40], [30, -40], [46, -24], [50, 0], [44, 24], [32, 46], [16, 64], [0, 76], [-16, 64], [-32, 46], [-44, 24], [-50, 0], [-46, -24], [-30, -40]], true, 1 / 6.5);
+  let o = '';
+  // oreilles pointues, écartées
+  for (const s of [-1, 1]) {
+    const e = smooth([[s * 44, -18], [s * 70, -34], [s * 98, -58], [s * 84, -26], [s * 66, 4], [s * 48, 18]], true, 1 / 8);
+    o += shade(e, SK, { s: 5, lw: 3, hatch: false, inner: line(`M${s * 52},-10Q${s * 70},-24 ${s * 86},-46`, 2, SK.dark) });
+  }
+  let model = '';
+  model += ellipse([-16, -6], 14, 9, `fill="${SK.dark}" opacity="0.7" filter="url(#soft)"`) + ellipse([18, -6], 14, 9, `fill="${SK.dark}" opacity="0.8" filter="url(#soft)"`);
+  model += path('M30,4Q36,30 24,52L40,40Q46,20 40,4Z', `fill="${SK.dark}" opacity="0.6" filter="url(#soft)"`);
+  model += ellipse([-28, 10], 10, 6, `fill="${SK.light}" opacity="0.6" filter="url(#soft)"`) + ellipse([-10, -30], 18, 6, `fill="${SK.light}" opacity="0.5" filter="url(#soft)"`);
+  o += shade(face, SK, { s: 9, lw: 3.4, inner: model });
+  // rides : front, pattes d'oie, plis des joues, menton
+  o += line('M-22,-26Q0,-32 22,-26M-18,-20Q0,-25 18,-20M-6,-30L-2,-16M6,-30L2,-16', 1.6, '#24461a');
+  o += line('M-40,-2L-48,-6M-40,4L-48,4M40,-2L48,-6M40,4L48,4', 1.5, '#24461a');
+  o += line('M-12,14Q-30,22 -34,40M12,14Q32,22 36,40M-24,30Q-30,44 -26,56M26,30Q32,44 28,56M-6,66Q0,70 6,66', 1.8, '#24461a');
+  // yeux jaunes, plissés, sous des sourcils froncés
+  for (const s of [-1, 1]) {
+    const cx = s * 18;
+    const d = `M${cx - s * 11},-2Q${cx},-9 ${cx + s * 12},-8Q${cx + s * 4},2 ${cx - s * 11},-2Z`;
+    o += path(d, `fill="#f2e04a" stroke="${INK}" stroke-width="1.6"`) + circle([cx + s * 1, -4.4], 2.6, `fill="#b8200a"`) + circle([cx + s * 1, -4.4], 1.2, `fill="${INK}"`);
+    o += brush([[s * 4, -6], [s * 14, -14], [s * 26, -18], [s * 36, -16]], 6, 2, '#1e3a12', 7);
+  }
+  // long nez crochu
+  o += shade(smooth([[-4, -10], [4, -10], [10, 10], [14, 28], [8, 34], [-2, 32], [-6, 26], [-4, 6]], true, 1 / 8), SK, { s: 4, lw: 2.6, hatch: false });
+  o += line('M-4,30Q2,36 10,32', 1.6, '#24461a');
+  // rictus immense plein de dents
+  const M = `M-32,40Q0,44 32,40Q30,52 20,58Q0,64 -20,58Q-30,52 -32,40Z`;
+  let teeth = '';
+  for (let i = 0; i < 9; i++) { const x = -26 + i * 6.5; teeth += `<rect x="${f(x - 3)}" y="38" width="6" height="${f(9 - Math.abs(i - 4) * 0.6)}" fill="#efe8c8" stroke="${INK}" stroke-width="0.9"/>`; }
+  for (let i = 0; i < 7; i++) { const x = -18 + i * 6; teeth += `<rect x="${f(x - 3)}" y="${f(52 - Math.abs(i - 3) * 0.6)}" width="6" height="9" fill="#e2dab8" stroke="${INK}" stroke-width="0.9"/>`; }
+  o += path(M, `fill="#2a0a0a"`) + clip(M, teeth) + path(M, `fill="none" stroke="${INK}" stroke-width="2.6"`);
+  o += line('M-36,36Q-34,42 -32,40M36,36Q34,42 32,40', 2, INK);
+  // bonnet violet : bandeau puis pointe qui retombe vers l'arrière
+  const hat = smooth([[-52, -26], [-50, -54], [-30, -76], [0, -86], [30, -84], [58, -74], [86, -64], [104, -42], [110, -18], [96, -36], [78, -50], [60, -48], [52, -26], [26, -32], [0, -34], [-26, -32]], true, 1 / 7);
+  o += shade(hat, { base: '#6b3a9e', dark: '#2e1050', light: '#a070d8' }, { s: 7, lw: 3.2, inner: line('M-48,-36Q0,-48 52,-34', 2.4, '#2e1050') + line('M10,-80Q50,-74 92,-48', 2, '#2e1050') });
+  return o;
+};
+
 // =================== BOUFFON VERT ===================
 const pumpkin = (c, r) => circle(c, r * 1.6, `fill="#ff8a1a" opacity="0.5" filter="url(#blur6)"`) + shade(smooth([[c[0], c[1] - r], [c[0] + r * 0.9, c[1] - r * 0.6], [c[0] + r, c[1] + r * 0.2], [c[0] + r * 0.6, c[1] + r * 0.9], [c[0], c[1] + r], [c[0] - r * 0.6, c[1] + r * 0.9], [c[0] - r, c[1] + r * 0.2], [c[0] - r * 0.9, c[1] - r * 0.6]]), '#f07a1a', {
   s: 4, inner: line(`M${c[0]},${c[1] - r}V${c[1] + r}M${c[0] - r * 0.5},${c[1] - r * 0.85}Q${c[0] - r * 0.7},${c[1]} ${c[0] - r * 0.5},${c[1] + r * 0.9}M${c[0] + r * 0.5},${c[1] - r * 0.85}Q${c[0] + r * 0.7},${c[1]} ${c[0] + r * 0.5},${c[1] + r * 0.9}`, 1.6, '#a84a10') +
@@ -1034,19 +1076,7 @@ C({
     return `<rect x="-100" y="110" width="200" height="200" fill="#7ab83a"/>` + mail + path('M-100,110L0,140L100,110L100,100L-100,100Z', `fill="#6a3f9a" stroke="${INK}" stroke-width="2.4"`) +
       line('M-70,80L-30,110M70,80L30,110', 2, '#3a1f5a') + `<rect x="-70" y="200" width="140" height="18" fill="#3a1f5a" stroke="${INK}" stroke-width="2"/>`;
   },
-  head: {
-    t: -0.2, expr: 'evil', skin: '#7ab83a', mouth: 'smile', mouthW: 1.4, shape: { jaw: 1.0, chin: 1.12, cheek: 1.02 }, lines: ['cheek', 'fold', 'forehead'],
-    eyes: { iris: '#e8c020', lid: 3, h: 1.1 }, brows: { th: 6, col: '#2a4a12' },
-    front: ({ F, t }) => {
-      // oreilles pointues + bonnet violet
-      let o = [-1, 1].map(s => {
-        const x = s * 44 - t * 6;
-        return shade(smooth([[x, -12], [x + s * 30, -40], [x + s * 20, -8], [x + s * 6, 12]]), '#7ab83a', { s: 3, lw: 2.6 });
-      }).join('');
-      o += shade(smooth([[-50, -26], [-48, -58], [-20, -78], [20, -80], [50, -62], [70, -60], [96, -36], [84, -34], [60, -46], [52, -24], [20, -40], [-20, -40]]), '#6a3f9a', { s: 6, lw: 3, inner: line('M-48,-34Q0,-50 52,-30', 3, '#3a1f5a') });
-      return o;
-    },
-  },
+  head: { t: -0.1, expr: 'evil', skin: '#6fae3c', ears: false, custom: goblinHead },
   pose: {
     N: [200, 268], tilt: -6, htilt: 4, sw: 178, ww: 122, nw: 18,
     armL: { a1: 140, a2: 70, L1: 72, L2: 60, hand: 'open', talons: false, layer: 'mid', r: [24, 18, 17, 13] },
@@ -1208,6 +1238,42 @@ C({
   },
 });
 
+// Tête de Rocket (film) : museau de raton laveur, truffe, bandeau noir, oreilles rondes, joues touffues
+const rocketHead = () => {
+  const FUR = { base: '#8c7158', dark: '#4a3626', light: '#c2a688' };
+  let o = '';
+  // oreilles arrondies
+  for (const s of [-1, 1]) {
+    o += shade(smooth([[s * 20, -50], [s * 30, -82], [s * 46, -90], [s * 58, -76], [s * 56, -46]], true, 1 / 6), FUR, { s: 4, lw: 3, hatch: false, inner: path(smooth([[s * 30, -54], [s * 36, -78], [s * 46, -82], [s * 52, -72], [s * 50, -52]]), `fill="#e8d4bc"`) });
+  }
+  // tête : crâne, joues touffues en pointes, museau qui s'affine
+  const head = smooth([[0, -62], [26, -58], [46, -42], [56, -18], [70, -4], [58, 4], [70, 16], [56, 20], [62, 32], [44, 34], [30, 46], [14, 58], [0, 62], [-14, 58], [-30, 46], [-44, 34], [-62, 32], [-56, 20], [-70, 16], [-58, 4], [-70, -4], [-56, -18], [-46, -42], [-26, -58]], true, 1 / 9);
+  let inner = '';
+  // dessus de tête plus sombre
+  inner += ellipse([0, -50], 40, 18, `fill="${FUR.dark}" opacity="0.55" filter="url(#soft)"`);
+  // sourcils clairs au-dessus du bandeau
+  inner += path('M-50,-22Q-30,-40 -6,-30Q-4,-24 -10,-22Q-30,-30 -46,-16Z M50,-22Q30,-40 6,-30Q4,-24 10,-22Q30,-30 46,-16Z', `fill="#efe2cc"`);
+  // bandeau noir de raton laveur
+  inner += path('M-66,-6Q-56,-24 -30,-22Q-12,-20 0,-10Q12,-20 30,-22Q56,-24 66,-6Q58,10 36,10Q16,8 6,4Q0,10 -6,4Q-16,8 -36,10Q-58,10 -66,-6Z', `fill="#1c1410"`);
+  // museau crème
+  inner += path(smooth([[-46, 10], [-26, 6], [-8, 8], [0, 12], [8, 8], [26, 6], [46, 10], [40, 30], [22, 46], [8, 58], [0, 62], [-8, 58], [-22, 46], [-40, 30]], true, 1 / 7), `fill="#ecdcc4"`);
+  // arête du museau
+  inner += path('M-7,-4Q0,-8 7,-4L6,22Q0,24 -6,22Z', `fill="${FUR.base}"`);
+  // texture de fourrure
+  inner += line('M-40,-50l4,10M-24,-56l3,10M24,-56l-3,10M40,-50l-4,10M-60,8l8,2M60,8l-8,2M-52,24l8,0M52,24l-8,0', 1.4, FUR.dark);
+  o += shade(head, FUR, { s: 8, lw: 3.2, hatch: false, inner });
+  // yeux ambrés
+  for (const s of [-1, 1]) o += eye([s * 22, -6], 0.95, s, { iris: '#9a5a1e', lid: 2.5 });
+  // truffe noire brillante
+  o += path(smooth([[-10, 22], [0, 18], [10, 22], [8, 30], [0, 34], [-8, 30]], true, 1 / 7), `fill="#14100e" stroke="${INK}" stroke-width="1.6"`) + ellipse([-3, 23], 3.4, 1.8, `fill="#ffffff" opacity="0.7"`);
+  // gueule : sourire narquois avec petits crocs
+  o += line('M0,34V42M0,42Q-8,50 -18,44M0,42Q10,50 22,40', 2.2, INK);
+  o += path('M-14,46l2,6l2,-5Z M14,45l2,6l2,-6Z', `fill="#ffffff" stroke="${INK}" stroke-width="1"`);
+  // moustaches
+  o += line('M-30,30L-74,22M-30,36L-72,40M30,30L74,22M30,36L72,40', 1.2, '#2a1e18', 'opacity="0.8"');
+  return o;
+};
+
 // =================== ROCKET ===================
 C({
   id: 'rocket', name: 'Rocket', group: 'cosmos', ring: '#e07a1a',
@@ -1224,19 +1290,7 @@ C({
   },
   suit: '#e07a1a', neckCol: '#8a6a52', sleeve: '#8a6a52', forearm: '#8a6a52', glove: '#5a4a3a',
   torso: T => line('M0,0V220', 2.4, '#8a3a0a') + `<rect x="-50" y="60" width="40" height="34" rx="4" fill="#b85a10" stroke="${INK}" stroke-width="2"/>` + line('M60,0L-60,200', 8, '#3a2a1e'),
-  head: {
-    t: 0.18, expr: 'smirk', skin: '#9a7a5e', mouth: 'grit', mouthW: 0.8, ears: false, shape: { jaw: 0.86, chin: 0.8, wid: 1.06, cran: 0.94, cheek: 1.08 },
-    eyes: { iris: '#3a2414', s: 1.05 }, brows: { th: 4, col: '#2a1a12' }, nose: false, eyeSocket: false,
-    back: () => [-1, 1].map(s => shade(smooth([[s * 18, -52], [s * 34, -84], [s * 50, -86], [s * 58, -48]]), '#6a5240', { s: 3, lw: 3, inner: path(smooth([[s * 28, -56], [s * 38, -76], [s * 48, -76], [s * 50, -52]]), `fill="#e8d0c0"`) })).join(''),
-    mid: ({ F, hd, t }) => clip(hd,
-      // masque sombre autour des yeux, museau clair, joues blanches
-      path(smooth([[F.cx - 60, -20], [F.cx - 30, -18], [F.cx, -6], [F.cx + 30, -18], [F.cx + 60, -20], [F.cx + 50, 14], [F.cx + 22, 10], [F.cx, 12], [F.cx - 22, 10], [F.cx - 50, 14]]), `fill="#2a1e18"`) +
-      path(smooth([[F.cx - 40, 18], [F.cx - 20, 12], [F.cx + 20, 12], [F.cx + 40, 18], [F.cx + 30, 56], [F.cx, 64], [F.cx - 30, 56]]), `fill="#efe2d4"`) +
-      line(`M${f(F.cx - 20)},-36L${f(F.cx)},-24L${f(F.cx + 20)},-36`, 6, '#efe2d4')) +
-      [0, 1].map(i => eye(F.eye[i], F.esc[i] * 1.05, i ? 1 : -1, { iris: '#3a2414', t, lid: 1.5 })).join('') +
-      ellipse([F.cx + t * 8, 22], 9, 6, `fill="${INK}"`) + ellipse([F.cx + t * 8 - 3, 20], 3, 1.6, `fill="#fff" opacity="0.6"`) +
-      line(`M${f(F.cx - 40)},26L${f(F.cx - 60)},20M${f(F.cx - 40)},32L${f(F.cx - 60)},34M${f(F.cx + 40)},26L${f(F.cx + 60)},20M${f(F.cx + 40)},32L${f(F.cx + 60)},34`, 1.4),
-  },
+  head: { t: 0, expr: 'smirk', skin: '#8c7158', ears: false, custom: rocketHead },
   pose: {
     N: [196, 276], tilt: -4, htilt: 4, sw: 140, ww: 100, nw: 16, hs: 1.24, nl: 8,
     armL: { a1: 110, a2: -10, L1: 54, L2: 50, hand: 'grip', hs: 1.1, layer: 'front', r: [18, 14, 13, 10] },
