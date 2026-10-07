@@ -3122,6 +3122,22 @@ body{font-synthesis:none}
 .cd-pf .pf-bio{margin-top:14px}
 .cd-info-bas{margin-top:26px}
 .cd-info-bas:empty{display:none}
+
+/* ══════ V3.4 ══════ */
+/* Bandes-annonces en tête : format cinéma (les bandes noires incrustées dans la vidéo sortent du cadre),
+   fond flou animé tiré de la vidéo tout autour, comme avec les anciens montages */
+.ecran-cine.ecran-ba{aspect-ratio:2.39/1}
+.fond-cv{opacity:0;transition:opacity 1.2s ease}
+.fond-cv.on{opacity:1}
+/* Ouverture d'une fiche : l'affiche touchée vole et devient l'image de la fiche (et y retourne à la fermeture) */
+.morph-clone{position:fixed;z-index:400;object-fit:cover;object-position:center 18%;pointer-events:none;box-shadow:0 24px 70px rgba(0,0,0,.65)}
+#fiche.morph.on{animation:morphFond .42s ease both}
+#fiche.morph.part{animation:morphFondOut .26s ease both}
+@keyframes morphFond{from{opacity:0}}
+@keyframes morphFondOut{to{opacity:0}}
+#fiche.morph .fiche-visuel img{animation:none}
+#fiche.morph.on:not(.part) .fiche-texte{animation:morphTexte .55s .16s cubic-bezier(.2,.8,.2,1) both}
+@keyframes morphTexte{from{opacity:0;transform:translateY(26px)}}
 </style>
 </head>
 <body>
@@ -3910,6 +3926,7 @@ function lancerVideo(id, donnees, cle = id){
   if(BA_TETE[cle]){ lancerBA(id, cle); return; }
   [v, document.getElementById(id + "-fond")].forEach(x => { if(x){ delete x.dataset.ba; x.removeAttribute("poster"); } });
   const lg = v.parentNode.querySelector(".ba-legende"); if(lg) lg.remove();
+  v.parentNode.classList.remove("ecran-ba"); const cv = v.closest(".hero") && v.closest(".hero").querySelector("canvas.fond-cv"); if(cv) cv.remove();
   if(!urlsVideo[cle]){ preparerVideo(cle, donnees).then(() => { if(document.getElementById(id) === v) lancerVideo(id, donnees, cle); }); return; }
   [v, document.getElementById(id + "-fond")].forEach(x => {
     if(!x) return;
@@ -3919,35 +3936,55 @@ function lancerVideo(id, donnees, cle = id){
     const p = x.play(); if(p) p.catch(() => {});
   });
 }
-/* En tête de l'accueil MCU et de Doomsday : une vraie bande-annonce, différente à chaque fois.
-   Pioche sans remise mémorisée sur l'appareil (on voit toutes les bandes-annonces avant de revoir la même).
-   Lue en continu depuis Allociné comme dans la fiche ; le fond flouté reprend l'affiche (pas de seconde vidéo à télécharger). */
+/* En tête de l'accueil (MCU et Multivers) et de Doomsday : une vraie bande-annonce, en VF uniquement.
+   Tirée au hasard à l'ouverture de l'appli puis gardée tant que l'appli reste ouverte (on retrouve la même, là où on l'avait laissée) ;
+   à la prochaine ouverture, une autre (pioche sans remise mémorisée sur l'appareil : on les voit toutes avant de revoir la même).
+   Lue en continu depuis Allociné comme dans la fiche ; le fond flouté est dessiné à partir de la vidéo elle-même (pas de second téléchargement). */
+const baVF = i => i.ba && i.ba.src && i.ba.langue === "VF";
 const BA_TETE = {
-  mcu:() => tous("mcu").filter(i => i.ba && i.ba.src).map(i => ({ src:i.ba.src, aff:affiche(i), id:i.id, t:i.t })),
-  doom:() => { const dd = tous("mcu").find(i => i.t === "Avengers: Doomsday"); return TRAILERS.map(t => ({ src:t.src, aff:dd ? affiche(dd) : "", id:dd ? dd.id : null, t:t.titre })); },
+  mcu:() => tous("mcu").filter(baVF).map(i => ({ src:i.ba.src, id:i.id, t:i.t })),
+  multi:() => tous("multi").filter(baVF).map(i => ({ src:i.ba.src, id:i.id, t:i.t })),
+  doom:() => { const dd = tous("mcu").find(i => i.t === "Avengers: Doomsday");
+    return TRAILERS.filter(t => t.langue === "VF").map(t => ({ src:t.src, id:dd ? dd.id : null, t:"Avengers: Doomsday" })); },
 };
-const baTete = {};
+const baTete = {};   // la bande-annonce choisie pour cette ouverture de l'appli, par vue
 function piocherBA(cle){
+  if(baTete[cle]) return baTete[cle];
   const l = BA_TETE[cle](); if(!l.length) return null;
   let sac = []; try{ sac = JSON.parse(localStorage.getItem("mt-ba-" + cle) || "[]"); }catch(e){}
   sac = sac.filter(src => l.some(x => x.src === src));
-  if(!sac.length) sac = l.map(x => x.src).map(x => [Math.random(), x]).sort((a, b) => a[0] - b[0]).map(x => x[1]).filter(src => src !== (baTete[cle] || {}).src);
+  if(!sac.length) sac = l.map(x => [Math.random(), x.src]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
   const src = sac.shift(); try{ localStorage.setItem("mt-ba-" + cle, JSON.stringify(sac)); }catch(e){}
-  return baTete[cle] = l.find(x => x.src === src) || l[0];
+  return baTete[cle] = { ...(l.find(x => x.src === src) || l[0]), pos:0 };
+}
+/* Fond flou animé : la vidéo redessinée en tout petit dans un canevas, agrandie et floutée par le CSS. */
+function fondAnime(v, cv){
+  const x = cv.getContext("2d"); let der = 0;
+  const boucle = t => {
+    if(!cv.isConnected || !v.isConnected) return;
+    if(t - der > 90 && !v.paused && v.readyState >= 2){ der = t; try{ x.drawImage(v, 0, 0, cv.width, cv.height); cv.classList.add("on"); }catch(e){} }
+    requestAnimationFrame(boucle);
+  };
+  requestAnimationFrame(boucle);
 }
 function lancerBA(id, cle){
   const v = document.getElementById(id), f = document.getElementById(id + "-fond"), ba = piocherBA(cle); if(!v || !ba) return;
-  v.dataset.ba = cle; v.classList.remove("on");
-  if(f){ f.removeAttribute("src"); f.dataset.ba = cle; if(ba.aff){ f.poster = ba.aff; f.classList.add("on"); } }
-  v.addEventListener("loadedmetadata", () => { try{ v.currentTime = Math.min(8, v.duration * .08); }catch(e){} }, { once:true });   // on saute les logos du début
+  v.dataset.ba = cle; v.classList.remove("on"); v.parentNode.classList.add("ecran-ba");
+  if(f){
+    f.removeAttribute("src"); f.removeAttribute("poster"); f.classList.remove("on"); f.dataset.ba = cle;
+    let cv = f.parentNode.querySelector("canvas.fond-flou");
+    if(!cv){ cv = document.createElement("canvas"); cv.className = "fond-flou fond-cv"; cv.width = 96; cv.height = 54; f.after(cv); }
+    fondAnime(v, cv);
+  }
+  v.addEventListener("loadedmetadata", () => { try{ v.currentTime = ba.pos || Math.min(8, v.duration * .08); }catch(e){} }, { once:true });   // on saute les logos du début, ou on reprend où on en était
+  v.addEventListener("timeupdate", () => { if(v.currentTime > 1) ba.pos = v.currentTime; });
   v.addEventListener("playing", () => v.classList.add("on"), { once:true });
   v.muted = true; v.src = ba.src;
   const p = v.play(); if(p) p.catch(() => {});
   let lg = v.parentNode.querySelector(".ba-legende");
   if(!lg){ lg = document.createElement("button"); lg.className = "ba-legende"; v.parentNode.appendChild(lg); }
   if(ba.id) lg.dataset.fiche = ba.id; else delete lg.dataset.fiche;
-  const [type, nom] = /^Teaser · /.test(ba.t) ? ["Teaser", ba.t.slice(9)] : ["Bande-annonce", cle === "doom" ? "Avengers: Doomsday" : ba.t];
-  lg.innerHTML = `<i>${type}</i>${esc(nom)}`;
+  lg.innerHTML = `<i>Teaser</i>${esc(ba.t)}`;
   majSonVue();
 }
 /* Le son des bandes-annonces est celui de la vidéo : un toucher suffit à le rallumer si le navigateur l'a coupé. */
@@ -4590,7 +4627,7 @@ function rendreDoomsday(){
       </section>
       <section class="bloc">
         <div class="bloc-tete"><p class="surtitre">Bandes-annonces</p></div>
-        <div class="rail-h">${TRAILERS.map((t, n) => `<button class="ba" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="voile"></span>
+        <div class="rail-h">${TRAILERS.map((t, n) => [t, n]).filter(([t]) => t.langue === "VF").map(([t, n]) => `<button class="ba" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="voile"></span>
           <span class="jouer">${SVG.jouer}</span><span class="lg"><b>${esc(t.titre)}</b><em>${t.langue}</em></span></button>`).join("")}</div>
       </section>
     </div>
@@ -4835,8 +4872,39 @@ function ouvrirFiche(id, opt = {}){
       ${plexSerie(it) && !plexCle(it) ? `<section class="episodes"><p class="surtitre">Épisodes</p><div id="ep-liste"><div class="ep-attente"><i></i>Lecture de ta bibliothèque Plex…</div></div></section>` : ""}
     </div>`;
   ouvrirFeuille("fiche");
+  morphOuvrir(opt.depuis);
   monterHD(document.getElementById("fiche-in"));
   if(plexSerie(it) && !plexCle(it)) chargerEpisodes(it);
+}
+/* Ouverture « comme une appli iPhone » : l'affiche touchée grandit jusqu'à devenir l'image de la fiche,
+   le reste de la fiche apparaît autour ; à la fermeture, l'image rapetisse et retourne à sa place dans la liste. */
+let morphSource = null;
+const morphOk = () => !matchMedia("(prefers-reduced-motion: reduce)").matches && !document.documentElement.classList.contains("pivot");
+const dansEcran = r => r.width > 0 && r.bottom > 0 && r.top < innerHeight;
+function cloneMorph(src, de, vers, duree, fin){
+  const c = document.createElement("img"); c.className = "morph-clone"; c.src = src; c.alt = "";
+  const pos = r => ({ left:r.left + "px", top:r.top + "px", width:r.width + "px", height:r.height + "px" });
+  Object.assign(c.style, pos(vers)); document.body.appendChild(c);
+  const a = c.animate([pos(de), pos(vers)], { duration:duree, easing:"cubic-bezier(.2,.75,.15,1)" });
+  a.onfinish = a.oncancel = () => { if(fin) fin(); c.remove(); };
+}
+function morphOuvrir(img){
+  const f = document.getElementById("fiche"); morphSource = null; f.classList.remove("morph");
+  if(!img || !morphOk()) return;
+  const a = img.getBoundingClientRect(), cible = f.querySelector(".fiche-visuel img");
+  if(!cible || !dansEcran(a)) return;
+  f.classList.add("morph"); morphSource = img;
+  const b = cible.getBoundingClientRect();
+  cible.style.visibility = "hidden";
+  cloneMorph(img.currentSrc || img.src, a, b, 520, () => { cible.style.visibility = ""; });
+}
+function morphFermer(){
+  const f = document.getElementById("fiche"), img = morphSource, cible = f.querySelector(".fiche-visuel img"); morphSource = null;
+  if(!img || !img.isConnected || !cible || !morphOk()){ f.classList.remove("morph"); return; }
+  const a = img.getBoundingClientRect(), b = cible.getBoundingClientRect();
+  if(!dansEcran(a) || !dansEcran(b)){ f.classList.remove("morph"); return; }   // affiche ou image hors de l'écran : fermeture classique
+  img.style.visibility = "hidden"; cible.style.visibility = "hidden";
+  cloneMorph(cible.currentSrc || cible.src, b, a, 400, () => { img.style.visibility = ""; cible.style.visibility = ""; });
 }
 
 /* ═══════════ SÉRIES : SAISONS ET ÉPISODES (PLEX) ═══════════ */
@@ -4913,8 +4981,9 @@ function ouvrirFeuille(id){
 }
 function fermerFeuille(id){
   const f = document.getElementById(id); if(!f.classList.contains("on")) return;
+  if(id === "fiche") morphFermer();
   f.classList.add("part");
-  setTimeout(() => { f.classList.remove("on", "part"); f.style.zIndex = ""; majSonVue(); }, 280);
+  setTimeout(() => { f.classList.remove("on", "part", "morph"); f.style.zIndex = ""; majSonVue(); }, 280);
   if(id === "plex-modale") clearInterval(plexAttente);
   if(id === "jeu"){ JEU.actif = false; clearInterval(JEU.minuterie); }
   if(id === "fiche") ficheOuverte = null;
@@ -7529,7 +7598,7 @@ function rendreCarte(forge = false){
       <div class="cd-stats"><div><b>${a ? "×" + c.col[i] : "—"}</b><span>${a ? "Obtenue" : "Pas encore obtenue"}</span></div>
         <div><b>${a ? ECLATS[r] : cout}</b><span>${a ? "Éclats par doublon" : "Éclats pour la forger"}</span></div></div>
     </div>
-    <div class="pf r${r} cd-pf">${corpsPerso(i)}</div>
+    <div class="pf r${r} cd-pf">${corpsPerso(i, { equipe:false })}</div>
     <div class="cd-info cd-info-bas">
       ${a ? "" : `<div class="cd-forge"><button class="btn btn-forge" data-forger="${i}" ${c.ecl >= cout ? "" : "disabled"}>Forger cette carte · ${cout} éclats</button>
         <p>${c.ecl >= cout ? "Tu as " + c.ecl + " éclats." : "Encore " + (cout - c.ecl) + " éclats. Les doublons en rapportent."}</p></div>`}
@@ -7874,7 +7943,7 @@ function resultatsCartes(brut, q, z){
 }
 /* Corps de la fiche personnage (bio, chiffres, pouvoirs, identité, affiliations, suivi, apparitions, équipe) :
    utilisé par la fiche personnage et directement sous la carte dans la collection. */
-function corpsPerso(i){
+function corpsPerso(i, { equipe = true } = {}){
   const f = ficheDe(i), noms = PERSOS[i], r = RARETE[i], inf = infoDe(i);
   const items = f.l.map(([id, acteur, role, ver]) => ({ it:parId(id), acteur, role, ver })).filter(x => x.it);
   let vrai = items.filter(x => x.ver === "v"), anim = items.filter(x => x.ver === "a");
@@ -7909,7 +7978,7 @@ function corpsPerso(i){
     ${groupe("anim", "Variantes · autres réalités", "Pas notre " + prenom, anim, ["Variante", "v"])}
     ${groupe("autres", "Autres versions · autres interprètes", "Autres acteurs", autres, ["Autre acteur", "f"])}
     ${!items.length ? `<p class="pf-vide">Pas encore apparu dans un film ou une série du catalogue. Peut-être bientôt…</p>` : ""}
-    ${eq.length ? `<section class="pf-bloc"><h3>Dans la même équipe</h3><div class="pf-eq">${eq.map(j => `<button data-perso="${j}"><img src="${vignette(j)}" alt="" loading="lazy"><b>${esc(PERSOS[j][0])}</b></button>`).join("")}</div></section>` : ""}
+    ${equipe && eq.length ? `<section class="pf-bloc"><h3>Dans la même équipe</h3><div class="pf-eq">${eq.map(j => `<button data-perso="${j}"><img src="${vignette(j)}" alt="" loading="lazy"><b>${esc(PERSOS[j][0])}</b></button>`).join("")}</div></section>` : ""}
 `;
 }
 function ouvrirPerso(i){
@@ -8699,7 +8768,7 @@ document.addEventListener("click", e => {
   const coche = e.target.closest("[data-coche]");
   if(coche){ basculerVu(coche.dataset.coche); return; }
   const fi = e.target.closest("[data-fiche]");
-  if(fi){ ouvrirFiche(fi.dataset.fiche, fi.hasAttribute("data-extended") ? { aff:img(IMG_EXTENDED) } : {}); return; }
+  if(fi){ ouvrirFiche(fi.dataset.fiche, { ...(fi.hasAttribute("data-extended") ? { aff:img(IMG_EXTENDED) } : {}), depuis:fi.querySelector("img") }); return; }
   const fm = e.target.closest("[data-film]");
   if(fm){ const it = parId(fm.dataset.film); if(it) lireFilm(it); return; }
   const ch = e.target.closest("[data-chap]");
@@ -8921,17 +8990,14 @@ function majTva(){
   const p = nx && document.querySelector(`#tva-in .pas[data-id="${nx.id}"]`);
   if(p) p.classList.add("suivant");
 }
-/* La chronologie TVA, aux codes de l'app : en-tête comme le Parcours, une étape par époque, le chemin jaune à cocher.
-   Chaque titre rappelle sa phase et sa saga. */
+/* La chronologie TVA, aux codes de l'app : en-tête comme le Parcours, une étape par époque, le chemin jaune à cocher. */
 function ouvrirTva(){
   const { par, vus, liste, n, nx } = etatTva();
   let num = 0;
-  const phase = it => { const g = groupeDe(it); if(!g) return "Bonus"; const [nom, sous] = g.groupe.split(" · "); return nom.split(" / ")[0] + (sous ? " · " + sous : g.note ? " · " + g.note : ""); };
   const pas = (it, x) => `<li class="pas${vus[it.id] ? " vu" : ""}${it === nx ? " suivant" : ""}" data-id="${it.id}">
       <button class="noeud coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button>
       <button class="pas-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy" decoding="async">
-        <span class="pas-txt"><em>Prochain</em><b><span>${esc(it.t)}</span></b><small><span class="tv-num">${++num}</span>${Array.isArray(x) ? esc(x[1]) + " · " : ""}${it.a} · ${typeTitre(it)}${it.v ? " · à venir" : ""}</small>
-        <small class="tv-saga">${esc(phase(it))}</small></span></button></li>`;
+        <span class="pas-txt"><em>Prochain</em><b><span>${esc(it.t)}</span></b><small><span class="tv-num">${++num}</span>${Array.isArray(x) ? esc(x[1]) + " · " : ""}${it.a} · ${typeTitre(it)}${it.v ? " · à venir" : ""}</small></span></button></li>`;
   document.getElementById("tva-in").innerHTML = `
     <div class="colonne pc tv">
       <div class="pc-tete">
