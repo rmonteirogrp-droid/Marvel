@@ -129,3 +129,25 @@ ${fig.front}
 <circle cx="200" cy="200" r="${R - 5}" fill="none" stroke="#ffffff" stroke-width="1.6" opacity="0.35"/>
 </svg>`;
 }
+
+// Icône d'appli : carré plein (sans rond ni coins arrondis), cadré sur le visage.
+// Le cadre fait `size` unités autour de la tête, la tête est donc centrée avec de la marge.
+export function iconSquare(c, size = c.iconSize ?? 250) {
+  resetIds(c.id.replace(/[^a-z]/g, '').slice(0, 5) + 'q_');
+  const fig = figure(c);
+  const bg = c.bg(fig.J);
+  const [hx, hy] = fig.J.H;
+  const cy = hy + (c.iconDy ?? 14) * fig.J.hs;
+  const clamp = v => Math.max(0, Math.min(400 - size, v));
+  const x0 = clamp(hx - size / 2), y0 = clamp(cy - size / 2);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${f(x0)} ${f(y0)} ${size} ${size}" width="1024" height="1024" role="img" aria-label="${c.name}">
+<defs>${DEFS}</defs>
+<rect x="-50" y="-50" width="500" height="500" fill="${c.sky || '#222'}"/>
+${bg}
+<rect width="400" height="400" fill="url(#dots)" opacity="0.10" mask="url(#htMask)"/>
+${fig.behind}
+${fig.body}
+${fig.front}
+<rect width="400" height="400" fill="url(#vig)" opacity="0.6"/>
+</svg>`;
+}

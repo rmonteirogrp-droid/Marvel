@@ -1324,7 +1324,7 @@ const bark = (n = 8, seed = 3) => {
 const twig = (a, b, col = '#6a4426') => line(`M${P(a)}L${P(b)}`, 7, INK) + line(`M${P(a)}L${P(b)}`, 4, col);
 const leaf = (c, a, s = 1) => g(path('M0,0Q8,-8 18,0Q8,8 0,0Z', `fill="#5ac83a" stroke="${INK}" stroke-width="1.6"`), `transform="translate(${f(c[0])} ${f(c[1])}) rotate(${a}) scale(${s})"`);
 C({
-  id: 'groot', name: 'Groot', group: 'cosmos', ring: '#6a4426',
+  id: 'groot', name: 'Groot', iconSize: 280, iconDy: -16, group: 'cosmos', ring: '#6a4426',
   sky: '#0f2a1a',
   bg: J => {
     const R = B.rng(61);
@@ -1975,7 +1975,7 @@ C({
 
 // =================== LOKI ===================
 C({
-  id: 'loki', name: 'Loki', group: 'ff', ring: '#2a8a3a',
+  id: 'loki', name: 'Loki', iconSize: 310, iconDy: -34, group: 'ff', ring: '#2a8a3a',
   sky: '#0a1a10',
   bg: J => {
     let sw = '';

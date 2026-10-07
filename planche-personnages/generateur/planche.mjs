@@ -18,9 +18,11 @@ const GROUPS = [
   ['xmen', 'X-Men & mutants'],
   ['ff', 'Fantastiques & vilains'],
 ];
+// Personnages retirés de la planche (rendu jugé raté)
+const HIDDEN = new Set(['la-guepe', 'falcon', 'silver-surfer', 'nebula', 'la-torche']);
 const svg64 = id => 'data:image/svg+xml;base64,' + fs.readFileSync(path.join(ICONS, id + '.svg')).toString('base64');
 const sections = GROUPS.map(([g, title]) => {
-  const cells = CHARS.filter(c => c.group === g).map(c => `<figure><img src="${svg64(c.id)}"><figcaption>${c.name}</figcaption></figure>`).join('');
+  const cells = CHARS.filter(c => c.group === g && !HIDDEN.has(c.id)).map(c => `<figure><img src="${svg64(c.id)}"><figcaption>${c.name}</figcaption></figure>`).join('');
   return `<h2>${title}</h2><div class="grid">${cells}</div>`;
 }).join('');
 
@@ -40,7 +42,7 @@ h2{font-family:Bangers;font-size:72px;letter-spacing:4px;margin:60px 0 22px;colo
 figure{margin:0;text-align:center}
 figure img{width:300px;height:300px;display:block;margin:0 auto;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
 figcaption{font-family:Bangers;font-size:40px;letter-spacing:2px;margin-top:10px;color:#fff;-webkit-text-stroke:1.5px #120d1a}
-</style></head><body><h1>Personnages Marvel</h1><div class="sub">51 héros et vilains · style comics · chacun dans sa pose et son décor</div>${sections}</body></html>`;
+</style></head><body><h1>Personnages Marvel</h1><div class="sub">46 héros et vilains · style comics · chacun dans sa pose et son décor</div>${sections}</body></html>`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 3400, height: 1000 } });
