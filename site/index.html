@@ -3126,7 +3126,9 @@ body{font-synthesis:none}
 /* ══════ V3.4 ══════ */
 /* Bandes-annonces en tête : format cinéma (les bandes noires incrustées dans la vidéo sortent du cadre),
    fond flou animé tiré de la vidéo tout autour, comme avec les anciens montages */
-.ecran-cine.ecran-ba{aspect-ratio:2.39/1}
+/* (format des anciens montages : 16:10 ; la vidéo est cadrée par le script, sans bandes noires) */
+.ecran-cine.ecran-ba{overflow:hidden}
+.ecran-ba video{transition:opacity 1.2s ease,left .6s ease,top .6s ease,width .6s ease,height .6s ease}
 .fond-cv{opacity:0;transition:opacity 1.2s ease}
 .fond-cv.on{opacity:1}
 /* Ouverture d'une fiche : l'affiche touchée vole et devient l'image de la fiche (et y retourne à la fermeture) */
@@ -3138,6 +3140,8 @@ body{font-synthesis:none}
 #fiche.morph .fiche-visuel img{animation:none}
 #fiche.morph.on:not(.part) .fiche-texte{animation:morphTexte .55s .16s cubic-bezier(.2,.8,.2,1) both}
 @keyframes morphTexte{from{opacity:0;transform:translateY(26px)}}
+.ecran-cine.ecran-ba{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
+.ecran-ba video{-webkit-mask-image:none;mask-image:none}
 </style>
 </head>
 <body>
@@ -3958,11 +3962,12 @@ function piocherBA(cle){
   return baTete[cle] = { ...(l.find(x => x.src === src) || l[0]), pos:0 };
 }
 /* Fond flou animé : la vidéo redessinée en tout petit dans un canevas, agrandie et floutée par le CSS. */
-function fondAnime(v, cv){
+function fondAnime(v, cv, ba){
   const x = cv.getContext("2d"); let der = 0;
   const boucle = t => {
     if(!cv.isConnected || !v.isConnected) return;
-    if(t - der > 90 && !v.paused && v.readyState >= 2){ der = t; try{ x.drawImage(v, 0, 0, cv.width, cv.height); cv.classList.add("on"); }catch(e){} }
+    if(t - der > 90 && !v.paused && v.readyState >= 2){ der = t; const z = ba.zone;
+      try{ z ? x.drawImage(v, z.x, z.y, z.w, z.h, 0, 0, cv.width, cv.height) : x.drawImage(v, 0, 0, cv.width, cv.height); cv.classList.add("on"); }catch(e){} }
     requestAnimationFrame(boucle);
   };
   requestAnimationFrame(boucle);
@@ -3974,19 +3979,53 @@ function lancerBA(id, cle){
     f.removeAttribute("src"); f.removeAttribute("poster"); f.classList.remove("on"); f.dataset.ba = cle;
     let cv = f.parentNode.querySelector("canvas.fond-flou");
     if(!cv){ cv = document.createElement("canvas"); cv.className = "fond-flou fond-cv"; cv.width = 96; cv.height = 54; f.after(cv); }
-    fondAnime(v, cv);
+    fondAnime(v, cv, ba);
   }
-  v.addEventListener("loadedmetadata", () => { try{ v.currentTime = ba.pos || Math.min(8, v.duration * .08); }catch(e){} }, { once:true });   // on saute les logos du début, ou on reprend où on en était
+  v.addEventListener("loadedmetadata", () => { cadrerBA(v, ba.zone); try{ v.currentTime = ba.pos || Math.min(8, v.duration * .08); }catch(e){} }, { once:true });   // on saute les logos du début, ou on reprend où on en était
   v.addEventListener("timeupdate", () => { if(v.currentTime > 1) ba.pos = v.currentTime; });
-  v.addEventListener("playing", () => v.classList.add("on"), { once:true });
-  v.muted = true; v.src = ba.src;
+  v.addEventListener("playing", () => { v.classList.add("on"); if(!ba.zoneOk) [600, 2200, 4500, 8000].forEach(t => setTimeout(() => affinerZone(v, ba), t)); }, { once:true });
+  v.addEventListener("error", () => { if(v.crossOrigin){ v.removeAttribute("crossorigin"); v.src = ba.src; v.play().catch(() => {}); } }, { once:true });   // sans autorisation de lecture d'image : on garde le cadrage simple
+  v.muted = true; v.crossOrigin = "anonymous"; v.src = ba.src;
   const p = v.play(); if(p) p.catch(() => {});
   let lg = v.parentNode.querySelector(".ba-legende");
   if(!lg){ lg = document.createElement("button"); lg.className = "ba-legende"; v.parentNode.appendChild(lg); }
   if(ba.id) lg.dataset.fiche = ba.id; else delete lg.dataset.fiche;
   lg.innerHTML = `<i>Teaser</i>${esc(ba.t)}`;
+  if(cle === "doom") lg.remove();   // Doomsday : la vidéo seule
   majSonVue();
 }
+/* Cadrage des bandes-annonces, au format des anciens montages (16:10) : on mesure la zone d'image réelle
+   (sans les bandes noires incrustées dans la vidéo, en haut/bas comme sur les côtés), puis on agrandit la vidéo
+   pour que cette zone remplisse tout l'écran. Plusieurs mesures, gardées pour toute la session. */
+function cadrerBA(v, zone){
+  const box = v.parentNode, W = box.clientWidth, H = box.clientHeight, vw = v.videoWidth, vh = v.videoHeight; if(!W || !H || !vw) return;
+  const z = zone || { x:0, y:0, w:vw, h:vh }, s = Math.max(W / z.w, H / z.h);
+  Object.assign(v.style, { objectFit:"fill", right:"auto", bottom:"auto", width:vw * s + "px", height:vh * s + "px",
+    left:(W / 2 - (z.x + z.w / 2) * s) + "px", top:(H / 2 - (z.y + z.h / 2) * s) + "px" });
+}
+function mesurerZone(v){
+  const w = 96, h = Math.max(2, Math.round(96 * v.videoHeight / v.videoWidth)), cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+  const x = cv.getContext("2d", { willReadFrequently:true }); x.drawImage(v, 0, 0, w, h);
+  const d = x.getImageData(0, 0, w, h).data, clair = i => d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11 > 30;
+  const ligne = y => { let n = 0; for(let i = 0; i < w; i++) if(clair((y * w + i) * 4)) n++; return n > w * .05; };
+  const col = c => { let n = 0; for(let y = 0; y < h; y++) if(clair((y * w + c) * 4)) n++; return n > h * .05; };
+  let t = 0, b = h - 1, l = 0, r = w - 1;
+  while(t < h / 2 && !ligne(t)) t++; while(b > h / 2 && !ligne(b)) b--;
+  while(l < w / 2 && !col(l)) l++; while(r > w / 2 && !col(r)) r--;
+  if(t >= h / 2 || l >= w / 2) return null;   // image trop sombre pour juger
+  const bv = Math.min(t, h - 1 - b), bh = Math.min(l, w - 1 - r), k = v.videoWidth / w;   // bandes symétriques : on garde la plus fine
+  return { x:bh * k, y:bv * k, w:(w - 2 * bh) * k, h:(h - 2 * bv) * k };
+}
+function affinerZone(v, ba){
+  if(!v.isConnected || v.paused || v.readyState < 2) return;
+  let z; try{ z = mesurerZone(v); }catch(e){ ba.zoneOk = true; return; }   // image non lisible (pas d'autorisation) : cadrage simple
+  if(!z) return;
+  const a = ba.zone;   // on garde l'union des mesures : une scène sombre ne doit pas faire zoomer
+  ba.zone = a ? { x:Math.min(a.x, z.x), y:Math.min(a.y, z.y), w:Math.max(a.x + a.w, z.x + z.w) - Math.min(a.x, z.x), h:Math.max(a.y + a.h, z.y + z.h) - Math.min(a.y, z.y) } : z;
+  ba.mesures = (ba.mesures || 0) + 1; if(ba.mesures >= 4) ba.zoneOk = true;
+  cadrerBA(v, ba.zone);
+}
+addEventListener("resize", () => document.querySelectorAll("video[data-ba]").forEach(v => { const ba = baTete[v.dataset.ba]; if(v.src && ba) cadrerBA(v, ba.zone); }));
 /* Le son des bandes-annonces est celui de la vidéo : un toucher suffit à le rallumer si le navigateur l'a coupé. */
 function reveillerBA(){
   const c = sonVueVoulu(); if(!c || !BA_TETE[c] || Date.now() < silenceJusqua) return;
