@@ -874,58 +874,91 @@ const venomMaw = (x, y, W = 62, H = 46, tongue = '') => {
 };
 const SYMB = { base: '#0f0f15', dark: '#020204', light: '#2c3350' };
 const gloss = (pts, w = 3, op = 0.55) => line(smooth(pts, false), w, '#b8d0ff', `opacity="${op}"`);
+// Tête du Venom « film » : goutte allongée, yeux blancs fuyants, gueule haute à crocs fins, langue enroulée
+const venomHead = () => {
+  const skull = smooth([[0, -74], [26, -70], [44, -52], [52, -24], [54, 6], [50, 34], [42, 66], [26, 94], [0, 106], [-26, 94], [-42, 66], [-50, 34], [-54, 6], [-52, -24], [-44, -52], [-26, -70]], true, 1 / 6.5);
+  const id = 'vh';
+  let o = `<defs><linearGradient id="${id}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.6" stop-color="#e4ecf4"/><stop offset="1" stop-color="#9fb2c6"/></linearGradient>` +
+    `<radialGradient id="${id}g" cx="0.5" cy="0.4" r="0.7"><stop offset="0" stop-color="#7a1626"/><stop offset="0.7" stop-color="#2a050c"/><stop offset="1" stop-color="#0a0104"/></radialGradient></defs>`;
+  // crâne noir brillant
+  o += shade(skull, SYMB, { s: 12, h: 3, lw: 3.6, sheen: 0.2, hatch: false });
+  // reflets spéculaires (bleutés) sur le crâne et les joues
+  o += line(smooth([[-34, -50], [-18, -64], [6, -68]], false), 7, '#9fb8e0', 'opacity="0.55" filter="url(#soft)"') + line(smooth([[-30, -52], [-14, -63], [4, -66]], false), 2.4, '#e6f0ff', 'opacity="0.9"');
+  o += line(smooth([[-50, -10], [-50, 16], [-44, 44]], false), 4, '#8aa4cc', 'opacity="0.45"') + line(smooth([[46, -30], [50, -6]], false), 3, '#8aa4cc', 'opacity="0.35"');
+  // nervures du symbiote
+  o += line('M-6,-70Q-2,-50 -8,-36M8,-66Q12,-50 6,-38M-46,30Q-36,40 -40,60M44,36Q38,50 40,66', 1.6, '#4a5a7a', 'opacity="0.7"');
+  // yeux
+  for (const s of [-1, 1]) {
+    const E = [[6, 8], [14, -8], [30, -26], [50, -38], [52, -24], [46, -6], [32, 6], [16, 12]].map(([x, y]) => [s * x, y]);
+    const d = smooth(E, true, 1 / 10);
+    o += path(d, `fill="url(#${id}e)" stroke="#05060a" stroke-width="3"`) + path(smooth(E.map(([x, y]) => [x * 0.9 + s * 3, y * 0.7 - 6]), true, 1 / 10), `fill="#ffffff" opacity="0.65"`);
+  }
+  // gueule béante
+  const M = smooth([[0, 14], [22, 16], [40, 22], [42, 44], [34, 72], [18, 92], [0, 98], [-18, 92], [-34, 72], [-42, 44], [-40, 22], [-22, 16]], true, 1 / 7);
+  const R = B.rng(91);
+  let up = '', low = '';
+  for (let i = 0; i < 17; i++) {
+    const k = i / 16, x = -38 + k * 76, yTop = 18 + Math.abs(k - 0.5) * 12, L = 18 + (1 - Math.abs(k - 0.5) * 2) * 10 + R() * 6;
+    up += path(`M${f(x - 2.6)},${f(yTop - 4)}L${f(x + 2.6)},${f(yTop - 4)}L${f(x + R() * 2 - 1)},${f(yTop + L)}Z`, `fill="#efe9da" stroke="#1a0a0a" stroke-width="0.9"`);
+  }
+  for (let i = 0; i < 14; i++) {
+    const k = i / 13, x = -30 + k * 60, yB = 94 - Math.abs(k - 0.5) * 2 * 26, L = 14 + R() * 8;
+    low += path(`M${f(x - 2.4)},${f(yB + 4)}L${f(x + 2.4)},${f(yB + 4)}L${f(x + R() * 2 - 1)},${f(yB - L)}Z`, `fill="#e2dccb" stroke="#1a0a0a" stroke-width="0.9"`);
+  }
+  // gencives roses le long des lèvres
+  const gums = line(smooth([[-40, 22], [-20, 20], [0, 20], [20, 20], [40, 22]], false), 7, '#c0566a', 'opacity="0.9"') + line(smooth([[-34, 74], [-18, 92], [0, 96], [18, 92], [34, 74]], false), 6, '#a8485c', 'opacity="0.85"');
+  // langue : sort du fond, passe sur les crocs du bas, s'enroule vers la gauche
+  const tongue = shade(smooth([[-8, 50], [8, 52], [10, 70], [0, 92], [-22, 108], [-52, 114], [-74, 104], [-82, 86], [-76, 72], [-66, 78], [-66, 92], [-52, 98], [-30, 94], [-16, 80], [-12, 64]], true, 1 / 7), { base: '#b4685e', dark: '#5e2a28', light: '#e0a090' }, {
+    s: 5, lw: 3, hatch: false, inner: line(smooth([[-2, 58], [-6, 82], [-28, 102], [-58, 106], [-74, 94]], false), 2, '#6e302c'),
+  });
+  let drool = '';
+  for (const x of [-24, -6, 14, 28]) drool += line(`M${x},${24 + Math.abs(x) * 0.2}Q${x + 2},${60} ${x - 1},${84 - Math.abs(x) * 0.4}`, 1.4, '#d6e8f0', 'opacity="0.75"');
+  o += path(M, `fill="url(#${id}g)"`) + clip(M, gums + low + tongue + drool + up) +
+    path(M, `fill="none" stroke="#05060a" stroke-width="3.6"`);
+  // la langue déborde de la gueule
+  o += clip(smooth([[-120, 60], [120, 60], [120, 200], [-120, 200]]), `<g clip-path="url(#vhOut)">${tongue}</g>`);
+  o = `<defs><clipPath id="vhOut"><path d="M-200,-200H200V200H-200Z ${M}" clip-rule="evenodd"/></clipPath></defs>` + o;
+  return o;
+};
 C({
-  id: 'venom', name: 'Venom', group: 'spider', ring: '#e8e8f0',
-  sky: '#05060c',
+  id: 'venom', name: 'Venom', group: 'spider', ring: '#cfd8e2',
+  sky: '#3a4a5a',
   bg: J => {
     let ten = '';
     const R = B.rng(23);
-    for (let i = 0; i < 14; i++) {
-      const a = 180 + R() * 180, c = [200 + Math.cos(a * Math.PI / 180) * 40, 250];
-      ten += line(smooth([c, add(c, polar(80, a + 25)), add(c, polar(150, a - 25)), add(c, polar(240, a + 15))], false), 16 - i * 0.7, '#020205');
+    for (let i = 0; i < 9; i++) {
+      const s = i % 2 ? 1 : -1, c = [200 + s * (90 + R() * 40), 150 + R() * 120];
+      ten += line(smooth([c, add(c, [s * (40 + R() * 30), -30 - R() * 30]), add(c, [s * (90 + R() * 40), -60 + R() * 40]), add(c, [s * (150 + R() * 30), -110 + R() * 60])], false), 7 - i * 0.4, '#06080c');
     }
-    let rain = '';
-    for (let i = 0; i < 60; i++) rain += `M${f(R() * 420)},${f(R() * 400)}l-5,16`;
-    return B.radial('vn', '#2a1438', '#020206', 0.5, 0.35, 0.7) + B.city({ far: '#140e22', near: '#06040c', win: '#9a6aff', base1: 380, base2: 430, seed: 33 }) +
-      path(rain, `stroke="#8a8ab0" stroke-width="1" opacity="0.35"`) + ten;
+    return B.sky(['#2a3644', '#56687a', '#8a9aa6'], 'vns') + B.clouds('#3a4858', -30, 3, 0.9, 1.4, false) + B.clouds('#4a5a6a', 300, 8, 0.7, 1.2, false) +
+      path('M-10,60L60,20L90,140L40,260L-10,300Z', `fill="#2f6a8a" opacity="0.45" filter="url(#blur14)"`) + path('M410,40L340,90L330,220L410,260Z', `fill="#2f6a8a" opacity="0.45" filter="url(#blur14)"`) + ten;
   },
-  behind: J => {
-    let t = '';
-    const R = B.rng(5);
-    for (let i = 0; i < 8; i++) {
-      const s = i % 2 ? 1 : -1, p0 = J.toG([s * 120, 10 + i * 6]);
-      t += line(smooth([p0, add(p0, [s * (40 + R() * 30), -40 - R() * 40]), add(p0, [s * (60 + R() * 40), -110 - R() * 50]), add(p0, [s * (30 + R() * 50), -170 - R() * 40])], false), 9 - i * 0.6, INK);
-    }
-    return t;
-  },
-  suit: SYMB, neckCol: SYMB, sleeve: SYMB, glove: SYMB, bu: 9, bl: 5, armK: 1.25, swK: 1.2, headK: 1.0,
+  suit: SYMB, neckCol: SYMB, sleeve: SYMB, glove: SYMB, bu: 9, bl: 5, armK: 1.3, swK: 1.3, headK: 1.0,
   torso: T => {
-    const sp = s => path(smooth([[0, 34], [s * 34, 6], [s * 96, -26], [s * 84, 22], [s * 34, 46], [s * 20, 96], [s * 62, 170], [s * 44, 176], [s * 4, 110]]), `fill="#ecebf2" stroke="${INK}" stroke-width="2.4"`);
-    return pecs(T, '#000000', 0.9) + abs(T, '#000000', 0.8) + sp(-1) + sp(1) + ellipse([0, 64], 22, 38, `fill="#ecebf2" stroke="${INK}" stroke-width="2.4"`) +
-      gloss([[-T.sw * 0.38, 40], [-T.sw * 0.3, 30], [-T.sw * 0.18, 34]], 5) + gloss([[-30, 120], [-26, 140], [-30, 160]], 3, 0.4);
+    let veins = '';
+    const R = B.rng(7);
+    for (let i = 0; i < 12; i++) {
+      const x = (R() - 0.5) * T.sw * 0.9, y = 10 + R() * 180;
+      veins += `M${f(x)},${f(y)}q${f(R() * 20 - 10)},${f(12 + R() * 14)} ${f(R() * 16 - 8)},${f(26 + R() * 16)}t${f(R() * 14 - 7)},${f(22 + R() * 10)}`;
+    }
+    return pecs(T, '#000000', 0.9) + abs(T, '#000000', 0.7) + line(veins, 1.6, '#5a6e8a', 'opacity="0.7"') +
+      gloss([[-T.sw * 0.42, 24], [-T.sw * 0.3, 12], [-T.sw * 0.14, 18]], 5, 0.55) + gloss([[T.sw * 0.2, 30], [T.sw * 0.34, 24]], 4, 0.35);
   },
-  dU: (L, r) => gloss([[L * 0.15, -r * 0.55], [L * 0.5, -r * 0.75], [L * 0.85, -r * 0.5]], 4, 0.5),
+  dU: (L, r) => gloss([[L * 0.15, -r * 0.55], [L * 0.5, -r * 0.75], [L * 0.85, -r * 0.5]], 4, 0.5) + line(`M${f(L * 0.2)},${f(r * 0.2)}q${f(L * 0.2)},${f(-r * 0.3)} ${f(L * 0.5)},${f(r * 0.1)}`, 1.4, '#5a6e8a', 'opacity="0.7"'),
   dL: (L, r) => gloss([[L * 0.15, -r * 0.5], [L * 0.6, -r * 0.6]], 3, 0.45),
-  head: {
-    t: 0.06, expr: 'furious', skin: SYMB, ears: false, shape: { jaw: 1.3, wid: 1.18, chin: 1.2, cran: 1.04, cheek: 1.12 },
-    mask: {
-      type: 'full', color: SYMB, lens: 'venom', ang: 4, ls: 0.92, border: 5, shine: false, dy: -14, modelK: 0.4,
-      pattern: ({ F }) => gloss([[F.cx - 34, -50], [F.cx - 16, -60], [F.cx + 6, -60]], 5, 0.6) + gloss([[F.cx - 44, -10], [F.cx - 42, 10]], 3, 0.4),
-    },
-    front: ({ F }) => {
-      const x = F.cx + 3, y = 22;
-      // la langue part du fond de la gueule, passe par-dessus les dents du bas et pend sur le menton
-      const tx = x - 6, ty = y + 8;
-      const tongue = shade(smooth([[tx - 14, ty], [tx + 8, ty - 2], [tx + 10, ty + 18], [tx + 4, ty + 38], [tx - 6, ty + 58], [tx - 20, ty + 70], [tx - 30, ty + 64], [tx - 22, ty + 50], [tx - 16, ty + 30], [tx - 16, ty + 12]]), '#b82a52', {
-        s: 5, lw: 3, inner: line(`M${tx - 2},${ty + 6}Q${tx - 4},${ty + 36} ${tx - 20},${ty + 62}`, 2, '#7a1434'),
-      });
-      return venomMaw(x, y, 52, 36, tongue);
-    },
-  },
+  head: { t: 0, expr: 'furious', skin: SYMB, ears: false, custom: venomHead },
+  // épaules monstrueuses qui remontent autour de la tête
+  preHead: J => [-1, 1].map(s => {
+    const c = J.toG([s * 118, -6]);
+    const d = smooth([add(c, [-s * 70, 40]), add(c, [-s * 62, -20]), add(c, [-s * 20, -62]), add(c, [s * 40, -66]), add(c, [s * 86, -30]), add(c, [s * 100, 40]), add(c, [s * 60, 90]), add(c, [-s * 20, 90])], true, 1 / 6);
+    return shade(d, SYMB, { s: 14, lw: 3.4, hatch: false, sheen: 0.22 }) +
+      gloss([add(c, [-s * 40, -40]), add(c, [0, -58]), add(c, [s * 40, -54])], 5, 0.55) +
+      line(`M${P(add(c, [-s * 30, -10]))}q${s * 20},18 ${s * 8},40t${s * 16},34M${P(add(c, [s * 30, -30]))}q${s * 14},20 ${s * 4},44`, 1.5, '#5a6e8a', 'opacity="0.7"');
+  }).join(''),
   pose: {
-    N: [200, 290], tilt: 0, sw: 262, ww: 176, nw: 34, hs: 1.46, nl: -10,
-    armL: { a1: 128, a2: 64, L1: 76, L2: 72, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'front', r: [38, 30, 29, 21], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
-    armR: { a1: 52, a2: 116, L1: 76, L2: 72, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'front', r: [38, 30, 29, 21], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
+    N: [200, 280], tilt: 0, sw: 262, ww: 176, nw: 34, hs: 1.02, nl: -38, hoff: [0, -46],
+    armL: { a1: 128, a2: 64, L1: 76, L2: 72, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'back', r: [38, 30, 29, 21], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
+    armR: { a1: 52, a2: 116, L1: 76, L2: 72, hand: 'open', talons: true, clawCol: '#f0eee6', hs: 1.75, layer: 'back', r: [38, 30, 29, 21], fingers: [[-30, 22], [-11, 26], [8, 25], [26, 20]] },
   },
 });
 

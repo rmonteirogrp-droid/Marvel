@@ -421,6 +421,7 @@ export function head(h) {
   const ctx = { t, F, hd, skin, ex, h };
   let out = '';
   if (h.back && !h.noBack) out += h.back(ctx);
+  if (h.custom) return out + h.custom(ctx);
   // oreilles
   if (h.ears !== false) {
     for (const s of [-1, 1]) {
