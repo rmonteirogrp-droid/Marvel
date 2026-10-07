@@ -4914,7 +4914,7 @@ function ouvrirFiche(id, opt = {}){
       ${plexSerie(it) && !plexCle(it) ? `<section class="episodes"><p class="surtitre">Épisodes</p><div id="ep-liste"><div class="ep-attente"><i></i>Lecture de ta bibliothèque Plex…</div></div></section>` : ""}
     </div>`;
   ouvrirFeuille("fiche");
-  morphOuvrir(opt.depuis);
+  morphOuvrir(opt.depuis, opt.aff ? null : prechargerHD(it));
   monterHD(document.getElementById("fiche-in"));
   if(plexSerie(it) && !plexCle(it)) chargerEpisodes(it);
 }
@@ -4929,16 +4929,40 @@ function cloneMorph(src, de, vers, duree, fin){
   Object.assign(c.style, pos(vers)); document.body.appendChild(c);
   const a = c.animate([pos(de), pos(vers)], { duration:duree, easing:"cubic-bezier(.2,.75,.15,1)" });
   a.onfinish = a.oncancel = () => { if(fin) fin(); c.remove(); };
+  return c;
 }
-function morphOuvrir(img){
+/* Image nette pour l'animation : l'affiche HD est demandée dès que le doigt se pose sur une affiche,
+   l'animation part avec elle (0,2 s d'attente au plus) et la fiche l'affiche directement : un seul passage, sans flou. */
+const affHD = new Map();
+function prechargerHD(it){
+  const u = it && hdUrl(it, "w780"); if(!u) return null;
+  if(!affHD.has(u)){ const im = new Image(); im.decoding = "async"; im.src = u; affHD.set(u, im); }
+  return affHD.get(u);
+}
+document.addEventListener("pointerdown", e => {
+  const fi = e.target.closest && e.target.closest("[data-fiche]");
+  if(fi && !fi.hasAttribute("data-extended")) prechargerHD(parId(fi.dataset.fiche));
+}, { capture:true, passive:true });
+function morphOuvrir(img, hd){
   const f = document.getElementById("fiche"); morphSource = null; f.classList.remove("morph");
   if(!img || !morphOk()) return;
   const a = img.getBoundingClientRect(), cible = f.querySelector(".fiche-visuel img");
   if(!cible || !dansEcran(a)) return;
   f.classList.add("morph"); morphSource = img;
-  const b = cible.getBoundingClientRect();
   cible.style.visibility = "hidden";
-  cloneMorph(img.currentSrc || img.src, a, b, 520, () => { cible.style.visibility = ""; });
+  const net = () => hd && hd.complete && hd.naturalWidth;
+  const orig = cible.dataset.hd;
+  if(hd){ cible.removeAttribute("data-hd");   // la fiche garde cette image nette : pas de second changement d'image
+    hd.addEventListener("error", () => { if(orig){ cible.dataset.hd = orig; monterHD(cible.parentNode); } }, { once:true }); }   // image nette introuvable : chargement habituel
+  const lancer = () => {
+    const b = cible.getBoundingClientRect();
+    if(net()) cible.src = hd.src;
+    const c = cloneMorph(net() ? hd.src : img.currentSrc || img.src, a, b, 520, () => { cible.style.visibility = ""; });
+    if(hd && !net()) hd.addEventListener("load", () => { c.src = hd.src; cible.src = hd.src; }, { once:true });   // arrivée en vol : bascule discrète
+  };
+  if(!hd || net()) { lancer(); return; }
+  let fait = false; const go = () => { if(!fait){ fait = true; lancer(); } };
+  hd.addEventListener("load", go, { once:true }); hd.addEventListener("error", go, { once:true }); setTimeout(go, 220);
 }
 function morphFermer(){
   const f = document.getElementById("fiche"), img = morphSource, cible = f.querySelector(".fiche-visuel img"); morphSource = null;
