@@ -2,6 +2,9 @@
 [build]
   publish = "site"
   command = ""
+  # Pas de déploiement (ni de crédits consommés) quand l'envoi ne change ni l'appli (site/) ni la sauvegarde (netlify/) :
+  # planche de personnages, maquettes, sources… ne relancent plus de mise en ligne.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- site/ netlify/ netlify.toml package.json"
 
 # L'appli et son service worker sont toujours revérifiés, pour que « Recharger » trouve la dernière version.
 [[headers]]
