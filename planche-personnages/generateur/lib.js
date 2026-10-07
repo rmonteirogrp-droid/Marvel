@@ -372,13 +372,13 @@ export function lens(c, sc, side, shape, o = {}) {
   else if (shape === 'narrow')
     pts = [[-13, -2 + ang], [0, -7], [14, -8], [16, -2], [9, 4], [-6, 4], [-13, 2]];
   else if (shape === 'venom')
-    pts = [[-12, 6 + ang], [2, -6], [16, -20], [34, -34], [30, -14], [26, 2], [12, 14], [-4, 16]];
+    pts = [[-14, 12 + ang], [-2, -2], [14, -16], [30, -30], [48, -42], [42, -20], [34, 0], [20, 14], [2, 20]];
   else if (shape === 'slit')
     pts = [[-12, -1 + ang], [2, -5], [15, -6], [12, 2], [-4, 3]];
   const s = sc * (o.s ?? 1);
   // le côté gauche est le miroir du côté droit : coin intérieur vers le nez
   const P2 = pts.map(([px, py]) => [x + side * px * s, y + py * s]);
-  const d = shape === 'narrow' || shape === 'slit' ? poly(P2) : smooth(P2, true, 1 / 7);
+  const d = shape === 'narrow' || shape === 'slit' ? poly(P2) : smooth(P2, true, shape === 'venom' ? 1 / 16 : 1 / 7);
   return path(d, `fill="${o.fill || '#ffffff'}" stroke="${INK}" stroke-width="${o.border ?? 5}" stroke-linejoin="round"`) +
     (o.shine === false ? '' : path(d, `fill="#b9d4ff" opacity="0.35" transform="translate(${f(x)} ${f(y)}) scale(0.55) translate(${f(-x + side * 4)} ${f(-y + 6)})"`));
 }

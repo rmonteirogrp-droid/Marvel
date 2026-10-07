@@ -845,21 +845,27 @@ C({
 // =================== VENOM ===================
 // Gueule énorme, crocs irréguliers, bave et langue
 const venomMaw = (x, y, W = 62, H = 46) => {
-  const d = `M${x - W},${y - 10}Q${x - W * 0.5},${y - 2} ${x},${y - 4}Q${x + W * 0.5},${y - 2} ${x + W},${y - 10}Q${x + W * 0.9},${y + H * 0.7} ${x},${y + H}Q${x - W * 0.9},${y + H * 0.7} ${x - W},${y - 10}Z`;
+  // rictus : coins relevés jusqu'aux tempes, crocs qui suivent la courbe
+  const q = (P0, C, P2, t) => [(1 - t) ** 2 * P0[0] + 2 * (1 - t) * t * C[0] + t * t * P2[0], (1 - t) ** 2 * P0[1] + 2 * (1 - t) * t * C[1] + t * t * P2[1]];
+  const L0 = [x - W, y - 24], R0 = [x + W, y - 24], Ct = [x, y + 8], Cb = [x, y + H * 1.7];
+  const d = `M${P(L0)}Q${P(Ct)} ${P(R0)}Q${P(Cb)} ${P(L0)}Z`;
   const R = B.rng(77);
   let teeth = '';
-  const n = 13;
+  const n = 15;
   for (let i = 0; i < n; i++) {
-    const k = i / (n - 1), tx = x - W * 0.95 + k * W * 1.9;
-    const top = y - 10 + Math.abs(k - 0.5) * -6 + 6;
-    const L = 12 + R() * 14 + (i === 2 || i === n - 3 ? 10 : 0);
-    teeth += path(`M${f(tx - 4.5)},${f(top - 8)}L${f(tx + 4.5)},${f(top - 8)}L${f(tx + R() * 2 - 1)},${f(top + L)}Z`, `fill="#f2efe2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
-    const bot = y + H - Math.abs(k - 0.5) * H * 0.9 - 4;
-    const L2 = 10 + R() * 12;
-    teeth += path(`M${f(tx - 4)},${f(bot + 10)}L${f(tx + 4)},${f(bot + 10)}L${f(tx + R() * 2 - 1)},${f(bot - L2)}Z`, `fill="#e6e2d2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
+    const t = 0.03 + (i / (n - 1)) * 0.94;
+    const pt = q(L0, Ct, R0, t), pb = q(L0, Cb, R0, t);
+    const gap = pb[1] - pt[1];
+    const L = Math.min(gap * 0.55, 10 + R() * 12 + (i === 3 || i === n - 4 ? 10 : 0));
+    teeth += path(`M${f(pt[0] - 4.5)},${f(pt[1] - 6)}L${f(pt[0] + 4.5)},${f(pt[1] - 6)}L${f(pt[0] + R() * 2 - 1)},${f(pt[1] + L)}Z`, `fill="#f2efe2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
+    const L2 = Math.min(gap * 0.45, 8 + R() * 10);
+    teeth += path(`M${f(pb[0] - 4)},${f(pb[1] + 6)}L${f(pb[0] + 4)},${f(pb[1] + 6)}L${f(pb[0] + R() * 2 - 1)},${f(pb[1] - L2)}Z`, `fill="#e6e2d2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
   }
   let drool = '';
-  for (const [k, l] of [[-0.6, 26], [-0.2, 34], [0.35, 22], [0.7, 30]]) drool += line(`M${f(x + W * k)},${f(y - 2)}Q${f(x + W * k + 3)},${f(y + l * 0.6)} ${f(x + W * k + 1)},${f(y + l)}`, 2, '#cfe6f0', 'opacity="0.85"');
+  for (const t of [0.22, 0.4, 0.62, 0.8]) {
+    const pt = q(L0, Ct, R0, t), pb = q(L0, Cb, R0, t);
+    drool += line(`M${f(pt[0])},${f(pt[1] + 4)}Q${f(pt[0] + 3)},${f((pt[1] + pb[1]) / 2)} ${f(pt[0] + 1)},${f(pb[1] - 2)}`, 1.8, '#cfe6f0', 'opacity="0.8"');
+  }
   return path(d, `fill="#1a0408"`) + clip(d, ellipse([x, y + H * 0.55], W * 0.6, H * 0.4, `fill="#6a0f1e" filter="url(#soft)"`) + teeth + drool) +
     path(d, `fill="none" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"`);
 };
@@ -898,16 +904,17 @@ C({
   dU: (L, r) => gloss([[L * 0.15, -r * 0.55], [L * 0.5, -r * 0.75], [L * 0.85, -r * 0.5]], 4, 0.5),
   dL: (L, r) => gloss([[L * 0.15, -r * 0.5], [L * 0.6, -r * 0.6]], 3, 0.45),
   head: {
-    t: 0.06, expr: 'furious', skin: SYMB, ears: false, shape: { jaw: 1.36, wid: 1.16, chin: 1.3, cran: 0.94, cheek: 1.1 },
+    t: 0.06, expr: 'furious', skin: SYMB, ears: false, shape: { jaw: 1.3, wid: 1.18, chin: 1.2, cran: 1.04, cheek: 1.12 },
     mask: {
-      type: 'full', color: SYMB, lens: 'venom', ang: 10, ls: 1.12, border: 5, shine: false, dy: -10, modelK: 0.4,
+      type: 'full', color: SYMB, lens: 'venom', ang: 4, ls: 1.04, border: 5, shine: false, dy: -14, modelK: 0.4,
       pattern: ({ F }) => gloss([[F.cx - 34, -50], [F.cx - 16, -60], [F.cx + 6, -60]], 5, 0.6) + gloss([[F.cx - 44, -10], [F.cx - 42, 10]], 3, 0.4),
     },
     front: ({ F }) => {
-      const x = F.cx + 3, y = 26;
-      return venomMaw(x, y) +
-        shade(smooth([[x - 14, y + 14], [x + 10, y + 12], [x + 20, y + 40], [x + 14, y + 72], [x + 26, y + 96], [x + 44, y + 104], [x + 30, y + 112], [x + 4, y + 96], [x - 2, y + 64], [x - 10, y + 36]]), '#c8325e', {
-          s: 5, lw: 3.2, inner: line(`M${x + 2},${y + 22}Q${x + 6},${y + 60} ${x + 12},${y + 92}`, 2.2, '#7a1434'),
+      const x = F.cx + 3, y = 22;
+      const tx = x - 22, ty = y + 34;
+      return venomMaw(x, y, 60, 40) +
+        shade(smooth([[tx - 8, ty - 10], [tx + 12, ty - 8], [tx + 8, ty + 24], [tx - 12, ty + 52], [tx - 34, ty + 70], [tx - 60, ty + 72], [tx - 44, ty + 62], [tx - 26, ty + 44], [tx - 14, ty + 16]]), '#c8325e', {
+          s: 5, lw: 3.2, inner: line(`M${tx},${ty}Q${tx - 6},${ty + 34} ${tx - 40},${ty + 64}`, 2.2, '#7a1434'),
         });
     },
   },
@@ -1094,23 +1101,34 @@ C({
 });
 
 // =================== DRAX ===================
-const draxTat = (T) => line('M-60,30Q-40,70 -10,60Q10,40 30,70Q50,100 70,80M-50,120Q-20,150 0,130Q20,110 40,140M-30,40Q-20,10 0,20', 4, '#a82a2a');
+const TAT = '#8e1414';
+const draxTat = T => {
+  const sw = T.sw / 2;
+  let d = '';
+  for (const s of [-1, 1]) {
+    d += `M${f(s * sw * 0.86)},20Q${f(s * sw * 0.4)},18 ${f(s * 22)},44Q${f(s * 8)},70 ${f(s * 30)},86Q${f(s * 60)},96 ${f(s * sw * 0.6)},70Q${f(s * sw * 0.7)},52 ${f(s * sw * 0.5)},50`;
+    d += `M${f(s * 8)},110Q${f(s * 40)},124 ${f(s * 34)},150Q${f(s * 26)},176 ${f(s * 48)},196`;
+    d += `M${f(s * sw * 0.7)},110Q${f(s * sw * 0.56)},150 ${f(s * sw * 0.64)},200`;
+  }
+  return line(d, 5.5, TAT);
+};
 C({
   id: 'drax', name: 'Drax', group: 'cosmos', ring: '#a82a2a',
   sky: '#3a140a',
-  bg: J => B.sky(['#2a0a14', '#8a2a1e', '#f08a3a'], 'dx') + B.planet([300, 90], 50, '#f0c06a') + B.rocks(['#5a2a1e', '#3a1a14'], 51, 10, 320) + B.debris([200, 220], 10, '#6a3a2a', 5, 140, 200),
-  suit: '#8a9a96', skin: '#8a9a96', neckCol: '#8a9a96', sleeve: '#8a9a96', glove: '#8a9a96', bu: 5, bl: 3,
-  torso: T => pecs(T, INK, 0.6) + abs(T, INK, 0.5) + draxTat(T) + `<rect x="-90" y="214" width="180" height="40" fill="#5a3a2a" stroke="${INK}" stroke-width="2.4"/>`,
-  dU: (L, r) => line(`M${f(L * 0.2)},${f(-r * 0.6)}Q${f(L * 0.5)},${f(r * 0.4)} ${f(L * 0.8)},${f(-r * 0.3)}`, 3.5, '#a82a2a'),
+  bg: J => B.sky(['#1a0610', '#7a1e1a', '#e07a34'], 'dx') + B.planet([300, 90], 50, '#f0c06a') + B.rays([200, 220], '#ffd6a0', 22, 0.12) + B.rocks(['#5a2a1e', '#3a1a14'], 51, 10, 320) + B.debris([200, 220], 10, '#6a3a2a', 5, 140, 200),
+  suit: '#7c9184', skin: '#7c9184', neckCol: '#7c9184', sleeve: '#7c9184', glove: '#7c9184', bu: 8, bl: 4, swK: 1.22, armK: 1.3, headK: 0.94,
+  torso: T => pecs(T, '#1a2a22', 0.9) + abs(T, '#1a2a22', 0.8) + draxTat(T) + `<rect x="-130" y="222" width="260" height="40" fill="#4a2e22" stroke="${INK}" stroke-width="2.4"/>` + line('M-130,232H130', 3, '#2a1a12'),
+  dU: (L, r) => line(`M${f(L * 0.1)},${f(-r * 0.5)}Q${f(L * 0.4)},${f(r * 0.6)} ${f(L * 0.7)},${f(-r * 0.2)}Q${f(L * 0.85)},${f(-r * 0.6)} ${f(L)},${f(-r * 0.1)}`, 5, TAT),
+  dL: (L, r) => line(`M${f(L * 0.1)},${f(r * 0.3)}Q${f(L * 0.45)},${f(-r * 0.6)} ${f(L * 0.8)},${f(r * 0.2)}`, 4.5, TAT),
   head: {
-    t: 0.1, expr: 'furious', skin: '#8a9a96', mouth: 'roar', mouthW: 1.1, shape: { jaw: 1.18, wid: 1.04, chin: 1.12 }, lines: ['cheek', 'fold'],
-    eyes: { iris: '#c84a2a', lid: 3 }, brows: { th: 6, col: '#3a4440' },
-    mid: ({ F }) => line(`M${f(F.cx - 30)},-60Q${f(F.cx)},-40 ${f(F.cx + 30)},-60M${f(F.cx)},-50V-24M${f(F.cx - 40)},-30Q${f(F.cx - 46)},-6 ${f(F.cx - 38)},10`, 3.5, '#a82a2a'),
+    t: 0.08, expr: 'furious', skin: '#7c9184', mouth: 'grit', mouthW: 1.25, shape: { jaw: 1.28, wid: 1.12, chin: 1.14, cran: 0.9, cheek: 1.08 }, lines: ['fold', 'forehead'],
+    eyes: { iris: '#5a1a14', lid: 4, s: 0.92 }, brows: { th: 9, col: '#3e5046', w: 1.2 },
+    mid: ({ F }) => line(`M${f(F.cx)},-66V-26M${f(F.cx)},-26Q${f(F.cx - 14)},-30 ${f(F.cx - 26)},-42Q${f(F.cx - 38)},-50 ${f(F.cx - 40)},-30Q${f(F.cx - 40)},-14 ${f(F.cx - 30)},-12M${f(F.cx)},-26Q${f(F.cx + 14)},-30 ${f(F.cx + 26)},-42Q${f(F.cx + 38)},-50 ${f(F.cx + 40)},-30Q${f(F.cx + 40)},-14 ${f(F.cx + 30)},-12M${f(F.cx - 34)},14Q${f(F.cx - 36)},30 ${f(F.cx - 28)},44M${f(F.cx + 34)},14Q${f(F.cx + 36)},30 ${f(F.cx + 28)},44M${f(F.cx - 14)},-62Q${f(F.cx)},-50 ${f(F.cx + 14)},-62`, 4.6, TAT),
   },
   pose: {
-    N: [200, 276], tilt: 0, sw: 236, ww: 164, nw: 30, hs: 1.04, nl: 6,
-    armL: { a1: 142, a2: -84, L1: 70, L2: 62, hand: 'grip', hs: 1.45, layer: 'mid', r: [36, 28, 27, 20], prop: arm => ({ front: PR.sword(arm.W, -110, 92, '#dfe6ee', { w: 10, guard: '#5a3a2a' }) }) },
-    armR: { a1: 38, a2: -96, L1: 70, L2: 62, hand: 'grip', hs: 1.45, layer: 'mid', r: [36, 28, 27, 20], prop: arm => ({ front: PR.sword(arm.W, -70, 92, '#dfe6ee', { w: 10, guard: '#5a3a2a' }) }) },
+    N: [200, 276], tilt: 0, sw: 236, ww: 164, nw: 30, hs: 1.1, nl: 0,
+    armL: { a1: 100, a2: -58, L1: 66, L2: 62, hand: 'grip', hs: 1.45, layer: 'front', r: [36, 28, 27, 20], prop: arm => ({ front: PR.sword(arm.W, -104, 100, '#dfe6ee', { w: 10, guard: '#4a2e22', grip: '#2a1a12' }) }) },
+    armR: { a1: 80, a2: -122, L1: 66, L2: 62, hand: 'grip', hs: 1.45, layer: 'front', r: [36, 28, 27, 20], prop: arm => ({ front: PR.sword(arm.W, -76, 100, '#dfe6ee', { w: 10, guard: '#4a2e22', grip: '#2a1a12' }) }) },
   },
 });
 
@@ -1233,15 +1251,14 @@ C({
   torso: T => shade(smooth([[-T.sw / 2 - 10, 10], [-30, 0], [30, 0], [T.sw / 2 + 10, 10], [T.sw / 2, 60], [30, 50], [-30, 50], [-T.sw / 2, 60]]), '#e0b13a', { s: 6, lw: 2.6 }) +
     line('M-60,90L0,140L60,90M-50,170H50', 4, '#e0b13a') + pecs(T, '#14204a', 0.6),
   head: {
-    t: 0.12, expr: 'evil', skin: '#8a5aa8', mouth: 'smirk', mouthW: 1.1, shape: { jaw: 1.25, wid: 1.06, chin: 1.3, cran: 0.94 }, lines: ['fold', 'forehead'],
+    t: 0.12, expr: 'angry', skin: '#8a5aa8', mouth: 'frown', mouthW: 1.2, shape: { jaw: 1.32, wid: 1.1, chin: 1.36, cran: 0.98, cheek: 1.06 }, lines: ['fold', 'forehead', 'cheek'], ears: true,
     eyes: { iris: '#3a6aff', lid: 3 }, brows: { th: 5, col: '#4a2a5e' },
     mid: ({ F }) => line(`M${f(F.mouth[0] - 10)},${48}V${62}M${f(F.mouth[0])},${50}V${66}M${f(F.mouth[0] + 10)},${48}V${62}M${f(F.mouth[0] - 20)},${44}V${56}M${f(F.mouth[0] + 20)},${44}V${56}`, 2.2, '#4a2a5e'),
-    front: () => shade(smooth([[-50, -20], [-50, -54], [-26, -76], [26, -76], [50, -54], [50, -20], [36, -40], [20, -50], [-20, -50], [-36, -40]]), '#e0b13a', { s: 6, lw: 3, inner: line('M-24,-74Q0,-60 24,-74M0,-62V-50', 2.6, '#8a6a1a') }),
   },
   pose: {
-    N: [196, 280], tilt: -3, sw: 240, ww: 170, nw: 30, hs: 1.06, nl: 6,
+    N: [196, 278], tilt: -3, sw: 240, ww: 170, nw: 30, hs: 1.26, nl: 18,
     armL: { a1: 130, a2: 104, L1: 76, L2: 66, hand: 'fist', hs: 1.6, layer: 'mid', r: [36, 28, 28, 22] },
-    armR: { a1: 36, a2: -96, L1: 70, L2: 64, hand: 'f-fist', hs: 1.5, ha: 4, layer: 'front', r: [34, 27, 28, 24] },
+    armR: { a1: 56, a2: -100, L1: 66, L2: 60, hand: 'f-fist', hs: 1.5, ha: 4, layer: 'front', r: [34, 27, 28, 24] },
   },
 });
 
@@ -1518,21 +1535,24 @@ C({
     g(path('M0,0L120,0L120,60L40,60L20,84L24,60L0,60Z', `fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"`) + `<text x="60" y="42" text-anchor="middle" font-family="Impact, sans-serif" font-size="30" fill="${INK}">BANG!</text>`, 'transform="translate(250 30) rotate(8)"') +
     g(path(B.starShape([0, 0], 40, 0.55, 10), `fill="#ff3a3a" stroke="${INK}" stroke-width="3"`) + `<text x="0" y="8" text-anchor="middle" font-family="Impact, sans-serif" font-size="20" fill="#fff">POW</text>`, 'transform="translate(70 90) rotate(-12)"'),
   behind: J => line(`M${P(J.toG([-90, -60]))}L${P(J.toG([60, 120]))}M${P(J.toG([90, -60]))}L${P(J.toG([-60, 120]))}`, 9, INK) + line(`M${P(J.toG([-90, -60]))}L${P(J.toG([-40, 0]))}M${P(J.toG([90, -60]))}L${P(J.toG([40, 0]))}`, 5, '#2a2a32'),
-  suit: '#c41e2a', neckCol: '#c41e2a', sleeve: '#c41e2a', forearm: '#c41e2a', glove: '#1a1a22',
-  torso: T => [-1, 1].map(s => shade(smooth([[s * 34, 40], [s * (T.sw / 2 + 30), 10], [s * (T.sw / 2 + 30), 270], [s * T.ww * 0.42, 270], [s * T.ww * 0.36, 150]], true), '#1a1a22', { s: 6, lw: 2.4 })).join('') +
-    line('M60,0L-60,200', 10, '#1a1a22') + `<rect x="-70" y="190" width="140" height="18" fill="#1a1a22"/>` + circle([0, 199], 16, `fill="#c41e2a" stroke="${INK}" stroke-width="2.4"`) + line('M0,183V215', 4) + pecs(T, '#7a0a14', 0.6),
+  suit: '#b81a26', neckCol: '#b81a26', sleeve: '#b81a26', forearm: '#b81a26', glove: '#1a1a22', bu: 6, bl: 3, swK: 1.24, armK: 1.32,
+  torso: T => [-1, 1].map(s => shade(smooth([[s * 40, 46], [s * (T.sw / 2 + 30), 10], [s * (T.sw / 2 + 30), 270], [s * T.ww * 0.44, 270], [s * T.ww * 0.4, 150]], true), '#1a1a22', { s: 6, lw: 2.4 })).join('') +
+    pecs(T, '#4a0610', 0.9) + abs(T, '#4a0610', 0.8) +
+    line('M70,0L-70,210', 12, '#1a1a22') + line('M70,0L-70,210', 1.6, '#3a3a44') + `<rect x="-90" y="196" width="180" height="20" fill="#1a1a22" stroke="${INK}" stroke-width="2"/>` +
+    circle([0, 206], 17, `fill="#b81a26" stroke="${INK}" stroke-width="2.6"`) + line('M0,189V223', 4) + [-60, -36, 36, 60].map(x => `<rect x="${x - 8}" y="194" width="16" height="22" rx="2" fill="#2a2a34" stroke="${INK}" stroke-width="1.6"/>`).join(''),
+  dU: (L, r) => line(`M${f(L * 0.15)},${f(-r * 0.2)}Q${f(L * 0.5)},${f(-r * 0.9)} ${f(L * 0.85)},${f(-r * 0.3)}`, 1.8, '#4a0610', 'opacity="0.7"'),
   head: {
-    t: -0.28, expr: 'smirk', skin: '#c41e2a', ears: false, shape: { jaw: 0.96 },
+    t: -0.22, expr: 'angry', skin: '#b81a26', ears: false, shape: { jaw: 1.06, chin: 1.02, wid: 1.0 },
     mask: {
-      type: 'full', color: '#c41e2a', lens: 'round', ls: 0.95, ang: 1, border: 3.5, shine: false,
-      pattern: ({ F }) => [0, 1].map(i => path(smooth([[F.eye[i][0] - 24, -8], [F.eye[i][0] - 6, -22], [F.eye[i][0] + 18, -18], [F.eye[i][0] + 24, 0], [F.eye[i][0] + 12, 18], [F.eye[i][0] - 14, 16]].map(([x, y]) => [i ? x : 2 * F.eye[i][0] - x, y])), `fill="#16161c"`)).join('') +
-        line(`M${f(F.cx + 2)},-60V-20`, 1.8, '#7a0a14'),
+      type: 'full', color: '#b81a26', lens: 'narrow', ls: 0.95, ang: 8, border: 3.5, shine: false,
+      pattern: ({ F }) => [0, 1].map(i => path(smooth([[F.eye[i][0] - 22, -2], [F.eye[i][0] - 6, -14], [F.eye[i][0] + 18, -16], [F.eye[i][0] + 26, -2], [F.eye[i][0] + 14, 16], [F.eye[i][0] - 12, 14]].map(([x, y]) => [i ? x : 2 * F.eye[i][0] - x, y])), `fill="#141418"`)).join('') +
+        line(`M${f(F.cx + 2)},-64V-22`, 1.8, '#5a0610'),
     },
   },
   pose: {
-    N: [200, 268], tilt: 6, htilt: -12, sw: 176, ww: 118, nw: 18,
-    armL: { a1: 120, a2: -30, L1: 70, L2: 60, hand: 'grip', layer: 'front', r: [24, 18, 17, 13], prop: arm => ({ back: PR.sword(arm.W, -64, 170, '#dfe6ee', { w: 7, guard: '#1a1a22', grip: '#1a1a22' }) }) },
-    armR: { a1: -20, a2: -80, L1: 68, L2: 58, hand: 'f-two', hs: 1.0, ha: 14, layer: 'back', r: [24, 18, 17, 13] },
+    N: [200, 272], tilt: 6, htilt: -6, sw: 196, ww: 132, nw: 22,
+    armL: { a1: -150, a2: -72, L1: 70, L2: 62, hand: 'grip', layer: 'back', r: [26, 20, 19, 15], prop: arm => ({ mid: PR.sword(arm.W, -32, 190, '#dfe6ee', { w: 7, guard: '#1a1a22', grip: '#1a1a22' }) }) },
+    armR: { a1: 96, a2: -66, L1: 68, L2: 62, hand: 'grip', layer: 'front', r: [26, 20, 19, 15], prop: arm => ({ front: PR.gun(add(arm.W, [8, -12]), -66, { s: 1.3, len: 60, col: '#2a2a32' }) + B.energy(add(arm.W, polar(100, -70)), 8, '#ffd27a') }) },
   },
 });
 
