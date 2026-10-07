@@ -3096,6 +3096,32 @@ body{font-synthesis:none}
 #choix .ch-titre{margin:10px 0 18px;font-size:clamp(38px,calc(11 * var(--vw)),56px)}
 #choix .grille-av{grid-template-columns:repeat(6,1fr);gap:10px 9px}
 @media (min-width:560px){html:not(.pivot) #choix .grille-av{grid-template-columns:repeat(8,1fr)}}
+
+/* ══════ V3.3 ══════ */
+/* Bande-annonce en tête de l'accueil MCU et de Doomsday : légende discrète (touchée → fiche du film) */
+.ba-legende{position:absolute;z-index:3;left:14px;bottom:12px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 80px);
+  font:600 13px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.9);text-align:left;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ba-legende i{flex:0 0 auto;font-style:normal;padding:4px 7px 3px;background:var(--rouge-vif);transform:skewX(-12deg);font-size:11px;letter-spacing:.16em;text-shadow:none}
+.fond-flou[poster]{opacity:1}
+/* Chronologie TVA aux codes de l'app : fond de l'app, en-tête du Parcours, étapes par époque, chemin jaune */
+#tva{background:var(--fond)}
+#tva-in{padding:calc(var(--haut) + 70px) 0 calc(var(--bas) + 40px)}
+#tva-in .tv{padding-top:0}
+.tv-logo{display:block;pointer-events:none}
+.tv-intro{margin-top:12px;font:500 14px/1.45 var(--texte);color:rgba(255,255,255,.55);max-width:34ch}
+.tv-filet{display:block;margin-top:18px}
+#tva-in .etape-tete .surtitre{font:600 12px/1 var(--cond);letter-spacing:.2em;color:var(--jaune)}
+.pas-txt .tv-saga{margin-top:5px;font:600 10.5px/1.2 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,194,26,.75);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pas.vu .pas-txt .tv-saga{color:rgba(255,255,255,.35)}
+.tv-num{display:inline-block;min-width:20px;margin-right:6px;padding:2px 5px 1px;background:rgba(255,255,255,.1);font:600 11px/1.2 var(--cond);color:#fff;text-align:center;transform:skewX(-10deg)}
+.tv-fin{margin:40px 0 0;text-align:center;font:400 22px/1 var(--titre);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.3);transform:skewX(-8deg)}
+/* Carte de la collection : la fiche complète du personnage directement sous la carte (plus de bouton intermédiaire) */
+.cd-pf{position:relative;align-self:stretch;margin:4px -20px 0;text-align:left}
+.cd-pf .pf-bio{margin-top:14px}
+.cd-info-bas{margin-top:26px}
+.cd-info-bas:empty{display:none}
 </style>
 </head>
 <body>
@@ -3826,8 +3852,24 @@ function majSonVue(){
     b.setAttribute("aria-label", sonsVues ? "Couper le son" : "Activer le son");
     b.innerHTML = sonsVues ? SVG.sonOn : SVG.sonOff;
   });
-  if(!lecteurDebloque) return;
   const cle = Date.now() < silenceJusqua ? null : sonVueVoulu();
+  // Bandes-annonces : seule celle de la vue affichée a le son ; celles des vues cachées sont en pause (pas de données pour rien)
+  const cache = document.getElementById("app").hidden || document.getElementById("film").classList.contains("on") || !!document.querySelector(".feuille.on:not(.part)");
+  const visible = cache ? null : vue === "accueil" ? univers : vue === "doomsday" ? "doom" : null;
+  document.querySelectorAll("video[data-ba]").forEach(x => {
+    if(x.dataset.ba !== cle) x.muted = true;
+    if(x.dataset.ba !== visible || document.hidden){ if(!x.paused) x.pause(); }
+    else if(x.paused && x.src){ const q = x.play(); if(q) q.catch(() => {}); }
+  });
+  if(cle && BA_TETE[cle]){
+    const v = document.getElementById(SONS_VUE[cle][0]);
+    if(v && v.dataset.ba === cle){
+      if(sonVueActuel !== cle){ arreterSonVue(); sonVueActuel = cle; }
+      if(v.muted){ v.muted = false; const q = v.play(); if(q) q.catch(() => { v.muted = true; v.play().catch(() => {}); }); }
+      return;
+    }
+  }
+  if(!lecteurDebloque) return;
   if(cle === sonVueActuel && (!cle || sonVueJoue())) return;
   if(cle && sonVueActuel && cle !== sonVueActuel){
     arreterSonVue(); sonVueActuel = null; reserverSilence(700); return;
@@ -3865,6 +3907,9 @@ function preparerVideo(cle, donnees){
 function lancerVideo(id, donnees, cle = id){
   const v = document.getElementById(id);
   if(!v || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if(BA_TETE[cle]){ lancerBA(id, cle); return; }
+  [v, document.getElementById(id + "-fond")].forEach(x => { if(x){ delete x.dataset.ba; x.removeAttribute("poster"); } });
+  const lg = v.parentNode.querySelector(".ba-legende"); if(lg) lg.remove();
   if(!urlsVideo[cle]){ preparerVideo(cle, donnees).then(() => { if(document.getElementById(id) === v) lancerVideo(id, donnees, cle); }); return; }
   [v, document.getElementById(id + "-fond")].forEach(x => {
     if(!x) return;
@@ -3874,6 +3919,45 @@ function lancerVideo(id, donnees, cle = id){
     const p = x.play(); if(p) p.catch(() => {});
   });
 }
+/* En tête de l'accueil MCU et de Doomsday : une vraie bande-annonce, différente à chaque fois.
+   Pioche sans remise mémorisée sur l'appareil (on voit toutes les bandes-annonces avant de revoir la même).
+   Lue en continu depuis Allociné comme dans la fiche ; le fond flouté reprend l'affiche (pas de seconde vidéo à télécharger). */
+const BA_TETE = {
+  mcu:() => tous("mcu").filter(i => i.ba && i.ba.src).map(i => ({ src:i.ba.src, aff:affiche(i), id:i.id, t:i.t })),
+  doom:() => { const dd = tous("mcu").find(i => i.t === "Avengers: Doomsday"); return TRAILERS.map(t => ({ src:t.src, aff:dd ? affiche(dd) : "", id:dd ? dd.id : null, t:t.titre })); },
+};
+const baTete = {};
+function piocherBA(cle){
+  const l = BA_TETE[cle](); if(!l.length) return null;
+  let sac = []; try{ sac = JSON.parse(localStorage.getItem("mt-ba-" + cle) || "[]"); }catch(e){}
+  sac = sac.filter(src => l.some(x => x.src === src));
+  if(!sac.length) sac = l.map(x => x.src).map(x => [Math.random(), x]).sort((a, b) => a[0] - b[0]).map(x => x[1]).filter(src => src !== (baTete[cle] || {}).src);
+  const src = sac.shift(); try{ localStorage.setItem("mt-ba-" + cle, JSON.stringify(sac)); }catch(e){}
+  return baTete[cle] = l.find(x => x.src === src) || l[0];
+}
+function lancerBA(id, cle){
+  const v = document.getElementById(id), f = document.getElementById(id + "-fond"), ba = piocherBA(cle); if(!v || !ba) return;
+  v.dataset.ba = cle; v.classList.remove("on");
+  if(f){ f.removeAttribute("src"); f.dataset.ba = cle; if(ba.aff){ f.poster = ba.aff; f.classList.add("on"); } }
+  v.addEventListener("loadedmetadata", () => { try{ v.currentTime = Math.min(8, v.duration * .08); }catch(e){} }, { once:true });   // on saute les logos du début
+  v.addEventListener("playing", () => v.classList.add("on"), { once:true });
+  v.muted = true; v.src = ba.src;
+  const p = v.play(); if(p) p.catch(() => {});
+  let lg = v.parentNode.querySelector(".ba-legende");
+  if(!lg){ lg = document.createElement("button"); lg.className = "ba-legende"; v.parentNode.appendChild(lg); }
+  if(ba.id) lg.dataset.fiche = ba.id; else delete lg.dataset.fiche;
+  const [type, nom] = /^Teaser · /.test(ba.t) ? ["Teaser", ba.t.slice(9)] : ["Bande-annonce", cle === "doom" ? "Avengers: Doomsday" : ba.t];
+  lg.innerHTML = `<i>${type}</i>${esc(nom)}`;
+  majSonVue();
+}
+/* Le son des bandes-annonces est celui de la vidéo : un toucher suffit à le rallumer si le navigateur l'a coupé. */
+function reveillerBA(){
+  const c = sonVueVoulu(); if(!c || !BA_TETE[c] || Date.now() < silenceJusqua) return;
+  const v = document.getElementById(SONS_VUE[c][0]);
+  if(v && v.dataset.ba === c && v.muted){ v.muted = false; const p = v.play(); if(p) p.catch(() => { v.muted = true; v.play().catch(() => {}); }); }
+}
+document.addEventListener("touchend", reveillerBA, true);
+document.addEventListener("click", reveillerBA, true);
 /* Répliques : l'image suit le son (recalage dès que l'écart dépasse 0,12 s).
    Seulement si le son avance vraiment : un son bloqué (iPhone qui suspend l'audio) figerait son horloge,
    et la vidéo serait ramenée sans fin à la même seconde. */
@@ -4431,7 +4515,7 @@ function rendreParcours(versId){
         d.scrollTo({ top:Math.max(0, rectApp(sec).top + d.scrollTop + parseFloat(getComputedStyle(sec).paddingTop) - marge - 18) }); }
       return;
     }
-    const li = document.querySelector(`.pas[data-id="${versId}"]`);
+    const li = document.querySelector(`#pc-liste .pas[data-id="${versId}"]`);
     if(li) defileur().scrollTo({ top:Math.max(0, rectApp(li).top + defileur().scrollTop - hautEcran() * .38) });
   });
 }
@@ -4443,7 +4527,7 @@ function rendreChemin(){
   const html = BIB[univers].map((g, gi) => {
     const l = g.items.filter(filtreOk);
     if(!l.length) return "";
-    const [nom, sous] = g.groupe.split(" · "), saga = sous || g.note || "", nouvelle = saga !== sagaPrec;
+    const [nom, sous] = g.groupe.split(" · "), saga = sous || g.note || "", nouvelle = true;   // la saga rappelée au-dessus de chaque phase
     sagaPrec = saga;
     const pi = pierreDe(univers, gi);
     return `<section class="etape${pi ? " pierre" : ""}" data-groupe="${gi}"${pi ? ` style="--pierre:${pi[1]}"` : ""}>
@@ -4473,8 +4557,8 @@ function majParcours(){
     sec.querySelector(".etape-compte").innerHTML = `${v}<i>/${l.length}</i>`;
     requestAnimationFrame(() => { sec.querySelector(".filet-prog i").style.width = (l.length ? Math.round(v / l.length * 100) : 0) + "%"; });
   });
-  document.querySelectorAll(".pas.suivant").forEach(p => p.classList.remove("suivant"));
-  const p = nx && document.querySelector(`.pas[data-id="${nx.id}"]`);
+  document.querySelectorAll("#pc-liste .pas.suivant").forEach(p => p.classList.remove("suivant"));
+  const p = nx && document.querySelector(`#pc-liste .pas[data-id="${nx.id}"]`);
   if(p) p.classList.add("suivant");
 }
 
@@ -4631,7 +4715,7 @@ const libNote = n => n ? `<b>${fmtNote(n)}</b><i>/5</i> <span>${LIBELLES_NOTE[n]
       if(!vusDe(a.id)[a.id]) basculerVu(a.id, true);
     }
     sauver();
-    document.querySelectorAll(`.pas[data-id="${a.id}"] .pas-txt small`).forEach(sm => {
+    document.querySelectorAll(`#pc-liste .pas[data-id="${a.id}"] .pas-txt small`).forEach(sm => {
       const it = parId(a.id); sm.innerHTML = `${infosTitre(it)}${it.v ? " · à venir" : ""}${pastilleNote(a.id)}`; });
     if(vue === "profil") rendreProfil();
   };
@@ -7434,7 +7518,6 @@ function rendreCarte(forge = false){
   const i = carteVue, r = RARETE[i], c = collec(), a = !!c.col[i], p = PERSOS[i];
   const l = listeCatalogue(), k = l.indexOf(i);
   const alias = p.slice(1).filter(n => n.toLowerCase() !== p[0].toLowerCase()).slice(0, 2);
-  const films = apparitions(i), act = interpretes(i), vusF = films.filter(it => vusDe(it.id)[it.id]).length;
   const cout = FORGE[r];
   document.getElementById("carte-in").innerHTML = `<div class="cd r${r}"><span class="cd-fond"></span><span class="cd-halo"></span>
     <div class="cd-scene${forge ? " forge" : ""}" id="cd-scene"><div class="cd-flip" id="cd-flip"><div class="cd-tourne">
@@ -7445,16 +7528,9 @@ function rendreCarte(forge = false){
       <h2>${esc(p[0])}</h2>${alias.length ? `<p class="cd-alias">${alias.map(esc).join(" · ")}</p>` : ""}
       <div class="cd-stats"><div><b>${a ? "×" + c.col[i] : "—"}</b><span>${a ? "Obtenue" : "Pas encore obtenue"}</span></div>
         <div><b>${a ? ECLATS[r] : cout}</b><span>${a ? "Éclats par doublon" : "Éclats pour la forger"}</span></div></div>
-      ${typeof PERSOINFO !== "undefined" && PERSOINFO[i] && PERSOINFO[i].b ? `<p class="cd-bio">${esc(PERSOINFO[i].b)}</p>` : ""}
-      <button class="cd-fiche" data-perso="${i}"><span>Fiche complète</span><small>bio, pouvoirs, apparitions</small><i>›</i></button>
-      ${act ? `<p class="cd-act"><i>${act.startsWith("Voix") ? "Voix originale" : "Interprété par"}</i><b>${esc(act.replace(/^Voix : /, ""))}</b></p>` : ""}
-      <div class="cd-app">
-        <div class="cd-app-tete"><p>Apparitions${films.length ? ` · ${films.length} titre${films.length > 1 ? "s" : ""}` : ""}</p>${films.length ? `<span>${vusF} vu${vusF > 1 ? "s" : ""}</span>` : ""}</div>
-        ${films.length ? `<div class="cd-films">${films.map(it => `<button class="cd-film${vusDe(it.id)[it.id] ? " vu" : ""}" data-fiche="${it.id}">
-            <span class="cd-film-aff"><img src="${affiche(it)}" alt="" loading="lazy">${vusDe(it.id)[it.id] ? `<i>${SVG.coche}</i>` : ""}</span>
-            <b>${esc(it.t)}</b><small>${it.a} · ${univDe(it.id) === "mcu" ? "MCU" : "Multivers"}</small></button>`).join("")}</div>`
-          : `<p class="cd-app-vide">Personnage des comics : il n'apparaît dans aucun film ni aucune série de l'app pour l'instant.</p>`}
-      </div>
+    </div>
+    <div class="pf r${r} cd-pf">${corpsPerso(i)}</div>
+    <div class="cd-info cd-info-bas">
       ${a ? "" : `<div class="cd-forge"><button class="btn btn-forge" data-forger="${i}" ${c.ecl >= cout ? "" : "disabled"}>Forger cette carte · ${cout} éclats</button>
         <p>${c.ecl >= cout ? "Tu as " + c.ecl + " éclats." : "Encore " + (cout - c.ecl) + " éclats. Les doublons en rapportent."}</p></div>`}
       ${l.length > 1 && k >= 0 ? `<div class="cd-nav"><button data-cd-pas="-1" aria-label="Carte précédente">‹</button><span>${k + 1} / ${l.length}</span><button data-cd-pas="1" aria-label="Carte suivante">›</button></div>` : ""}
@@ -7796,7 +7872,9 @@ function resultatsCartes(brut, q, z){
       return { i, s }; }).filter(x => x.s >= 0).sort((a, b) => a.s - b.s || RARETE[b.i] - RARETE[a.i]);
   z.innerHTML = l.length ? `<p class="rc-sect">${l.length} carte${l.length > 1 ? "s" : ""}</p>${l.slice(0, 40).map(x => ligne(x.i)).join("")}` : `<p class="rc-rien">Aucune carte ne correspond à « ${esc(brut)} »</p>`;
 }
-function ouvrirPerso(i){
+/* Corps de la fiche personnage (bio, chiffres, pouvoirs, identité, affiliations, suivi, apparitions, équipe) :
+   utilisé par la fiche personnage et directement sous la carte dans la collection. */
+function corpsPerso(i){
   const f = ficheDe(i), noms = PERSOS[i], r = RARETE[i], inf = infoDe(i);
   const items = f.l.map(([id, acteur, role, ver]) => ({ it:parId(id), acteur, role, ver })).filter(x => x.it);
   let vrai = items.filter(x => x.ver === "v"), anim = items.filter(x => x.ver === "a");
@@ -7817,12 +7895,7 @@ function ouvrirPerso(i){
     ["À l'écran depuis", premiere ? premiere.it.a + " · " + premiere.it.t : ""], ["Dans les comics", inf.fa ? inf.fa + (inf.an ? " · " + inf.an : "") : inf.an || ""],
     ["Créé par", inf.cr], ["Carte", RARETES[r] + " " + "★".repeat(r) + (possede(i) ? " · obtenue" : " · à trouver")]].filter(x => x[1]);
   const eq = equipiers(i);
-  document.getElementById("perso-in").innerHTML = `<div class="pf r${r}">
-    <div class="pf-hero"><img src="${photo(i)}"${u ? ` data-hd="${u}"` : ""} alt="" style="object-position:50% ${fy}%"><span class="pf-trame"></span>
-      <span class="pf-carte" data-carte-perso="${i}">${carteHTML(i, { etat:possede(i) ? "face" : "verrou" })}</span>
-      <div class="pf-txt"><p class="pf-tags"><span>${esc(equipeDe(i))}</span>${inf.s ? `<span>${esc(inf.s)}</span>` : ""}</p><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>
-        <p>${civil ? `<b>${esc(civil)}</b>` : ""}${f.a ? `${civil ? " · " : ""}joué par <b>${esc(f.a)}</b>` : ""}</p></div></div>
-    ${inf.b ? `<p class="pf-bio">${esc(inf.b)}</p>` : ""}
+  return `${inf.b ? `<p class="pf-bio">${esc(inf.b)}</p>` : ""}
     <div class="pf-stats"><span><b>${items.length}</b><small>apparition${items.length > 1 ? "s" : ""}</small></span><span><b>${premiere ? premiere.it.a : "—"}</b><small>à l'écran</small></span><span><b>${vus.length}<i>/${sortis.length}</i></b><small>vu${vus.length > 1 ? "s" : ""}</small></span></div>
     ${inf.p && inf.p.length ? `<section class="pf-bloc"><h3>Pouvoirs et capacités</h3><div class="pf-pouv">${inf.p.map((x, k) => `<span style="--k:${k}"><i>${String(k + 1).padStart(2, "0")}</i>${esc(x)}</span>`).join("")}</div></section>` : ""}
     <section class="pf-bloc"><h3>Fiche d'identité</h3><dl class="pf-id">${id.map(([k, v]) => `<div${["Créé par", "À l'écran depuis", "Dans les comics", "Carte"].includes(k) ? ` class="l"` : ""}><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></section>
@@ -7837,6 +7910,17 @@ function ouvrirPerso(i){
     ${groupe("autres", "Autres versions · autres interprètes", "Autres acteurs", autres, ["Autre acteur", "f"])}
     ${!items.length ? `<p class="pf-vide">Pas encore apparu dans un film ou une série du catalogue. Peut-être bientôt…</p>` : ""}
     ${eq.length ? `<section class="pf-bloc"><h3>Dans la même équipe</h3><div class="pf-eq">${eq.map(j => `<button data-perso="${j}"><img src="${vignette(j)}" alt="" loading="lazy"><b>${esc(PERSOS[j][0])}</b></button>`).join("")}</div></section>` : ""}
+`;
+}
+function ouvrirPerso(i){
+  const f = ficheDe(i), noms = PERSOS[i], r = RARETE[i], inf = infoDe(i), civil = nomCivil(i);
+  const fy = typeof FY_PERSO !== "undefined" && FY_PERSO[i] ? Math.round(FY_PERSO[i] * 100) : 30, u = photoHD(i);
+  document.getElementById("perso-in").innerHTML = `<div class="pf r${r}">
+    <div class="pf-hero"><img src="${photo(i)}"${u ? ` data-hd="${u}"` : ""} alt="" style="object-position:50% ${fy}%"><span class="pf-trame"></span>
+      <span class="pf-carte" data-carte-perso="${i}">${carteHTML(i, { etat:possede(i) ? "face" : "verrou" })}</span>
+      <div class="pf-txt"><p class="pf-tags"><span>${esc(equipeDe(i))}</span>${inf.s ? `<span>${esc(inf.s)}</span>` : ""}</p><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>
+        <p>${civil ? `<b>${esc(civil)}</b>` : ""}${f.a ? `${civil ? " · " : ""}joué par <b>${esc(f.a)}</b>` : ""}</p></div></div>
+    ${corpsPerso(i)}
     <div class="fin-page"></div></div>`;
   ouvrirFeuille("perso");
   monterHD(document.getElementById("perso-in"));
@@ -8822,34 +8906,47 @@ function etatTva(){
   const liste = CHRONO.flatMap(e => e[2]).map(par).filter(Boolean);
   return { par, vus, liste, n:liste.filter(i => vus[i.id]).length, nx:liste.find(i => !vus[i.id] && !pasSorti(i)) };
 }
-/* Après une coche : compteur, jauge et repère « Prochain » suivent, sans redessiner la page. */
+/* Après une coche : compteurs, jauges et repère « Prochain » suivent, sans redessiner la page. */
 function majTva(){
   if(!document.getElementById("tva").classList.contains("on")) return;
-  const { liste, n, nx } = etatTva(), prog = document.querySelector(".chr-prog");
-  if(prog){ prog.querySelector("b").textContent = n; prog.querySelector(".filet-prog i").style.width = Math.round(n / liste.length * 100) + "%"; }
-  document.querySelectorAll(".chr-pas.ici").forEach(p => { p.classList.remove("ici"); p.querySelector(".chr-txt em")?.remove(); });
-  const p = nx && document.querySelector(`.chr-pas[data-id="${nx.id}"]`);
-  if(p){ p.classList.add("ici"); p.querySelector(".chr-txt").insertAdjacentHTML("afterbegin", `<em>Prochain dans la chronologie</em>`); }
+  const { par, vus, liste, n, nx } = etatTva(), q = id => document.getElementById(id);
+  if(q("tv-compte")){ q("tv-compte").innerHTML = `${n}<i>/${liste.length}</i>`; q("tv-filet").style.width = Math.round(n / liste.length * 100) + "%"; }
+  document.querySelectorAll("#tva-in .etape").forEach(sec => {
+    const l = CHRONO[+sec.dataset.ere][2].map(par).filter(Boolean), v = l.filter(i => vus[i.id]).length;
+    sec.classList.toggle("fini", v === l.length);
+    sec.querySelector(".etape-compte").innerHTML = `${v}<i>/${l.length}</i>`;
+    sec.querySelector(".filet-prog i").style.width = (l.length ? Math.round(v / l.length * 100) : 0) + "%";
+  });
+  document.querySelectorAll("#tva-in .pas.suivant").forEach(p => p.classList.remove("suivant"));
+  const p = nx && document.querySelector(`#tva-in .pas[data-id="${nx.id}"]`);
+  if(p) p.classList.add("suivant");
 }
+/* La chronologie TVA, aux codes de l'app : en-tête comme le Parcours, une étape par époque, le chemin jaune à cocher.
+   Chaque titre rappelle sa phase et sa saga. */
 function ouvrirTva(){
   const { par, vus, liste, n, nx } = etatTva();
-  let num = 0, ici = false;
-  const noeud = (it, note) => { const estIci = it === nx && !ici; if(estIci) ici = true; return `<div class="chr-pas${vus[it.id] ? " vu" : ""}${estIci ? " ici" : ""}" data-id="${it.id}">
-      <span class="chr-point">${SVG.coche}</span>
-      <button class="chr-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy">
-      <span class="chr-txt">${estIci ? `<em>Prochain dans la chronologie</em>` : ""}<b>${esc(it.t)}</b><small>${note || it.a + " · " + typeTitre(it)}${it.v ? " · à venir" : ""}</small></span></button>
-      <button class="coche chr-coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button></div>`; };
+  let num = 0;
+  const phase = it => { const g = groupeDe(it); if(!g) return "Bonus"; const [nom, sous] = g.groupe.split(" · "); return nom.split(" / ")[0] + (sous ? " · " + sous : g.note ? " · " + g.note : ""); };
+  const pas = (it, x) => `<li class="pas${vus[it.id] ? " vu" : ""}${it === nx ? " suivant" : ""}" data-id="${it.id}">
+      <button class="noeud coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button>
+      <button class="pas-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy" decoding="async">
+        <span class="pas-txt"><em>Prochain</em><b><span>${esc(it.t)}</span></b><small><span class="tv-num">${++num}</span>${Array.isArray(x) ? esc(x[1]) + " · " : ""}${it.a} · ${typeTitre(it)}${it.v ? " · à venir" : ""}</small>
+        <small class="tv-saga">${esc(phase(it))}</small></span></button></li>`;
   document.getElementById("tva-in").innerHTML = `
-    <div class="chr-tete">
-      <img class="chr-logo" src="${ICO.tva}" alt="TVA">
-      <p class="chr-sur">Autorité des Variations Temporelles · Dossier ${esc(profilActif().nom)}</p>
-      <h2 class="chr-titre">La Chronologie<br>sacrée</h2>
-      <p class="chr-intro">La chronologie intégrale de Disney+ : tout le MCU dans l'ordre où les événements se produisent, séries Netflix et courts métrages compris. Toute déviation sera… notée.</p>
-      <div class="chr-prog"><b>${n}</b><span>sur ${liste.length} étapes de la chronologie</span><span class="filet-prog"><i style="width:${Math.round(n / liste.length * 100)}%"></i></span></div>
-    </div>
-    <div class="chr-ligne">${CHRONO.map(([ere, dates, t]) => `<section class="chr-ere${ere === "Hors du temps" ? " hors" : ""}">
-      <header><span class="chr-date">${dates}</span><h3>${ere}</h3></header>${t.map(x => { const it = par(x); return it ? noeud(it, (++num) + " · " + (Array.isArray(x) ? x[1] + " · " : "") + it.a + " · " + typeTitre(it)) : ""; }).join("")}</section>`).join("")}</div>
-    <p class="chr-fin">Pour tout temps, toujours.</p>`;
+    <div class="colonne pc tv">
+      <div class="pc-tete">
+        <div class="pc-ligne"><p class="surtitre">Dossier ${esc(profilActif().nom)}</p><span class="pc-compte" id="tv-compte">${n}<i>/${liste.length}</i></span></div>
+        <div class="pc-titre"><h1 class="titre-l">La chronologie</h1><img class="pc-tva-logo tv-logo" src="${img(ICO.tva)}" alt="TVA"></div>
+        <p class="tv-intro">Tout le MCU dans l'ordre où les événements se produisent. Toute déviation sera… notée.</p>
+        <span class="filet-prog tv-filet"><i id="tv-filet" style="width:${Math.round(n / liste.length * 100)}%"></i></span>
+      </div>
+      ${CHRONO.map(([ere, dates, t], k) => { const l = t.map(x => [par(x), x]).filter(y => y[0]), v = l.filter(y => vus[y[0].id]).length;
+        return `<section class="etape${v === l.length ? " fini" : ""}" data-ere="${k}">
+        <header class="etape-tete"><span class="surtitre">${esc(dates)}</span><h2>${esc(ere)}</h2><span class="etape-compte">${v}<i>/${l.length}</i></span>
+          <span class="filet-prog"><i style="width:${l.length ? Math.round(v / l.length * 100) : 0}%"></i></span></header>
+        <ol class="chemin">${l.map(([it, x]) => pas(it, x)).join("")}</ol></section>`; }).join("")}
+      <p class="tv-fin">Pour tout temps, toujours.</p>
+    </div>`;
   ouvrirFeuille("tva");   // s'ouvre tout en haut, sur le titre
 }
 
