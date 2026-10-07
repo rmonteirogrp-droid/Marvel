@@ -1,6 +1,6 @@
 /* Service worker Marvel : l'app est gardée sur le téléphone ; images, vidéos et sons (/m/, /p/) sont gardés après le premier affichage.
    L'app vient toujours du réseau quand il répond (dernière version tout de suite), de la copie gardée sinon. */
-const CACHE = "marvel-08d36d52157a";
+const CACHE = "marvel-545b248a5a61";
 const FICHIERS = ["./", "./index.html", "./manifest.webmanifest", "./icone-180.png", "./icone-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FICHIERS.map(u => new Request(u, { cache:"reload" })))).then(() => self.skipWaiting()));

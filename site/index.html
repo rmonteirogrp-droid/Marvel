@@ -3142,6 +3142,24 @@ body{font-synthesis:none}
 @keyframes morphTexte{from{opacity:0;transform:translateY(26px)}}
 .ecran-cine.ecran-ba{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
 .ecran-ba video{-webkit-mask-image:none;mask-image:none}
+
+/* ══════ V3.5 ══════ */
+/* Intro : plus de mur d'affiches ni d'étiquette « Le parcours » ; le logo claque sans flou et reste parfaitement net */
+.io-mur,.io-sous{display:none}
+.io-logo{animation:ioApparait .01s 1.85s forwards !important;transform:none !important}
+.io-lettres{filter:none !important;animation:ioClaqueNet .34s 2.22s cubic-bezier(.3,1.5,.5,1) forwards}
+.io-lettres.r,.io-lettres.c{animation:ioClaqueNet .34s 2.22s cubic-bezier(.3,1.5,.5,1) forwards,ioChroma .5s 2.28s ease-out forwards}
+@keyframes ioClaqueNet{from{opacity:0;transform:scale(1.7)}to{opacity:1;transform:none}}
+/* Fiche : tout tient sur un écran (l'image prend la place qui reste), pas de défilement ;
+   seules les séries avec la liste des épisodes peuvent encore défiler */
+#fiche{overscroll-behavior:none}
+#fiche-in{display:flex;flex-direction:column;min-height:calc(100 * var(--svh,1vh))}
+#fiche .fiche-visuel{flex:1 1 auto;height:auto;min-height:calc(40 * var(--svh,1vh))}
+#fiche .fiche-texte{flex:0 0 auto;padding-bottom:calc(var(--bas) + 26px)}
+#fiche .fiche-texte .resume{margin-bottom:0}
+/* Parcours : le trait jaune s'arrête au dernier titre vu quand le suivant n'est pas encore sorti */
+.chemin .pas.vu:has(+ .pas .noeud.bloque){--l-b:rgba(255,255,255,.16)}
+.chemin .pas.vu + .pas:has(.noeud.bloque){--l-h:rgba(255,255,255,.16)}
 </style>
 </head>
 <body>
@@ -3975,8 +3993,21 @@ function fondAnime(v, cv, ba){
   };
   requestAnimationFrame(boucle);
 }
+/* iPhone : une vidéo ne peut prendre le son que si elle a été lancée pendant un toucher. Quand la vidéo est créée plus tard
+   (après l'animation du portail MCU / Multivers), on la prépare et on la lance dès le toucher, puis elle prend sa place. */
+const videosPretes = {};
+function preparerBA(cle){
+  if(!BA_TETE[cle] || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const ba = piocherBA(cle); if(!ba) return;
+  const v = document.createElement("video");
+  v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute("playsinline", ""); v.preload = "auto"; v.crossOrigin = "anonymous"; v.src = ba.src;
+  const p = v.play(); if(p) p.catch(() => {});
+  videosPretes[cle] = v;
+}
 function lancerBA(id, cle){
-  const v = document.getElementById(id), f = document.getElementById(id + "-fond"), ba = piocherBA(cle); if(!v || !ba) return;
+  let v = document.getElementById(id); const f = document.getElementById(id + "-fond"), ba = piocherBA(cle); if(!v || !ba) return;
+  const pret = videosPretes[cle]; delete videosPretes[cle];
+  if(pret && pret.src === ba.src){ pret.id = v.id; pret.className = v.className; pret.setAttribute("aria-hidden", "true"); v.replaceWith(pret); v = pret; }
   v.dataset.ba = cle; v.classList.remove("on"); v.parentNode.classList.add("ecran-ba");
   if(f){
     f.removeAttribute("src"); f.removeAttribute("poster"); f.classList.remove("on"); f.dataset.ba = cle;
@@ -3984,11 +4015,13 @@ function lancerBA(id, cle){
     if(!cv){ cv = document.createElement("canvas"); cv.className = "fond-flou fond-cv"; cv.width = 96; cv.height = 54; f.after(cv); }
     fondAnime(v, cv, ba);
   }
-  v.addEventListener("loadedmetadata", () => { cadrerBA(v, ba.zone); try{ v.currentTime = ba.pos || Math.min(8, v.duration * .08); }catch(e){} }, { once:true });   // on saute les logos du début, ou on reprend où on en était
+  const debut = () => { cadrerBA(v, ba.zone); try{ v.currentTime = ba.pos || Math.min(8, v.duration * .08); }catch(e){} };   // on saute les logos du début, ou on reprend où on en était
+  if(v === pret && v.readyState >= 1) debut(); else v.addEventListener("loadedmetadata", debut, { once:true });
   v.addEventListener("timeupdate", () => { if(v.currentTime > 1) ba.pos = v.currentTime; });
-  v.addEventListener("playing", () => { v.classList.add("on"); if(!ba.zoneOk) [600, 2200, 4500, 8000].forEach(t => setTimeout(() => affinerZone(v, ba), t)); }, { once:true });
+  const joue = () => { v.classList.add("on"); if(!ba.zoneOk) [600, 2200, 4500, 8000].forEach(t => setTimeout(() => affinerZone(v, ba), t)); };
+  if(v === pret && !v.paused && v.readyState >= 3) joue(); else v.addEventListener("playing", joue, { once:true });
   v.addEventListener("error", () => { if(v.crossOrigin){ v.removeAttribute("crossorigin"); v.src = ba.src; v.play().catch(() => {}); } }, { once:true });   // sans autorisation de lecture d'image : on garde le cadrage simple
-  v.muted = true; v.crossOrigin = "anonymous"; v.src = ba.src;
+  if(v !== pret){ v.muted = true; v.crossOrigin = "anonymous"; v.src = ba.src; }
   const p = v.play(); if(p) p.catch(() => {});
   let lg = v.parentNode.querySelector(".ba-legende");
   if(!lg){ lg = document.createElement("button"); lg.className = "ba-legende"; v.parentNode.appendChild(lg); }
@@ -4515,7 +4548,7 @@ function majAccueil(complet){
     ${nx ? `<div class="suivant">
       <span class="tag-v3"><span>À suivre${(() => { const g = BIB[univers].find(g => g.items.includes(nx)); return g ? " · " + esc(g.groupe.split(" · ")[0].split(" / ")[0]) : ""; })()}</span></span>
       <h2 class="suivant-titre${nx.t.length > 16 ? " long" : ""}">${esc(nx.t)}</h2>
-      <p class="meta">${nx.a} · ${typeTitre(nx)} · ${fmtDuree(nx.d)}${nx.dd ? ` · <b class="doom">Av. Doomsday</b>` : ""}</p>
+      <p class="meta">${nx.a} · ${typeTitre(nx)} · ${fmtDuree(nx.d)}</p>
       <div class="suivant-actions">
         ${plexCle(nx) ? `<button class="btn btn-blanc" data-film="${nx.id}">${SVG.jouer}Regarder</button>` : `<button class="btn btn-blanc" data-fiche="${nx.id}">Voir la fiche</button>`}
         ${nx.ba ? `<button class="btn btn-ligne" data-ba="${nx.id}">${SVG.clap}Bande-annonce</button>` : ""}
@@ -4545,13 +4578,6 @@ function majAccueil(complet){
     </section>
     ${cartes.length ? `<section class="bloc"><div class="bloc-tete"><p class="surtitre">À l'affiche et bientôt</p></div>
       ${cartes.map(c => `<button class="sortie"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em><i>J–</i>${c.tag}</em>` : ""}</button>`).join("")}</section>` : ""}
-    <section class="bloc">
-      <div class="chiffres">
-        <div><b>${s.filmsVus}<i>/${s.films}</i></b><span>Films</span></div>
-        <div><b>${s.seriesVus}<i>/${s.series}</i></b><span>Séries</span></div>
-        <div><b>${s.pct}<i>%</i></b><span>Parcours</span></div>
-      </div>
-    </section>
     <div id="reprendre"></div>
     <div class="reseaux">${RESEAUX.map(x => `<a href="${x[1]}" target="_blank" rel="noopener" aria-label="${x[0]}">${x[2]}</a>`).join("")}</div>`;
   rendreReprendre();
@@ -4900,7 +4926,7 @@ function ouvrirFiche(id, opt = {}){
     <div class="fiche-texte">
       <p class="surtitre">${esc(g ? g.groupe.split(" · ")[0] : tousBonus().includes(it) ? "Bonus · MCU" : "")}</p>
       <h2 class="fiche-titre">${esc(it.t)}</h2>
-      <p class="meta">${it.a} · ${typeTitre(it)} · ${fmtDuree(it.d)}${it.dd ? ` · <b class="doom">Av. Doomsday</b>` : ""}${it.v ? " · à venir" : ""}</p>
+      <p class="meta">${it.a} · ${typeTitre(it)} · ${fmtDuree(it.d)}${it.v ? " · à venir" : ""}</p>
       <div class="fiche-actions">
         <div class="duo">
           ${plexCle(it) ? `<button class="btn btn-blanc large" id="btn-film">${SVG.jouer}Regarder</button>`
@@ -4910,7 +4936,6 @@ function ouvrirFiche(id, opt = {}){
       </div>
       ${pasSorti(it) ? "" : blocNote(it)}
       <p class="resume">${esc(it.s)}</p>
-      ${it.p ? `<div class="pourquoi"><p class="surtitre">Pourquoi le regarder</p><p>${esc(it.p)}</p></div>` : ""}
       ${plexSerie(it) && !plexCle(it) ? `<section class="episodes"><p class="surtitre">Épisodes</p><div id="ep-liste"><div class="ep-attente"><i></i>Lecture de ta bibliothèque Plex…</div></div></section>` : ""}
     </div>`;
   ouvrirFeuille("fiche");
@@ -8550,6 +8575,7 @@ const COUPS_PORTAIL = [1630, 2560, 3500], SORTIE_PORTAIL = 4430;
 function changerUnivers(u, bouton){
   if(u === univers || portailEnCours) return;
   portailEnCours = true;
+  preparerBA(u);   // pendant le toucher : la vidéo du nouvel univers aura le droit au son
   if(navigator.vibrate) navigator.vibrate(12);
   reserverSilence(5800);
   const P = document.getElementById("portail"), t0 = Date.now(), minuteries = [];
@@ -9161,7 +9187,7 @@ function bienvenue(p, source, ms){
   // fond : l'affiche du prochain titre ; l'anneau devient la jauge de progression
   const suivant = tous(univers).find(i => !vus[i.id] && !pasSorti(i));
   document.getElementById("bv-aff").src = suivant ? affiche(suivant) : avatar(pr.avatar);
-  el.style.setProperty("--fin", s.vus ? Math.round(497 * (1 - Math.max(.03, s.pct / 100))) : 0);   // 497 = périmètre du cercle (r = 79)
+  el.style.setProperty("--fin", 0);   // l'anneau fait toujours le tour complet (497 = périmètre du cercle, r = 79)
   el.classList.toggle("neuf", !s.vus);   // nouveau profil : anneau rouge décoratif, le jaune est réservé à la progression
   const reste = tous(univers).filter(i => !vus[i.id]).reduce((t, i) => t + (i.d || 0), 0);
   document.getElementById("bv-stats").innerHTML = "";   // pas de chiffres ici : juste le prochain titre
@@ -9204,11 +9230,10 @@ if(accesRecu){
 // Ouverture : intro motion design (mur d'affiches, logo Marvel), puis « Qui regarde ? » (ou l'identifiant) sans rien toucher.
 (() => {
   const porte = document.getElementById("porte"); porte.hidden = false; document.body.classList.add("porte");
-  // le mur d'affiches : 6 colonnes, chaque liste doublée pour un défilement sans couture
-  const pool = melange(tous("mcu").filter(it => !pasSorti(it) && it.k === "film"));
-  const cols = Array.from({ length:6 }, (_, c) => pool.filter((x, k) => k % 6 === c).slice(0, 4));
-  document.getElementById("io-mur").innerHTML = cols.map(l => `<div class="io-col">${l.concat(l).map(it => `<img src="${affiche(it)}" alt="">`).join("")}</div>`).join("");
-  const fini = matchMedia("(prefers-reduced-motion: reduce)").matches ? 300 : 3900;
+  // plus de mur d'affiches : l'intro commence directement sur le voile rouge, coupe au noir, puis le logo claque
+  const AVANCE = 1300;
+  try{ porte.getAnimations({ subtree:true }).forEach(a => { a.currentTime = (a.currentTime || 0) + AVANCE; }); }catch(e){}
+  const fini = matchMedia("(prefers-reduced-motion: reduce)").matches ? 300 : 3900 - AVANCE;
   setTimeout(() => {
     porte.classList.add("part"); document.body.classList.remove("porte");
     document.getElementById("entree").classList.add("ouvert");   // les rideaux s'ouvrent sur la page des profils
