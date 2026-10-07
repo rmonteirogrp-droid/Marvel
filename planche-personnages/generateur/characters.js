@@ -844,20 +844,20 @@ C({
 
 // =================== VENOM ===================
 // Gueule énorme, crocs irréguliers, bave et langue
-const venomMaw = (x, y, W = 62, H = 46) => {
+const venomMaw = (x, y, W = 62, H = 46, tongue = '') => {
   // rictus : coins relevés jusqu'aux tempes, crocs qui suivent la courbe
   const q = (P0, C, P2, t) => [(1 - t) ** 2 * P0[0] + 2 * (1 - t) * t * C[0] + t * t * P2[0], (1 - t) ** 2 * P0[1] + 2 * (1 - t) * t * C[1] + t * t * P2[1]];
   const L0 = [x - W, y - 24], R0 = [x + W, y - 24], Ct = [x, y + 8], Cb = [x, y + H * 1.7];
   const d = `M${P(L0)}Q${P(Ct)} ${P(R0)}Q${P(Cb)} ${P(L0)}Z`;
   const R = B.rng(77);
-  let teeth = '';
+  let teeth = '', upper = '';
   const n = 15;
   for (let i = 0; i < n; i++) {
     const t = 0.03 + (i / (n - 1)) * 0.94;
     const pt = q(L0, Ct, R0, t), pb = q(L0, Cb, R0, t);
     const gap = pb[1] - pt[1];
     const L = Math.min(gap * 0.55, 10 + R() * 12 + (i === 3 || i === n - 4 ? 10 : 0));
-    teeth += path(`M${f(pt[0] - 4.5)},${f(pt[1] - 6)}L${f(pt[0] + 4.5)},${f(pt[1] - 6)}L${f(pt[0] + R() * 2 - 1)},${f(pt[1] + L)}Z`, `fill="#f2efe2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
+    upper += path(`M${f(pt[0] - 4.5)},${f(pt[1] - 6)}L${f(pt[0] + 4.5)},${f(pt[1] - 6)}L${f(pt[0] + R() * 2 - 1)},${f(pt[1] + L)}Z`, `fill="#f2efe2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
     const L2 = Math.min(gap * 0.45, 8 + R() * 10);
     teeth += path(`M${f(pb[0] - 4)},${f(pb[1] + 6)}L${f(pb[0] + 4)},${f(pb[1] + 6)}L${f(pb[0] + R() * 2 - 1)},${f(pb[1] - L2)}Z`, `fill="#e6e2d2" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"`);
   }
@@ -866,8 +866,11 @@ const venomMaw = (x, y, W = 62, H = 46) => {
     const pt = q(L0, Ct, R0, t), pb = q(L0, Cb, R0, t);
     drool += line(`M${f(pt[0])},${f(pt[1] + 4)}Q${f(pt[0] + 3)},${f((pt[1] + pb[1]) / 2)} ${f(pt[0] + 1)},${f(pb[1] - 2)}`, 1.8, '#cfe6f0', 'opacity="0.8"');
   }
-  return path(d, `fill="#1a0408"`) + clip(d, ellipse([x, y + H * 0.55], W * 0.6, H * 0.4, `fill="#6a0f1e" filter="url(#soft)"`) + teeth + drool) +
-    path(d, `fill="none" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"`);
+  // ordre : fond de gueule, crocs du bas, contour, langue (par-dessus la lèvre du bas), crocs du haut, ombre du fond
+  return path(d, `fill="#1a0408"`) + clip(d, ellipse([x, y + H * 0.55], W * 0.6, H * 0.4, `fill="#6a0f1e" filter="url(#soft)"`) + teeth) +
+    path(d, `fill="none" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"`) + tongue +
+    clip(d, ellipse([x - 6, y + 4], 18, 9, `fill="#0a0204" opacity="0.85" filter="url(#soft)"`) + upper + drool) +
+    path(`M${P(L0)}Q${P(Ct)} ${P(R0)}`, `fill="none" stroke="${INK}" stroke-width="3.4"`);
 };
 const SYMB = { base: '#0f0f15', dark: '#020204', light: '#2c3350' };
 const gloss = (pts, w = 3, op = 0.55) => line(smooth(pts, false), w, '#b8d0ff', `opacity="${op}"`);
@@ -912,11 +915,11 @@ C({
     front: ({ F }) => {
       const x = F.cx + 3, y = 22;
       // la langue part du fond de la gueule, passe par-dessus les dents du bas et pend sur le menton
-      const tx = x - 6, ty = y + 6;
-      return venomMaw(x, y, 52, 36) +
-        shade(smooth([[tx - 14, ty], [tx + 8, ty - 2], [tx + 10, ty + 18], [tx + 4, ty + 38], [tx - 6, ty + 58], [tx - 20, ty + 70], [tx - 30, ty + 64], [tx - 22, ty + 50], [tx - 16, ty + 30], [tx - 16, ty + 12]]), '#b82a52', {
-          s: 5, lw: 3, inner: line(`M${tx - 2},${ty + 6}Q${tx - 4},${ty + 36} ${tx - 20},${ty + 62}`, 2, '#7a1434') + ellipse([tx - 4, ty + 6], 12, 7, `fill="#3a0a14" opacity="0.6" filter="url(#soft)"`),
-        });
+      const tx = x - 6, ty = y + 8;
+      const tongue = shade(smooth([[tx - 14, ty], [tx + 8, ty - 2], [tx + 10, ty + 18], [tx + 4, ty + 38], [tx - 6, ty + 58], [tx - 20, ty + 70], [tx - 30, ty + 64], [tx - 22, ty + 50], [tx - 16, ty + 30], [tx - 16, ty + 12]]), '#b82a52', {
+        s: 5, lw: 3, inner: line(`M${tx - 2},${ty + 6}Q${tx - 4},${ty + 36} ${tx - 20},${ty + 62}`, 2, '#7a1434'),
+      });
+      return venomMaw(x, y, 52, 36, tongue);
     },
   },
   pose: {
