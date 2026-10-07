@@ -911,10 +911,11 @@ C({
     },
     front: ({ F }) => {
       const x = F.cx + 3, y = 22;
-      const tx = x - 22, ty = y + 34;
+      // la langue part du fond de la gueule, passe par-dessus les dents du bas et pend sur le menton
+      const tx = x - 6, ty = y + 6;
       return venomMaw(x, y, 52, 36) +
-        shade(smooth([[tx - 6, ty - 10], [tx + 10, ty - 8], [tx + 6, ty + 18], [tx - 8, ty + 36], [tx - 24, ty + 46], [tx - 16, ty + 30], [tx - 10, ty + 12]]), '#b82a52', {
-          s: 5, lw: 3.2, inner: line(`M${tx},${ty}Q${tx - 4},${ty + 22} ${tx - 18},${ty + 40}`, 2, '#7a1434'),
+        shade(smooth([[tx - 14, ty], [tx + 8, ty - 2], [tx + 10, ty + 18], [tx + 4, ty + 38], [tx - 6, ty + 58], [tx - 20, ty + 70], [tx - 30, ty + 64], [tx - 22, ty + 50], [tx - 16, ty + 30], [tx - 16, ty + 12]]), '#b82a52', {
+          s: 5, lw: 3, inner: line(`M${tx - 2},${ty + 6}Q${tx - 4},${ty + 36} ${tx - 20},${ty + 62}`, 2, '#7a1434') + ellipse([tx - 4, ty + 6], 12, 7, `fill="#3a0a14" opacity="0.6" filter="url(#soft)"`),
         });
     },
   },
