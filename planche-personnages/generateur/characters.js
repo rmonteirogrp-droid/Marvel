@@ -1032,24 +1032,27 @@ const goblinHead = () => {
   // rides : front, pattes d'oie, plis des joues, menton
   o += line('M-22,-26Q0,-32 22,-26M-18,-20Q0,-25 18,-20M-6,-30L-2,-16M6,-30L2,-16', 1.6, '#24461a');
   o += line('M-40,-2L-48,-6M-40,4L-48,4M40,-2L48,-6M40,4L48,4', 1.5, '#24461a');
-  o += line('M-12,14Q-30,22 -34,40M12,14Q32,22 36,40M-24,30Q-30,44 -26,56M26,30Q32,44 28,56M-6,66Q0,70 6,66', 1.8, '#24461a');
-  // yeux jaunes, plissés, sous des sourcils froncés
+  o += line('M-6,68Q0,72 6,68', 1.8, '#24461a');
+  // yeux de dément : grands ouverts, jaunes, coin extérieur relevé, petites pupilles rouges
   for (const s of [-1, 1]) {
-    const cx = s * 18;
-    const d = `M${cx - s * 11},-2Q${cx},-9 ${cx + s * 12},-8Q${cx + s * 4},2 ${cx - s * 11},-2Z`;
-    o += path(d, `fill="#f2e04a" stroke="${INK}" stroke-width="1.6"`) + circle([cx + s * 1, -4.4], 2.6, `fill="#b8200a"`) + circle([cx + s * 1, -4.4], 1.2, `fill="${INK}"`);
-    o += brush([[s * 4, -6], [s * 14, -14], [s * 26, -18], [s * 36, -16]], 6, 2, '#1e3a12', 7);
+    const cx = s * 19;
+    const d = smooth([[cx - s * 12, -2], [cx - s * 2, -10], [cx + s * 10, -14], [cx + s * 15, -12], [cx + s * 8, 0], [cx - s * 4, 2]], true, 1 / 9);
+    o += ellipse([cx, -6], 16, 11, `fill="#1e3a12" opacity="0.6" filter="url(#soft)"`);
+    o += path(d, `fill="#f6e84a" stroke="${INK}" stroke-width="2"`) + circle([cx + s * 1, -5], 3.2, `fill="#c81a0a"`) + circle([cx + s * 1, -5], 1.4, `fill="${INK}"`) + circle([cx - s * 2, -8], 1.2, `fill="#fff"`);
+    // sourcils en V acérés
+    o += path(`M${s * 3},-8L${s * 14},-18L${s * 34},-24L${s * 30},-17L${s * 14},-12Z`, `fill="#1a3410" stroke="${INK}" stroke-width="1.2" stroke-linejoin="round"`);
   }
-  // long nez crochu
-  o += shade(smooth([[-4, -10], [4, -10], [10, 10], [14, 28], [8, 34], [-2, 32], [-6, 26], [-4, 6]], true, 1 / 8), SK, { s: 4, lw: 2.6, hatch: false });
-  o += line('M-4,30Q2,36 10,32', 1.6, '#24461a');
-  // rictus immense plein de dents
-  const M = `M-32,40Q0,44 32,40Q30,52 20,58Q0,64 -20,58Q-30,52 -32,40Z`;
-  let teeth = '';
-  for (let i = 0; i < 9; i++) { const x = -26 + i * 6.5; teeth += `<rect x="${f(x - 3)}" y="38" width="6" height="${f(9 - Math.abs(i - 4) * 0.6)}" fill="#efe8c8" stroke="${INK}" stroke-width="0.9"/>`; }
-  for (let i = 0; i < 7; i++) { const x = -18 + i * 6; teeth += `<rect x="${f(x - 3)}" y="${f(52 - Math.abs(i - 3) * 0.6)}" width="6" height="9" fill="#e2dab8" stroke="${INK}" stroke-width="0.9"/>`; }
+  // nez pointu, légèrement crochu
+  o += shade(smooth([[-4, -8], [3, -8], [8, 8], [11, 20], [5, 23], [-3, 21], [-6, 14], [-4, 2]], true, 1 / 8), SK, { s: 4, lw: 2.6, hatch: false });
+  o += line('M-4,20Q2,25 8,22', 1.6, '#24461a');
+  // rictus démoniaque : dents serrées, coins remontés jusqu'aux joues
+  const M = `M-38,24Q-20,38 0,40Q20,38 38,24Q32,44 18,54Q0,60 -18,54Q-32,44 -38,24Z`;
+  let teeth = `<rect x="-40" y="20" width="80" height="27" fill="#efe8c8"/><rect x="-40" y="47" width="80" height="20" fill="#e2dab8"/>`;
+  for (let i = -6; i <= 6; i++) teeth += line(`M${f(i * 5.8)},${f(32 + Math.abs(i) * -1)}V${f(56 - Math.abs(i) * 1.6)}`, 1, '#3a2a10');
+  teeth += line('M-38,26Q-20,44 0,46Q20,44 38,26', 1.8, '#3a2a10');
   o += path(M, `fill="#2a0a0a"`) + clip(M, teeth) + path(M, `fill="none" stroke="${INK}" stroke-width="2.6"`);
-  o += line('M-36,36Q-34,42 -32,40M36,36Q34,42 32,40', 2, INK);
+  // plis du sourire qui montent vers les pommettes
+  o += line('M-38,24Q-44,14 -42,4M38,24Q44,14 42,4M-30,48Q-34,56 -28,62M30,48Q34,56 28,62', 1.8, '#24461a');
   // bonnet violet : bandeau puis pointe qui retombe vers l'arrière
   const hat = smooth([[-52, -26], [-50, -54], [-30, -76], [0, -86], [30, -84], [58, -74], [86, -64], [104, -42], [110, -18], [96, -36], [78, -50], [60, -48], [52, -26], [26, -32], [0, -34], [-26, -32]], true, 1 / 7);
   o += shade(hat, { base: '#6b3a9e', dark: '#2e1050', light: '#a070d8' }, { s: 7, lw: 3.2, inner: line('M-48,-36Q0,-48 52,-34', 2.4, '#2e1050') + line('M10,-80Q50,-74 92,-48', 2, '#2e1050') });
