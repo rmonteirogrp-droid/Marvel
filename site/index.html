@@ -3160,6 +3160,31 @@ body{font-synthesis:none}
 /* Parcours : le trait jaune s'arrête au dernier titre vu quand le suivant n'est pas encore sorti */
 .chemin .pas.vu:has(+ .pas .noeud.bloque){--l-b:rgba(255,255,255,.16)}
 .chemin .pas.vu + .pas:has(.noeud.bloque){--l-h:rgba(255,255,255,.16)}
+
+/* ══════ V3.6 ══════ */
+/* Défis : le dernier jeu en grand, les autres en tuiles sur deux colonnes (toute la page en un écran et demi) */
+.df .defi-une{height:280px}
+.df-grille{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.df-grille .defi-tuile{height:178px;margin:0}
+.defi-tuile .defi-in{left:12px;right:12px;bottom:12px;gap:4px}
+.defi-tuile .defi-in b{font-size:22px;line-height:.95}
+.defi-tuile .defi-num{font:600 12px/1 var(--cond);letter-spacing:.18em;color:var(--rouge-vif)}
+.defi-tuile .defi-rec{font-size:15px}
+.defi-tuile .defi-rec i{font-size:10.5px}
+/* Petits libellés agrandis (lisibles sur téléphone) */
+.defi-rec i,.defi-rec i.sur{font-size:11px}
+.rebours span{font-size:11px}
+.jeu-records span{font-size:11px}
+.palier b{font-size:10.5px}
+/* Écran d'identifiant : l'affiche seule, en fond d'écran, sans légende */
+.defile-legende{display:none !important}
+.pas-txt small .tv-multi{font-style:normal;color:#b48cff}
+/* Tuiles : le décor de la grande carte, en miniature (même composition, rien de coupé ni de chevauché) */
+.defi-mini{position:absolute;left:0;top:0;width:208.4%;height:208.4%;transform:scale(.48);transform-origin:0 0;pointer-events:none}
+.defi-tuile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(7,7,10,.92) 82%);pointer-events:none}
+.defi-tuile .defi-in{z-index:2}
+/* Record : l'unité (/8, pts…) reste sur la même ligne que le chiffre */
+.defi-rec i.sur{display:inline;margin:0 0 0 3px;letter-spacing:.08em}
 </style>
 </head>
 <body>
@@ -5251,27 +5276,35 @@ function fondPoussiere(){   // une rangée de héros qui partent en poussière v
 /* Étiquette d'un défi : son numéro et son thème (plutôt que « Défi 1 » répété partout). */
 const THEME_DEFI = { 1:"Mémoire", 2:"Visages", 3:"Duel", 4:"Affiches", 5:"Chronologie", 6:"Répliques", 7:"Blind test", 8:"Quiz express", 9:"Apparitions", 10:"Mentalisme" };
 const etiquetteDefi = n => String(n).padStart(2, "0") + " · " + (THEME_DEFI[n] || "");
+/* Page Défis : le dernier jeu joué en grand (« Rejouer »), les autres en tuiles sur deux colonnes. */
 function rendreDefis(){
-  const r = recordsHeros(), q = recordsQui(), v = recordsVs();
-  const carte = (id, n, titre, texte, fond, rec) => `<button class="defi" data-jeu="${id}">
-        ${fond}
-        <span class="defi-in"><span class="surtitre vert">${etiquetteDefi(n)}</span><b>${titre}</b>
-          <span class="defi-bas"><span class="defi-rec"><i>Record</i>${rec}</span><span class="btn btn-blanc">Jouer</span></span></span></button>`;
+  const r = recordsHeros(), q = recordsQui(), v = recordsVs(), QP = typeof QP_CLIPS !== "undefined";
+  const jeux = [
+    ["heros", "Héros en mémoire", fondNoms, () => Math.max(r.chrono, r.libre)],
+    ["qui", "Qui est-ce ?", fondSilhouette, () => q.chrono ? q.chrono + "<i class='sur'>/15</i>" : (q.libre ? fmtChrono(q.libre * 100) : "0")],
+    ["vs", "Qui gagne ?", fondVs, () => v.record],
+    ["affiche", "Devine l'affiche", fondAffiche, () => recordsDe("affiche").record + "<i class='sur'>pts</i>"],
+    ["ordre", "Dans l'ordre", fondOrdre, () => recordsDe("ordre").record + "<i class='sur'>/8</i>"],
+    ["replique", "Qui a dit ça ?", fondCitation, () => recordsDe("replique").record + "<i class='sur'>pts</i>"],
+    QP && ["quiparle", "Qui parle ?", fondOnde, () => recordsDe("quiparle").record + "<i class='sur'>pts</i>"],
+    typeof DOSSIER !== "undefined" && ["dossier", "Dossier classifié", fondDossier, () => recordsDe("dossier").record + "<i class='sur'>%</i>"],
+    typeof FILMO !== "undefined" && ["filmo", "Filmographie", fondFilmo, () => recordsDe("filmo").record + "<i class='sur'>pts</i>"],
+    typeof AKI_T !== "undefined" && ["akinator", "Le Gardien", fondAki, () => recordsAki().record + "<i class='sur'>questions</i>"],
+  ].filter(Boolean).map((j, k) => ({ id:j[0], n:k + 1, titre:j[1], fond:j[2], rec:j[3] }));
+  let dernier = null; try{ dernier = localStorage.getItem("mt-dernier-jeu"); }catch(e){}
+  const une = jeux.find(j => j.id === dernier) || jeux[0], joue = !!jeux.find(j => j.id === dernier);
+  const grande = j => `<button class="defi defi-une" data-jeu="${j.id}">${j.fond()}
+      <span class="defi-in"><span class="surtitre vert">${joue ? "Ton dernier défi" : etiquetteDefi(j.n)}</span><b>${j.titre}</b>
+        <span class="defi-bas"><span class="defi-rec"><i>Record</i>${j.rec()}</span><span class="btn btn-blanc">${joue ? "Rejouer" : "Jouer"}</span></span></span></button>`;
+  const tuile = j => `<button class="defi defi-tuile" data-jeu="${j.id}"><span class="defi-mini">${j.fond()}</span>
+      <span class="defi-in"><span class="defi-num">${String(j.n).padStart(2, "0")}</span><b>${j.titre}</b><span class="defi-rec"><i>Record</i>${j.rec()}</span></span></button>`;
   document.getElementById("v-defis").innerHTML = `
     <div class="colonne df">
-      <div class="pc-tete"><div class="pc-ligne"><p class="surtitre">Culture Marvel</p><span class="pc-compte">10<i> jeux</i></span></div>
+      <div class="pc-tete"><div class="pc-ligne"><p class="surtitre">Culture Marvel</p><span class="pc-compte">${jeux.length}<i> jeux</i></span></div>
         <h1 class="titre-l">Défis</h1></div>
       ${typeof bandeauCollection === "function" ? bandeauCollection() : ""}
-      ${carte("heros", 1, "Héros en mémoire", "Cite un maximum de personnages Marvel, sans te tromper d'orthographe.", fondNoms(), Math.max(r.chrono, r.libre))}
-      ${carte("qui", 2, "Qui est-ce ?", "Quinze visages, un nom à trouver pour chacun. Contre la montre ou au plus vite.", fondSilhouette(), q.chrono ? q.chrono + "<i class='sur'>/15</i>" : (q.libre ? fmtChrono(q.libre * 100) : "0"))}
-      ${carte("vs", 3, "Qui gagne ?", "Deux légendes, un seul vainqueur. Une erreur et la série s'arrête.", fondVs(), v.record)}
-      ${carte("affiche", 4, "Devine l'affiche", "L'affiche apparaît du bas vers le haut. Trouve le film au plus vite.", fondAffiche(), recordsDe("affiche").record + "<i class='sur'>pts</i>")}
-      ${carte("ordre", 5, "Dans l'ordre", "Quatre films à remettre du plus ancien au plus récent.", fondOrdre(), recordsDe("ordre").record + "<i class='sur'>/8</i>")}
-      ${carte("replique", 6, "Qui a dit ça ?", "Une réplique culte, quatre personnages. À toi de trouver qui l'a dite.", fondCitation(), recordsDe("replique").record + "<i class='sur'>pts</i>")}
-      ${typeof QP_CLIPS !== "undefined" ? carte("quiparle", 7, "Qui parle ?", "Écoute la réplique en VF, écran noir. Trouve qui la prononce, le plus vite possible.", fondOnde(), recordsDe("quiparle").record + "<i class='sur'>pts</i>") : ""}
-      ${typeof DOSSIER !== "undefined" ? carte("dossier", typeof QP_CLIPS !== "undefined" ? 8 : 7, "Dossier classifié", "La fiche du film est censurée. Déclassifie un maximum d'infos en une minute.", fondDossier(), recordsDe("dossier").record + "<i class='sur'>%</i>") : ""}
-      ${typeof FILMO !== "undefined" ? carte("filmo", typeof QP_CLIPS !== "undefined" ? 9 : 8, "Filmographie", "Un personnage : cite tous les films et séries où il apparaît vraiment.", fondFilmo(), recordsDe("filmo").record + "<i class='sur'>pts</i>") : ""}
-      ${typeof AKI_T !== "undefined" ? carte("akinator", typeof QP_CLIPS !== "undefined" ? 10 : 9, "Le Gardien", "Pense à un personnage Marvel. Uatu va lire dans ton esprit.", fondAki(), recordsAki().record + "<i class='sur'>questions</i>") : ""}
+      ${grande(une)}
+      <div class="df-grille">${jeux.filter(j => j !== une).map(tuile).join("")}</div>
     </div>
     <div class="fin-page"></div>`;
 }
@@ -5305,7 +5338,7 @@ function lancerJeu(){
     </form>
     <p class="jeu-retour" id="jeu-retour">&nbsp;</p>
     <div class="jeu-trouves" id="jeu-trouves"></div>
-    <button class="lien jeu-stop" data-fin-jeu>Terminer la partie</button>`;
+    <button class="lien jeu-stop" data-fin-jeu>Abandonner</button>`;
   document.getElementById("jeu-form").addEventListener("submit", ev => { ev.preventDefault(); proposer(true); });
   document.getElementById("jeu-champ").addEventListener("input", saisieAuto);
   document.getElementById("jeu-champ").focus();
@@ -5526,7 +5559,7 @@ document.getElementById("jeu").addEventListener("click", e => {
   if(combat){ choisirVs(+combat.dataset.c); return; }
   if(e.target.closest("[data-jouer]")){ (LANCEURS[JEU.type] || lancerJeu)(); return; }
   if(e.target.closest("[data-passer]")){ if(!QJ.attente) resultatQui(false, true); return; }
-  if(e.target.closest("[data-fin-jeu]")){ qui ? demanderQuitter(finQui) : finJeu(); return; }
+  if(e.target.closest("[data-fin-jeu]")){ qui ? demanderQuitter(finQui) : demanderQuitter(finJeu); return; }
   if(e.target.closest("[data-intro-jeu]")){ INTROS[JEU.type](); return; }
 });
 
@@ -7599,7 +7632,7 @@ function bandeauCollection(){
 
 /* ── Catalogue ── */
 const CL = { rar:0, vue:"toutes", q:"", tri:"num", serie:null };
-function ouvrirCollection(){ Object.assign(CL, { rar:0, vue:"toutes", q:"", serie:null }); rendreCollection(); ouvrirFeuille("collec"); }
+function ouvrirCollection(){ Object.assign(CL, { rar:0, vue:nbPossedees() ? "obtenues" : "toutes", q:"", serie:null }); rendreCollection(); ouvrirFeuille("collec"); }   // dès la première carte : on ouvre sur ses cartes
 /* Catalogue : un en-tête sobre (DA de l'app), une seule ligne pour les packs / éclats / palier,
    les rangs en pastilles qui filtrent, puis les onglets façon Parcours (avec la loupe à droite). */
 function rendreCollection(){
@@ -8602,7 +8635,7 @@ function changerUnivers(u, bouton){
   P.classList.remove("on", "part"); P.hidden = false; void P.offsetWidth; P.classList.add("on");
   jouerPortail();
   let bascule = false;
-  const basculer = () => { if(bascule) return; bascule = true; univers = u; filtre = "tout"; recherche = ""; majUnivers(); sauverSession(); allerA("accueil"); oublierPositions(); };   // autre univers : on repart du haut partout
+  const basculer = () => { if(bascule) return; bascule = true; univers = u; filtre = "tout"; recherche = ""; loupeOuverte = false; majUnivers(); sauverSession(); allerA("accueil"); oublierPositions(); };   // autre univers : on repart du haut partout
   const terminer = () => {
     minuteries.forEach(clearTimeout); basculer();
     P.classList.add("part");
@@ -8664,12 +8697,19 @@ function montrerEcran(id){
 /* Comme Netflix : les affiches sans texte s'enchaînent en fondu avec un lent zoom, le titre du film en légende.
    Affiche TMDB en ligne, sinon l'affiche intégrée du film. */
 const DEFILE = { k:-1, minuterie:null, ordre:null, n:0 };
+// Les 40 films les plus forts (affiches officielles sans texte) : un ordre au hasard à chaque ouverture
+const FORTS_ENTREE = ["Iron Man", "Thor", "Captain America: First Avenger", "Avengers", "Iron Man 3", "Captain America: Le Soldat de l'hiver", "Les Gardiens de la Galaxie",
+  "Avengers: L'Ère d'Ultron", "Captain America: Civil War", "Doctor Strange", "Les Gardiens de la Galaxie Vol. 2", "Spider-Man: Homecoming", "Thor: Ragnarok", "Black Panther",
+  "Avengers: Infinity War", "Captain Marvel", "Avengers: Endgame", "Spider-Man: Far From Home", "Black Widow", "Shang-Chi et la Légende des Dix Anneaux", "Spider-Man: No Way Home",
+  "Doctor Strange in the Multiverse of Madness", "Black Panther: Wakanda Forever", "Deadpool & Wolverine", "Thunderbolts*", "Les 4 Fantastiques : Premiers pas",
+  "Spider-Man: Brand New Day", "Avengers: Doomsday", "Spider-Man", "The Amazing Spider-Man", "X-Men", "X-Men 2", "X-Men : Days of Future Past", "Logan", "Deadpool",
+  "Deadpool 2", "Venom", "Venom: Let There Be Carnage", "Venom: The Last Dance", "Blade"];
 const filmDeFond = t => tous("mcu").concat(tous("multi")).find(i => i.t === t);
 function demarrerDefile(){
   if(DEFILE.minuterie) return;
   if(!DEFILE.ordre){
     const vus = new Set();   // une affiche par film, ordre au hasard
-    DEFILE.ordre = FONDS.map(f => [Math.random(), f]).sort((a, b) => a[0] - b[0]).map(x => x[1]).filter(([t]) => !vus.has(t) && vus.add(t) && filmDeFond(t));
+    DEFILE.ordre = FONDS.filter(([t]) => FORTS_ENTREE.includes(t)).map(f => [Math.random(), f]).sort((a, b) => a[0] - b[0]).map(x => x[1]).filter(([t]) => !vus.has(t) && vus.add(t) && filmDeFond(t));
   }
   suivantDefile();
   DEFILE.minuterie = setInterval(suivantDefile, 5600);
@@ -8707,9 +8747,9 @@ function rendreProfils(){
     const s = stats(p.id, "mcu");
     return `<button class="profil-p" data-qr="${p.id}" style="--n:${n}">
       <span class="av"><img src="${avatar(p.avatar)}" alt=""></span><b>${esc(p.nom)}</b>
-      <small>${s.vus ? s.pct + " %" : "Nouveau"}</small>${gestion ? `<span class="suppr">✕</span>` : ""}</button>`;
+      ${gestion ? `<span class="suppr">✕</span>` : ""}</button>`;
   }).join("") + (profils.length < MAX_PROFILS && !gestion ? `<button class="profil-p ajout" data-qr="+" style="--n:${profils.length}">
-      <span class="av">+</span><b>Ajouter</b><small>${MAX_PROFILS - profils.length} place${MAX_PROFILS - profils.length > 1 ? "s" : ""}</small></button>` : "");
+      <span class="av">+</span><b>Ajouter</b></button>` : "");
   document.getElementById("qr-gerer").textContent = gestion ? "Terminer" : "Gérer les profils";
 }
 let avatarChoisi = AVATARS[0];
@@ -8937,7 +8977,7 @@ document.addEventListener("click", e => {
   if(e.target.closest("#btn-tva")){ ouvrirTva(); return; }
   if(e.target.closest("[data-avdoom]")){ ouvrirAvDoom(); return; }
   const jeu = e.target.closest("[data-jeu]");
-  if(jeu){ ouvrirJeu(jeu.dataset.jeu); return; }
+  if(jeu){ try{ localStorage.setItem("mt-dernier-jeu", jeu.dataset.jeu); }catch(x){} ouvrirJeu(jeu.dataset.jeu); return; }
   const tr = e.target.closest("[data-trailer]");
   if(tr){ lireBA(TRAILERS[+tr.dataset.trailer].src); return; }
   if(e.target.closest("#btn-film") && ficheOuverte){ lireFilm(ficheOuverte); return; }
@@ -9042,22 +9082,20 @@ function actionReprise(a){
    dans l'ordre des événements ; puis les trois derniers titres de la Phase 6. [titre, note] quand il faut préciser une saison. */
 const CHRONO = [
   ["Les origines", "Avant 1995", ["Eyes of Wakanda", "Captain America: First Avenger", "Marvel One-Shot : Agent Carter", "Captain Marvel"]],
-  ["Naissance des Avengers", "2008 – 2012", ["Iron Man", "Iron Man 2", "L'Incroyable Hulk", "Marvel One-Shot : Une drôle d'histoire sur la route du marteau de Thor", "Thor",
-    "Marvel One-Shot : Le Consultant", "Avengers", "Marvel One-Shot : Article 47"]],
-  ["Après New York", "2013 – 2015", ["Thor: Le Monde des ténèbres", "Iron Man 3", "Marvel One-Shot : Longue vie au roi", "Captain America: Le Soldat de l'hiver",
-    "Les Gardiens de la Galaxie", "Les Gardiens de la Galaxie Vol. 2", "Je s'appelle Groot", "Je s'appelle Groot S2", ["Daredevil|2015", "Saison 1"], ["Jessica Jones|2015", "Saison 1"],
-    "Avengers: L'Ère d'Ultron", "Ant-Man", ["Daredevil|2015", "Saison 2"], ["Luke Cage|2016", "Saison 1"], ["Iron Fist|2017", "Saison 1"], "The Defenders"]],
+  ["Naissance des Avengers", "2008 – 2012", ["Iron Man", "Iron Man 2", "L'Incroyable Hulk", "Thor", "Avengers"]],
+  ["Après New York", "2013 – 2015", ["Thor: Le Monde des ténèbres", "Iron Man 3", "Captain America: Le Soldat de l'hiver", "Les Gardiens de la Galaxie", "Les Gardiens de la Galaxie Vol. 2",
+    ["Daredevil|2015", "Saison 1"], "Avengers: L'Ère d'Ultron", "Ant-Man", ["Daredevil|2015", "Saison 2"]]],
   ["Vers Thanos", "2016 – 2023", ["Captain America: Civil War", "Black Widow", "Black Panther", "Spider-Man: Homecoming", ["The Punisher|2017", "Saison 1"], "Doctor Strange",
-    ["Jessica Jones|2015", "Saison 2"], ["Luke Cage|2016", "Saison 2"], ["Iron Fist|2017", "Saison 2"], ["Daredevil|2015", "Saison 3"], "Thor: Ragnarok",
-    ["The Punisher|2017", "Saison 2"], ["Jessica Jones|2015", "Saison 3"], "Ant-Man et la Guêpe", "Avengers: Infinity War", "Avengers: Endgame"]],
-  ["Hors du temps", "TVA et univers parallèles", ["Loki S1", "What If...? S1", "Marvel Zombies"]],
+    ["Daredevil|2015", "Saison 3"], "Thor: Ragnarok", ["The Punisher|2017", "Saison 2"], "Ant-Man et la Guêpe", "Avengers: Infinity War", "Avengers: Endgame"]],
+  ["Hors du temps", "TVA et univers parallèles", ["Loki S1", "What If...? S1"]],
   ["Après le Blip", "2023 – 2025", ["WandaVision", "Shang-Chi et la Légende des Dix Anneaux", "Falcon et le Soldat de l'hiver", "Spider-Man: Far From Home", "Les Éternels",
-    "Spider-Man: No Way Home", "Doctor Strange in the Multiverse of Madness", "Hawkeye", "Moon Knight", "Black Panther: Wakanda Forever", "Echo", "She-Hulk : Avocate",
-    "Miss Marvel", "Thor: Love and Thunder", "Ironheart", "Werewolf by Night", "Les Gardiens de la Galaxie — Spécial fêtes"]],
-  ["Le monde d'après", "2025 – 2027", ["Ant-Man et la Guêpe: Quantumania", "Les Gardiens de la Galaxie Vol. 3", "Secret Invasion", "The Marvels", "Loki S2", "What If...? S2",
-    "Deadpool & Wolverine", "Agatha All Along", "What If...? S3", "Daredevil: Born Again S1", "Captain America: Brave New World", "Thunderbolts*",
+    "Spider-Man|2002", "Spider-Man 2", "The Amazing Spider-Man", "The Amazing Spider-Man : Le Destin d'un héros", "Venom", "Venom: Let There Be Carnage",
+    "Spider-Man: No Way Home", "Venom: The Last Dance", "Doctor Strange in the Multiverse of Madness", "Hawkeye", "Moon Knight", "Black Panther: Wakanda Forever", "Echo",
+    "She-Hulk : Avocate", "Miss Marvel", "Thor: Love and Thunder", "Ironheart"]],
+  ["Le monde d'après", "2025 – 2027", ["Ant-Man et la Guêpe: Quantumania", "Les Gardiens de la Galaxie Vol. 3", "Secret Invasion", "The Marvels", "Loki S2",
+    "Deadpool", "Deadpool 2", "Logan", "Deadpool & Wolverine", "Agatha All Along", "Daredevil: Born Again S1", "Captain America: Brave New World", "Thunderbolts*",
     "Les 4 Fantastiques : Premiers pas", "Wonder Man", "Daredevil: Born Again S2", "The Punisher : One Last Kill"]],
-  ["La suite", "Ajoutés après la liste Disney+", ["Spider-Man: Brand New Day", "Vision Quest", "Avengers: Doomsday"]],
+  ["La suite", "Ajoutés après la liste Disney+", ["Spider-Man: Brand New Day", "Vision Quest", "X-Men", "X-Men 2", "Avengers: Doomsday"]],
 ];
 const BRANCHES = [];
 /* La liste chronologique, l'avancée et la prochaine étape (premier titre sorti pas encore coché). */
@@ -9089,13 +9127,13 @@ function ouvrirTva(){
   const pas = (it, x) => `<li class="pas${vus[it.id] ? " vu" : ""}${it === nx ? " suivant" : ""}" data-id="${it.id}">
       <button class="noeud coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button>
       <button class="pas-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy" decoding="async">
-        <span class="pas-txt"><em>Prochain</em><b><span>${esc(it.t)}</span></b><small><span class="tv-num">${++num}</span>${Array.isArray(x) ? esc(x[1]) + " · " : ""}${it.a} · ${typeTitre(it)}${it.v ? " · à venir" : ""}</small></span></button></li>`;
+        <span class="pas-txt"><em>Prochain</em><b><span>${esc(it.t)}</span></b><small><span class="tv-num">${++num}</span>${Array.isArray(x) ? esc(x[1]) + " · " : ""}${it.a} · ${typeTitre(it)}${it.v ? " · à venir" : ""}${univDe(it.id) === "multi" ? ` · <em class="tv-multi">Multivers</em>` : ""}</small></span></button></li>`;
   document.getElementById("tva-in").innerHTML = `
     <div class="colonne pc tv">
       <div class="pc-tete">
         <div class="pc-ligne"><p class="surtitre">Dossier ${esc(profilActif().nom)}</p><span class="pc-compte" id="tv-compte">${n}<i>/${liste.length}</i></span></div>
         <div class="pc-titre"><h1 class="titre-l">La chronologie</h1><img class="pc-tva-logo tv-logo" src="${img(ICO.tva)}" alt="TVA"></div>
-        <p class="tv-intro">Tout le MCU dans l'ordre où les événements se produisent. Toute déviation sera… notée.</p>
+        <p class="tv-intro">Le MCU dans l'ordre où les événements se produisent, et l'essentiel du Multivers. Toute déviation sera… notée.</p>
         <span class="filet-prog tv-filet"><i id="tv-filet" style="width:${Math.round(n / liste.length * 100)}%"></i></span>
       </div>
       ${CHRONO.map(([ere, dates, t], k) => { const l = t.map(x => [par(x), x]).filter(y => y[0]), v = l.filter(y => vus[y[0].id]).length;
