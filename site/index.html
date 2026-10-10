@@ -3724,6 +3724,66 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 #carte .cd.cdx{display:flex;flex-direction:column;align-items:center;grid-template-columns:none;padding:calc(var(--haut) + 62px) 0 0;min-height:0}
 #carte .cdx .cd-scene{margin-top:0}
 #carte .cd4-t{width:100%;padding:18px 16px calc(var(--bas) + 30px)}
+
+/* ══════ V4.3 ══════ */
+/* Accueil : le film de la bande-annonce sous la vidéo (toucher = fiche), de l'air avant la suite */
+.v4h .hero-bas{margin-top:-4px;padding:0 16px 26px}
+.h4-film{display:block;width:100%;text-align:left}
+.h4-film .k{display:block}
+.h4-film .h4-titre{display:flex;align-items:center;gap:12px}
+.h4-film .h4-titre .chev4{width:13px;height:13px;border-width:3px;border-color:#fff;margin:0}
+.h4-film .h4-meta{display:block}
+.h4-actions{margin-top:16px}
+.rail-aff4{margin:0 -16px;padding:0 16px 4px;gap:8px}
+.rail-aff4 button{position:relative;flex:0 0 104px;aspect-ratio:2/3;background:#000;scroll-snap-align:start;overflow:hidden}
+.rail-aff4 img{width:100%;height:100%;object-fit:cover}
+.rail-aff4 .vu img{filter:brightness(.45)}
+.rail-aff4 .lock img{filter:grayscale(1) brightness(.3)}
+.rail-aff4 .v{position:absolute;right:5px;top:5px;width:22px;height:22px;background:var(--a);display:grid;place-items:center;clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%)}
+.rail-aff4 .v svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.ecran-cine .ba-legende{display:none}
+.hero-tag{display:none !important}
+/* Parcours : le rouge revient (titre de phase et jauge), sans cadre autour du prochain film */
+.v4p .etape-tete{box-shadow:inset 4px 0 0 var(--a)}
+.v4p .etape-tete .filet-prog{left:4px}
+.v4p .etape-tete .filet-prog i,.v4p .etape.fini .filet-prog i{background:var(--a)}
+/* Cases à cocher : la forme d'Avant Doomsday (coins coupés), en rouge Marvel une fois vu */
+:is(.v4p,#avdoom-in,#bonus-in,#tva-in) .noeud{width:34px;height:34px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);box-shadow:inset 0 0 0 2px rgba(255,255,255,.28);background:none}
+:is(.v4p,#avdoom-in,#bonus-in,#tva-in) .noeud svg{stroke:rgba(255,255,255,.18)}
+:is(.v4p,#avdoom-in,#bonus-in,#tva-in) .vu .noeud{background:var(--a);box-shadow:none}
+:is(.v4p,#avdoom-in,#bonus-in,#tva-in) .vu .noeud svg{stroke:#fff}
+#tva-in .pas.vu .noeud svg,#avdoom-in .vu .noeud svg,#bonus-in .pas.vu .noeud svg{stroke:#fff}
+#splash:not([hidden]){pointer-events:auto}
+/* Doomsday enrichi */
+.d4-syn{font:400 15px/1.45 var(--rc);color:#ccc}
+.d4-fiche{display:grid;grid-template-columns:1fr 1fr;margin-top:14px;border-top:1px solid var(--l4)}
+.d4-fiche div{padding:11px 0;border-bottom:1px solid var(--g42)}
+.d4-fiche div:nth-child(odd){padding-right:10px}
+.d4-fiche span{display:block;font:700 11.5px var(--rc);letter-spacing:.1em;text-transform:uppercase;color:var(--t4m)}
+.d4-fiche b{display:block;margin-top:3px;font:700 15px/1.2 var(--rc);color:#fff}
+.rail-cast4{margin:0 -16px;padding:0 16px 4px;gap:10px}
+.rail-cast4 button{flex:0 0 112px;text-align:left;scroll-snap-align:start}
+.rail-cast4 img{width:112px;height:168px;object-fit:cover;background:#000;clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%)}
+.rail-cast4 b{display:block;margin-top:7px;font:700 13px/1.15 var(--rc);text-transform:uppercase;color:#fff}
+.rail-cast4 small{display:block;margin-top:2px;font:400 12.5px var(--rc);color:var(--t4m)}
+.d4-infos{list-style:none}
+.d4-infos li{position:relative;padding:10px 0 10px 18px;border-bottom:1px solid var(--g42);font:400 14.5px/1.4 var(--rc);color:#ddd}
+.d4-infos li::before{content:"";position:absolute;left:0;top:17px;width:7px;height:7px;background:var(--vd)}
+#v-doomsday .s4-tete .h4-sec{}
+
+/* V4.3 — page provisoire « Tester les sons » */
+.sons4{padding:8px 16px 40px}
+.sons4 .resume{margin:6px 0 14px}
+.son4{display:flex;align-items:center;gap:12px;width:100%;text-align:left}
+.son4-n{flex:none;width:28px;height:28px;display:grid;place-items:center;background:var(--a);color:#fff;font-weight:800;font-size:13px;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+.son4 b{flex:1;display:flex;flex-direction:column;gap:2px}
+.son4 small{font-weight:400;font-size:12px;opacity:.6}
+.son4-p{flex:none;width:0;height:0;border-left:11px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent;opacity:.8}
+.son4.joue .son4-n{animation:son4 .5s}
+@keyframes son4{50%{transform:scale(1.25)}}
+.sons4{padding-top:64px}
+.s4-tete a,.s4-tete button,.s4-tete .tout4{white-space:nowrap;flex:none}
+.s4-tete h2{min-width:0}
 </style>
 </head>
 <body>
@@ -3830,7 +3890,7 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 /* ═══════════ DONNÉES ═══════════ */
 const HD = {"Iron Man": "uZrsDJkn0PPnGc51fQhtCqwPPVM.jpg", "L'Incroyable Hulk": "cImKVGUiEnwLsNUyoMA0a0na2y5.jpg", "Iron Man 2": "ghomWlBZtAW5K9zjcAvg4dU62AU.jpg", "Thor": "q8pF6s9b9veTQvxTqMDIQf9nJKi.jpg", "Captain America: First Avenger": "l1SP3gyHA5ZEuf72WKx5ihtZZFO.jpg", "Avengers": "ylsAO88v2tF0iXRFojPa0UaAJf1.jpg", "Iron Man 3": "sE71EBrRMfW0NKMHlXPO55Km88X.jpg", "Thor: Le Monde des ténèbres": "eAIGX0nlwlb5sMb4uDRGNFqMyG9.jpg", "Captain America: Le Soldat de l'hiver": "n3Xa8g1sWrUVUal6zk0OoC9ARo1.jpg", "Les Gardiens de la Galaxie": "9a6fGeSV5kffyNPPMWCPhLOhLdJ.jpg", "Avengers: L'Ère d'Ultron": "A0tw88n1byyR2vodhJMlFPQGQgF.jpg", "Ant-Man": "hAH2Rt2WvfMBK2tZDLMNuUTUwxG.jpg", "Captain America: Civil War": "i2nc9IAP1xRWoa3MgeR7ldsshkV.jpg", "Doctor Strange": "7wZ7mx7tY5SgflQKuJmQvwu3wGm.jpg", "Les Gardiens de la Galaxie Vol. 2": "brgkPEPQJNGLuKRy8omRTcDfDuL.jpg", "Spider-Man: Homecoming": "wFNNv1ZHglNdXJLYiEgpLY5sa9S.jpg", "Thor: Ragnarok": "mAA8RXkgF87jSWWMSf6hgLl73mk.jpg", "Black Panther": "g94IcdzPswTYl1ISdgn2EwvaZtt.jpg", "Avengers: Infinity War": "hSfuKPtyEryeFzapZ8UgZd4aESu.jpg", "Ant-Man et la Guêpe": "r3Vapr4sdXOhHBThTNtfuijKe5V.jpg", "Captain Marvel": "aRJAoQ6mqPHAKXjP3CqNyLC8FAh.jpg", "Avengers: Endgame": "wF7jv3x51hXgkl7t5KHePuRjXc8.jpg", "Spider-Man: Far From Home": "9FkewgPxlMPjgKhFN7LaRJEqmCI.jpg", "Loki — saison 1": "x3tgUYJNx58xL5WhuV5sDnujKIh.jpg", "Black Widow": "tIdq9lGrbSsq3RkgB9r0g0vYTbl.jpg", "What If...? — saison 1": "Wkjg8AxkmnxO9Bph7J3eW9f3ix.jpg", "Shang-Chi et la Légende des Dix Anneaux": "g54eUtuCTAOQaNlVpr7Kpr7sVoH.jpg", "Les Éternels": "vV7TrS7PNRZJHCxNmiYN1SU7s1w.jpg", "Spider-Man: No Way Home": "jwfDFqzxBkXC5bERBZrCEfK9iii.jpg", "Doctor Strange in the Multiverse of Madness": "arfzjn1tGvXWwkX7eaGVuXsc0mp.jpg", "Thor: Love and Thunder": "kSMarEm3ESOOr11dzsep2RZ1ClD.jpg", "Werewolf by Night": "5p6Q5dsqgT7dknImjtoRvNx50k9.jpg", "Black Panther: Wakanda Forever": "rNTKgJdJ8tyfpiUug5ittECK8CS.jpg", "Les Gardiens de la Galaxie — Spécial fêtes": "cF3E6CrCm3NUy5PDRBbGyXRChYb.jpg", "Ant-Man et la Guêpe: Quantumania": "2hq8EKF6kaUyOxB9KhmIb5JUxEe.jpg", "Les Gardiens de la Galaxie Vol. 3": "dnyQnKSSqQ8aOEMiE5hYDNJO4dE.jpg", "Loki — saison 2": "tGdaskDMBdGonOnuvkrAP9sd0mt.jpg", "What If...? — saison 2": "5oYadd4vILTIYs7j3H9pgWIvbhI.jpg", "The Marvels": "mqAQO6j5gkq6iwCXNbXpzf0RXBU.jpg", "Deadpool & Wolverine": "7CtRdKd5hQPB2b1apKCqxxQUKSf.jpg", "What If...? — saison 3": "lImTfDykg2OKrDPOQBb8yCwJbhl.jpg", "Captain America: Brave New World": "wDRXmiAEJdhNIcuetM4016fOCx8.jpg", "Daredevil: Born Again — saison 1": "9ERtLvFN1nFCabGaFkC6tiroglm.jpg", "Thunderbolts*": "zctISSBEZRgVQPG178HqRJMnc4x.jpg", "Les 4 Fantastiques : Premiers pas": "rNc4KARs6fVa4axzvuv3NfUiNy1.jpg", "Daredevil: Born Again — saison 2": "kNOOBUEKnivdnWsxbtKnG69VMwx.jpg", "Spider-Man: Brand New Day": "jjCCZcCtggGjKik2gXjyux1VEdZ.jpg", "WandaVision": "AXnCR7WE8BKlzsabQtUITySChn.jpg", "Falcon et le Soldat de l'hiver": "6NrUwEWDxZI2XffOnw3nuibukmX.jpg", "Hawkeye": "cybZ7FoeBoBJPieKvSp4wh2yCMR.jpg", "Moon Knight": "xrkDlkL6u26DLeBw2Cao8pYtrYH.jpg", "Miss Marvel": "3x1eRyuz2NOOSXODDcDl9EjGRQ.jpg", "Je s'appelle Groot": "wSkHKvNwJC5Mbx1jvRytJkd6RSb.jpg", "She-Hulk : Avocate": "poWy1hDzaIFv6UaYtFDNcNfiM2C.jpg", "Secret Invasion": "AbqvJTbFEOmL8vHk54lVolqQg8Y.jpg", "Echo": "g7Y8pX0yndEpGAa0v4ZGpGuMrF0.jpg", "Agatha All Along": "mGsxKwXUjojitRv2E9qMTbxbBRd.jpg", "Ironheart": "dtpiECNwAeLnGJSU3HTWhcQGHk1.jpg", "Eyes of Wakanda": "yuOfb1MgnaGPa4guzV0n1IFYVGN.jpg", "Marvel Zombies": "9CbKyXIbDKBSKKs7BOFnMiJxWal.jpg", "Wonder Man": "5uHI0TCde9YDGY7Fm54L3mBNILK.jpg", "Avengers: Doomsday": "cCUxE6EJ9zi1YfdsxU8rWLgqQnN.jpg", "Vision Quest": "xK27l5uwaVyZSlENWnmLlWwDQNS.jpg", "Loki S1": "x3tgUYJNx58xL5WhuV5sDnujKIh.jpg", "What If...? S1": "Wkjg8AxkmnxO9Bph7J3eW9f3ix.jpg", "Loki S2": "tGdaskDMBdGonOnuvkrAP9sd0mt.jpg", "What If...? S2": "5oYadd4vILTIYs7j3H9pgWIvbhI.jpg", "What If...? S3": "lImTfDykg2OKrDPOQBb8yCwJbhl.jpg", "Daredevil: Born Again S1": "9ERtLvFN1nFCabGaFkC6tiroglm.jpg", "Daredevil: Born Again S2": "kNOOBUEKnivdnWsxbtKnG69VMwx.jpg", "Spider-Man|2002|film": "pNz1NREgddPdlzytlR8mW4B26fW.jpg", "Spider-Man 2|2004|film": "m8X5HdADsW5YdmVNjwTOArMOUoL.jpg", "Spider-Man 3|2007|film": "4SBTOPWMM3My5nDIlpNHt6dg78d.jpg", "The Amazing Spider-Man|2012|film": "gsIkMf1VErbF0xtrgXEZXqLgsBG.jpg", "The Amazing Spider-Man : Le Destin d'un héros|2014|film": "rZ47R21ZGNTGr5ORxdMmxQWdcFn.jpg", "Spider-Man: The New Animated Series|2003|serie": "pYc8YlwH7ffNjitAUU18gD6k2PI.jpg", "X-Men 2|2003|film": "xQ9KsoaGNO9fyZiyE6rWfmXzQIL.jpg", "X-Men : L'Affrontement final|2006|film": "4p6vKNrG8bAG2BmdAmF0IVJR6DZ.jpg", "X-Men : Le Commencement|2011|film": "Ato626O1cmOjMlOFvYsgy9SJMbj.jpg", "X-Men : Days of Future Past|2014|film": "zGSi4NG7SfyILp3SOfBgVo4VoWG.jpg", "X-Men : Apocalypse|2016|film": "dt9K3vjV6nIttECni7EfXLysDa2.jpg", "X-Men : Dark Phoenix|2019|film": "iIsMHA3gX9E7ceNgvjfu99vTF7v.jpg", "X-Men Origins: Wolverine|2009|film": "ucJroLJ6RCqXY6hjYeLCW6jbWwE.jpg", "Wolverine : Le Combat de l'immortel|2013|film": "o7mGuVPrgBq1jSrq3gTWWKTdnEi.jpg", "Logan|2017|film": "sUYRG0ZGck9SYvMkTNcNibdE8M6.jpg", "Deadpool|2016|film": "z5VjcCEioj2c2dvxmoqBW0Rj8Xj.jpg", "Deadpool 2|2018|film": "ybjooZMNlRBaFNfs52XqONc4Xyw.jpg", "Les Nouveaux Mutants|2020|film": "aYHaR3FhKjipcy499YjCPRv4vcz.jpg", "Legion|2017|serie": "xH6g58326TcAxypFesaDIua20jL.jpg", "The Gifted|2017|serie": "nshCqszjTNuqhrB53vrSqWO18sE.jpg", "Les 4 Fantastiques|2005|film": "tnJ3WyJwVbQhBQV5fmFmpcnyi5J.jpg", "Les 4 Fantastiques et le Surfer d'argent|2007|film": "9Ejo1jwcq4T3CtB2fbUd2qLZOS6.jpg", "Les 4 Fantastiques|2015|film": "aVGL67lLyUJmmpgmrsgRDkDY8Nm.jpg", "Venom|2018|film": "vVusHIRlyyFVS42XnqZso2wGKr.jpg", "Venom: Let There Be Carnage|2021|film": "9j21DXo7Gwtfxj81iC20AbOqumt.jpg", "Morbius|2022|film": "xBoIe0eX9UuSSPe5Qt6KXIQOd3I.jpg", "Madame Web|2024|film": "AgavrwM5k9CWfw88CAf1jfbPDbv.jpg", "Venom: The Last Dance|2024|film": "9sAK8lZDNkH9QBFjmqLytXnmzyM.jpg", "Kraven the Hunter|2024|film": "bwhKUzPtwtJ00CGv67IEXmS2WaM.jpg", "Blade|1998|film": "1E1y8stLqgLEdvT3bEQscL1kiFf.jpg", "Blade II|2002|film": "wAn6VYamKbnOtfyTZ6arVtkMzDv.jpg", "Blade: Trinity|2004|film": "bA9HTKZljF80Q0tmtYcjbQ0viwg.jpg", "Daredevil|2003|film": "kupZzKFhFApvNjtBVB7JlQ6MjeI.jpg", "Elektra|2005|film": "jSu4kzc5kpzLgTeVuYkvKBmAY6v.jpg", "Ghost Rider|2007|film": "7kSRmdf80BART95tsOhuZkcmde6.jpg", "Ghost Rider : L'Esprit de vengeance|2011|film": "xQkZZ3UpbtmhtSaEfXCFJUx0XL.jpg", "Hulk|2003|film": "9Vdwl3KGZgnhiTCg2YnSKMyG3Vn.jpg", "The Punisher|2004|film": "wLsxrMfxNMjA6MLp1o6UqTUZw3W.jpg", "Punisher: War Zone|2008|film": "aorAzfK57TwSjgP8u7Q9X4mQ0CJ.jpg", "Agents of S.H.I.E.L.D.|2013|serie": "j6pen1MBLKbBoXrzrHSxfsd0lrC.jpg", "Agent Carter|2015|serie": "fe79VYyLp5ZBstpJ4oukpuUT3B.jpg", "Daredevil|2015|serie": "jwhi2cBENpdMYJUkmVTJ6Fcrokf.jpg", "Jessica Jones|2015|serie": "d8OS8nKmv45BjGXsWTOxRdiFm1X.jpg", "Luke Cage|2016|serie": "whnbD6LEjHenvda3A2cV2Vky531.jpg", "Iron Fist|2017|serie": "v6qcpqlpyRqZzmIehW3eOssTW5K.jpg", "The Defenders|2017|serie": "k8UOUmPzCHrflLHxvNhogsJGo8D.jpg", "The Punisher|2017|serie": "ioWV96X8lFnjO8PPAl6ayfZGjkM.jpg", "Inhumans|2017|serie": "y3aFlpB4Vwn1Qz0WOTUOTf6GmPl.jpg", "Runaways|2017|serie": "di2HQ7FsWv2xCiMPFh3VUOFXF8P.jpg", "Cloak & Dagger|2018|serie": "ceyAU7dwMYUk16gLOEO7DowITPe.jpg", "Helstrom|2020|serie": "5QmcKsepYpO9XYsWNLwsiULoaAu.jpg"};
 /* Bandes-annonces VF trouvées sur YouTube (chaînes officielles françaises en priorité) quand Allociné n'a que la VO. */
-const BA_VF = {"Miss Marvel": "JTb4NIzxtYE", "Je s'appelle Groot": "JpnSjPS6lg0", "Loki S2": "QiBHpxroTok", "What If...? S2": "5Xy95FAyMVM", "What If...? S3": "_oRJFwPC_gE", "Ironheart": "wJqMZEIcvx4", "Marvel Zombies": "Txa-LEY8i3E", "Les Gardiens de la Galaxie — Spécial fêtes": "Sz9mkYiBYXI", "Spider-Man|2002|film": "OFijO5eH3ok", "X-Men|2000|film": "dSxLvb78HmM", "Legion|2017|serie": "utbUB12KNhw", "Agent Carter|2015|serie": "KsJmj0lLTb8", "Daredevil|2015|serie": "-g8fSUNeYIE", "Luke Cage|2016|serie": "79XV13lyJdI", "The Punisher|2017|serie": "bwRv7RnmRHM", "Inhumans|2017|serie": "omXYKmcFCuY", "Helstrom|2020|serie": "Ark7k0xQZDk", "Spider-Man, la série animée|1994|serie": "DJaOC5ybPKU|Générique", "Spider-Man: The New Animated Series|2003|serie": "nj7o0iiBMps|Générique"};
+const BA_VF = {"Miss Marvel": "JTb4NIzxtYE", "Je s'appelle Groot": "JpnSjPS6lg0", "Loki S2": "QiBHpxroTok", "What If...? S2": "5Xy95FAyMVM", "What If...? S3": "_oRJFwPC_gE", "Ironheart": "wJqMZEIcvx4", "Marvel Zombies": "Txa-LEY8i3E", "Les Gardiens de la Galaxie — Spécial fêtes": "Sz9mkYiBYXI", "Spider-Man|2002|film": "OFijO5eH3ok", "X-Men|2000|film": "dSxLvb78HmM", "Legion|2017|serie": "utbUB12KNhw", "Agent Carter|2015|serie": "KsJmj0lLTb8", "Daredevil|2015|serie": "-g8fSUNeYIE", "Luke Cage|2016|serie": "79XV13lyJdI", "The Punisher|2017|serie": "bwRv7RnmRHM", "Inhumans|2017|serie": "omXYKmcFCuY", "Helstrom|2020|serie": "Ark7k0xQZDk", "Spider-Man, la série animée|1994|serie": "DJaOC5ybPKU|Générique", "Spider-Man: The New Animated Series|2003|serie": "nj7o0iiBMps|Générique", "Iron Man": "rDCTb9Gp2qk", "L'Incroyable Hulk": "A1WIcLbYh3o", "Iron Man 2": "SQnuLDnhB7g", "Spider-Man 2|2004|film": "3sDoiPWrook", "Spider-Man 3|2007|film": "oB09PpOoknM", "X-Men 2|2003|film": "pFwkWsiQMf8", "X-Men : L'Affrontement final|2006|film": "KMZ1FWENm3w", "X-Men Origins: Wolverine|2009|film": "yawHvdrZrcs", "Les 4 Fantastiques|2005|film": "f7KtZ-8NAoU", "Les 4 Fantastiques et le Surfer d'argent|2007|film": "oZtT0nUSFSE", "Blade|1998|film": "9G-RqBtnasI", "Blade II|2002|film": "OtW-g9C2xbs", "Daredevil|2003|film": "nHLouGzHO4s", "Hulk|2003|film": "JoODSGN0Ozk", "The Punisher|2004|film": "cMCcvoc0G-A", "Ghost Rider|2007|film": "hdEXAiawHy8"};
 /* Séries : [identifiant TMDB de la série, saison couverte (0 = toutes)]. */
 const TV = {"WandaVision": ["85271", 0], "Falcon et le Soldat de l'hiver": ["88396", 0], "Loki S1": ["84958", 1], "What If...? S1": ["91363", 1], "Hawkeye": ["88329", 0], "Moon Knight": ["92749", 0], "Miss Marvel": ["92782", 0], "Je s'appelle Groot": ["232125", 0], "She-Hulk : Avocate": ["92783", 0], "Werewolf by Night": ["894205", 0], "Les Gardiens de la Galaxie — Spécial fêtes": ["774752", 0], "Secret Invasion": ["114472", 0], "Loki S2": ["84958", 2], "What If...? S2": ["91363", 2], "Echo": ["122226", 0], "Agatha All Along": ["138501", 0], "What If...? S3": ["91363", 3], "Daredevil: Born Again S1": ["202555", 1], "Ironheart": ["114471", 0], "Eyes of Wakanda": ["241388", 0], "Marvel Zombies": ["138505", 0], "Wonder Man": ["198178", 0], "Daredevil: Born Again S2": ["202555", 2], "Vision Quest": ["213375", 0], "Spider-Man, la série animée|1994|serie": [null, 0], "Spider-Man: The New Animated Series|2003|serie": ["1664", 0], "Legion|2017|serie": ["67195", 0], "The Gifted|2017|serie": ["69629", 0], "Agents of S.H.I.E.L.D.|2013|serie": ["1403", 0], "Agent Carter|2015|serie": ["61550", 0], "Daredevil|2015|serie": ["61889", 0], "Jessica Jones|2015|serie": ["38472", 0], "Luke Cage|2016|serie": ["62126", 0], "Iron Fist|2017|serie": ["62127", 0], "The Defenders|2017|serie": ["62285", 0], "The Punisher|2017|serie": ["67178", 0], "Inhumans|2017|serie": ["68716", 0], "Runaways|2017|serie": ["67466", 0], "Cloak & Dagger|2018|serie": ["66190", 0], "Helstrom|2020|serie": ["88987", 0]};
 /* Fonds d'écran : affiches officielles sans texte (TMDB), [film, fichier]. */
@@ -3859,6 +3919,8 @@ const TRAILERS = [
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/06/15/40/20631918_hd_013.mp4", titre:"Teaser · X-Men", langue:"VF", vignette:"/m/41ca90bafc7457bb.avif" },
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/13/15/36/20632197_hd_013.mp4", titre:"Teaser · Wakanda et 4 Fantastiques", langue:"VF", vignette:"/m/792959f82eb5ddc5.avif" },
 ];
+/* Page Doomsday : affiches officielles des personnages (Marvel Studios, via le wiki Marvel). */
+const IMG_CAST = {"Ant-Man": "/m/35e536c1d9cf281e.webp", "Black_Panther": "/m/24d467ba47dcaf84.webp", "Black_Widow": "/m/099825e895ac91ef.webp", "Captain_America": "/m/9b07f6bd72249779.webp", "Doctor_Doom": "/m/fc75de6c7a4ee6a9.webp", "Gambit": "/m/edce75f4c72987af.webp", "Loki": "/m/b466720d5997ea64.webp", "Mister_Fantastic": "/m/b9b231090cb84ec3.webp", "Professor_X": "/m/284d493f56cbe0c1.webp", "Shang-Chi": "/m/1e852904f659cf23.webp", "Thor": "/m/c66e3529b0fcab20.webp", "Winter_Soldier": "/m/b062bdd0dde9bd18.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
 const IMG_JEUX = {"affiche": "/m/13006dcea8ed2b37.webp", "akinator": "/m/e69e7b85d44000f4.webp", "dossier": "/m/6060eeba44e79f4b.webp", "filmo": "/m/b22ab835778bb3fc.webp", "heros": "/m/07f57a7e4258334d.webp", "ordre": "/m/4d4878bf40541d8d.webp", "qui": "/m/47cc74be789e3325.webp", "quiparle": "/m/0d9ae9143ea5662d.webp", "replique": "/m/7ccb68b27acdc849.webp", "vs": "/m/4adcd19185c2f16a.webp"};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
@@ -4568,20 +4630,17 @@ function lancerVideo(id, donnees, cle = id){
    Tirée au hasard à l'ouverture de l'appli puis gardée tant que l'appli reste ouverte (on retrouve la même, là où on l'avait laissée) ;
    à la prochaine ouverture, une autre (pioche sans remise mémorisée sur l'appareil : on les voit toutes avant de revoir la même).
    Lue en continu depuis Allociné comme dans la fiche ; le fond flouté est dessiné à partir de la vidéo elle-même (pas de second téléchargement). */
-const baVF = i => i.ba && i.ba.src && i.ba.langue === "VF";
+const baVF = i => i.ba && i.ba.src && i.ba.langue === "VF" && /_(hd|h)_\d+\.mp4$/.test(i.ba.src);   // HD seulement (les versions 320p d'Allociné sont floues)
+const baAccueil = u => { const vus = profil && etat[profil] ? etat[profil][u].vus : {}, l = tous(u).filter(i => baVF(i) && !pasSorti(i)), nv = l.filter(i => !vus[i.id]);
+  return (nv.length ? nv : l).map(i => ({ src:i.ba.src, id:i.id, t:i.t })); };
 const BA_TETE = {
-  mcu:() => tous("mcu").filter(baVF).map(i => ({ src:i.ba.src, id:i.id, t:i.t })),
-  multi:() => tous("multi").filter(baVF).map(i => ({ src:i.ba.src, id:i.id, t:i.t })),
+  mcu:() => baAccueil("mcu"),
+  multi:() => baAccueil("multi"),
   doom:() => { const dd = tous("mcu").find(i => i.t === "Avengers: Doomsday");
     return TRAILERS.filter(t => t.langue === "VF").map(t => ({ src:t.src, id:dd ? dd.id : null, t:"Avengers: Doomsday" })); },
 };
 const baTete = {};   // la bande-annonce choisie pour cette ouverture de l'appli, par vue
 function piocherBA(cle){
-  if(cle === "mcu" || cle === "multi"){
-    const vus = profil && etat[profil] ? etat[profil][cle].vus : {}, nx = tous(cle).find(i => !vus[i.id] && !pasSorti(i));
-    if(nx && baVF(nx)){ if(!baTete[cle] || baTete[cle].id !== nx.id) baTete[cle] = { src:nx.ba.src, id:nx.id, t:nx.t, pos:0, suivant:true }; return baTete[cle]; }
-    if(baTete[cle] && baTete[cle].suivant) delete baTete[cle];
-  }
   if(baTete[cle]) return baTete[cle];
   const l = BA_TETE[cle](); if(!l.length) return null;
   let sac = []; try{ sac = JSON.parse(localStorage.getItem("mt-ba-" + cle) || "[]"); }catch(e){}
@@ -4635,7 +4694,7 @@ function lancerBA(id, cle){
   if(!lg){ lg = document.createElement("button"); lg.className = "ba-legende"; v.parentNode.appendChild(lg); }
   if(ba.id) lg.dataset.fiche = ba.id; else delete lg.dataset.fiche;
   lg.innerHTML = `<i>Teaser</i>${esc(ba.t)}`;
-  if(cle === "doom" || ba.suivant) lg.remove();   // la bande-annonce du titre affiché : pas de légende en double
+  lg.remove();   // le titre du film est affiché sous la vidéo : pas de légende en double
   majSonVue();
 }
 /* Cadrage des bandes-annonces, au format des anciens montages (16:10) : on mesure la zone d'image réelle
@@ -5137,7 +5196,6 @@ document.getElementById("film-video").addEventListener("pause", () => rapportFil
 /* ═══════════ ACCUEIL ═══════════ */
 /* Façon marvel.com : un grand bandeau (la bande-annonce de ton prochain titre, muette, avec le bouton son),
    la phase en cours en affiches, le défi du jour, puis les phases, les sorties et « Reprendre ». */
-let accueilNx = null;
 function rendreAccueil(){
   document.getElementById("v-accueil").innerHTML = `
     <section class="hero v4h">
@@ -5145,46 +5203,25 @@ function rendreAccueil(){
         <span class="hero-tag"><i></i>Bande-annonce</span><button class="son" data-son-vue aria-label="Son"></button></div>
       <div class="hero-bas" id="acc-hero"></div>
     </section>
-    <div id="acc-phase"></div>
     <div id="acc-suite"></div>
     <div class="fin-page"></div>`;
-  accueilNx = null;
   majAccueil(true);
 }
-/* Groupe (phase, franchise) du prochain titre, sinon le dernier groupe entamé. */
-function groupeEnCours(){
-  const nx = prochain(), l = BIB[univers];
-  if(nx){ const gi = l.findIndex(g => g.items.includes(nx)); if(gi >= 0) return gi; }
-  for(let gi = l.length - 1; gi >= 0; gi--) if(l[gi].items.some(i => ici().vus[i.id])) return gi;
-  return 0;
-}
+/* Rail d'affiches : vus grisés et cochés. */
+const railAff = l => `<div class="rail-h rail-aff4">${l.map(it => `<button class="${vusDe(it.id)[it.id] ? "vu" : pasSorti(it) ? "lock" : ""}" data-fiche="${it.id}">
+  <img src="${affiche(it)}" alt="" loading="lazy" decoding="async">${vusDe(it.id)[it.id] ? `<span class="v">${SVG.coche}</span>` : ""}</button>`).join("")}</div>`;
 function majAccueil(complet){
-  const nx = prochain();
   const h = document.getElementById("acc-hero"); if(!h) return;
-  const g = nx && BIB[univers].find(g => g.items.includes(nx)), nomG = g ? g.groupe.split(" · ")[0].split(" / ")[0] : "";
+  // Le bandeau : la bande-annonce d'un film pas encore vu, tirée au hasard à chaque ouverture de l'appli
+  const ba = piocherBA(univers), it = ba && ba.id ? parId(ba.id) : tous(univers).find(i => !ici().vus[i.id] && !pasSorti(i)) || null;
   const aff = document.getElementById("hero-aff");
-  if(aff && nx){ const src = affiche(nx); if(aff.getAttribute("src") !== src) aff.src = src; }
-  h.innerHTML = nx ? `<p class="k">À suivre${nomG ? " · " + esc(nomG) : ""}</p>
-      <h2 class="h4-titre${nx.t.length > 18 ? " long" : ""}">${esc(nx.t)}</h2>
-      <p class="h4-meta">${infosTitre(nx)}</p>
-      <div class="h4-actions">
-        ${plexCle(nx) ? `<button class="b4 b4-rouge" data-film="${nx.id}">${SVG.jouer}Regarder</button><button class="b4 b4-ligne" data-fiche="${nx.id}">Fiche du film</button>`
-          : `<button class="b4 b4-rouge" data-fiche="${nx.id}">Fiche du ${nx.k === "film" ? "film" : "titre"}</button>${nx.ba ? `<button class="b4 b4-ligne" data-ba="${nx.id}">${SVG.jouer}Bande-annonce</button>` : ""}`}
-      </div>`
-    : `<p class="k">${univers === "mcu" ? "MCU" : "Multivers"}</p><h2 class="h4-titre">Tout est vu</h2><p class="h4-meta">Respect. Le prochain titre arrivera ici dès sa sortie.</p>`;
-  if(accueilNx !== null && accueilNx !== (nx && nx.id) && document.getElementById("hero-video")) lancerVideoAccueil();   // nouveau titre à suivre : sa bande-annonce
-  accueilNx = nx ? nx.id : "";
-
-  // La phase en cours : deux titres avant, le prochain, puis les suivants (4 affiches)
-  const gi = groupeEnCours(), grp = BIB[univers][gi], e = ici().vus;
-  const dispo = grp.items.filter(i => e[i.id] || !pasSorti(i)), nv = dispo.filter(i => e[i.id]).length;
-  const k = nx && grp.items.includes(nx) ? grp.items.indexOf(nx) : grp.items.length - 1;
-  const debut = Math.max(0, Math.min(k - 2, grp.items.length - 4)), rail = grp.items.slice(debut, debut + 4);
-  document.getElementById("acc-phase").innerHTML = `<section class="s4">
-    <div class="s4-tete"><h2 class="h4-sec">${esc(grp.groupe.split(" · ")[0].split(" / ")[0])}<i>${nv} / ${dispo.length}</i></h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>
-    <div class="rail4">${rail.map(it => `<button class="${e[it.id] ? "vu" : nx === it ? "next" : pasSorti(it) ? "lock" : ""}" data-fiche="${it.id}">
-      <img src="${affiche(it)}" alt="" loading="lazy" decoding="async">${e[it.id] ? `<span class="v">${SVG.coche}</span>` : ""}${nx === it ? `<span class="tag4">À suivre</span>` : ""}</button>`).join("")}</div></section>`;
-
+  if(aff && it){ const src = affiche(it); if(aff.getAttribute("src") !== src) aff.src = src; }
+  h.innerHTML = it ? `<button class="h4-film" data-fiche="${it.id}"><span class="k">${ba ? "Bande-annonce" : univers === "mcu" ? "MCU" : "Multivers"}</span>
+      <span class="h4-titre${it.t.length > 18 ? " long" : ""}">${esc(it.t)}<i class="chev4"></i></span>
+      <span class="h4-meta">${infosTitre(it)}${vusDe(it.id)[it.id] ? " · vu" : ""}</span></button>
+      ${plexCle(it) ? `<div class="h4-actions"><button class="b4 b4-rouge" data-film="${it.id}">${SVG.jouer}Regarder</button></div>` : ""}`
+    : `<p class="k">${univers === "mcu" ? "MCU" : "Multivers"}</p><h2 class="h4-titre">Tout est vu</h2>`;
+  const e = ici().vus, nonVus = tous(univers).filter(i => !e[i.id] && !pasSorti(i));
   const cartes = [];
   if(univers === "mcu"){
     const endgame = tous("mcu").find(i => i.t === "Avengers: Endgame");
@@ -5192,12 +5229,16 @@ function majAccueil(complet){
     tous("mcu").forEach(i => { if(SORTIES[i.t] && jours(SORTIES[i.t]))
       cartes.push({aff:affiche(i), t:i.t, d:dateFr(SORTIES[i.t]) + " · " + (i.k==="film" ? "au cinéma" : "Disney+"), tag:jours(SORTIES[i.t]), id:i.id}); });
   }
+  // Puis : ce qui reste à voir, « Reprendre » (Plex), chaque phase ou franchise en affiches, les sorties
+  const groupes = BIB[univers].map((g, gi) => { const dispo = g.items.filter(i => e[i.id] || !pasSorti(i)), v = dispo.filter(i => e[i.id]).length;
+    return `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">${esc(g.groupe.split(" · ")[0].split(" / ")[0])}<i>${v} / ${dispo.length}</i></h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>${railAff(g.items)}</section>`; }).join("");
   document.getElementById("acc-suite").innerHTML = `
+    ${nonVus.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Pas encore vus<i>${nonVus.length}</i></h2><button class="s4-lien" data-vue="parcours">Parcours ›</button></div>${railAff(nonVus.slice(0, 20))}</section>` : ""}
     <div id="reprendre"></div>
     ${cartes.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">À l'affiche et bientôt</h2></div>
-      <div class="sorties4">${cartes.map(c => `<button class="sortie4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em>J-${c.tag}</em>` : ""}</button>`).join("")}</div></section>` : ""}`;
+      <div class="sorties4">${cartes.map(c => `<button class="sortie4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em>J-${c.tag}</em>` : ""}</button>`).join("")}</div></section>` : ""}
+    ${groupes}`;
   rendreReprendre();
-  monterHD(document.getElementById("acc-suite"));
 }
 function lancerVideoAccueil(){ lancerVideo("hero-video", univers === "mcu" ? VIDEO_MCU : VIDEO_MULTI, univers); }
 
@@ -5292,17 +5333,39 @@ function majParcours(){
 }
 
 /* ═══════════ DOOMSDAY ═══════════ */
+/* Doomsday : l'affiche de Fatalis, le compte à rebours, la préparation (une seule entrée vers Avant Doomsday),
+   le film en bref, le casting, ce qu'on sait, puis les bandes-annonces. */
+const CASTING_DOOM = [["Doctor_Doom", "Robert Downey Jr.", "Victor von Doom", "Docteur Fatalis"], ["Thor", "Chris Hemsworth", "Thor", "Thor"],
+  ["Captain_America", "Anthony Mackie", "Sam Wilson", "Falcon"], ["Winter_Soldier", "Sebastian Stan", "Bucky Barnes", "Bucky Barnes"],
+  ["Loki", "Tom Hiddleston", "Loki", "Loki"], ["Black_Widow", "Florence Pugh", "Yelena Belova", "Yelena Belova"],
+  ["Black_Panther", "Letitia Wright", "Shuri", "Shuri"], ["Ant-Man", "Paul Rudd", "Scott Lang", "Ant-Man"],
+  ["Shang-Chi", "Simu Liu", "Shang-Chi", "Shang-Chi"], ["Mister_Fantastic", "Pedro Pascal", "Reed Richards", "Mister Fantastic"],
+  ["Professor_X", "Patrick Stewart", "Charles Xavier", "Professeur X"], ["Gambit", "Channing Tatum", "Remy LeBeau", "Gambit"]];
+const INFOS_DOOM = [
+  "Robert Downey Jr. revient dans le MCU, cette fois dans la peau de Victor von Doom.",
+  "Les frères Russo, réalisateurs d'Infinity War et d'Endgame, sont aux commandes.",
+  "Steve Rogers (Chris Evans) fait son retour dans les bandes-annonces.",
+  "Les X-Men des films Fox reviennent : Patrick Stewart, Ian McKellen, James Marsden, Alan Cumming, Rebecca Romijn, Kelsey Grammer.",
+  "Les 4 Fantastiques et les Thunderbolts rejoignent les Avengers.",
+  "La suite directe, Avengers: Secret Wars, est prévue pour décembre 2027."];
 function rendreDoomsday(){
-  // L'affiche officielle de Fatalis, le compte à rebours, le teaser, puis la préparation (liste officielle) et les bandes-annonces.
   const ba = TRAILERS.map((t, n) => [t, n]).filter(([t]) => t.langue === "VF");
+  const perso = n => { const i = typeof indexDe === "function" ? indexDe(n) : undefined; return i !== undefined && typeof PERSOFICHE !== "undefined" ? ` data-perso="${i}"` : ""; };
   document.getElementById("v-doomsday").innerHTML = `
     <section class="d4h"><img src="${img(IMG_DOOM)}" alt="">
       <div class="d4h-in"><p class="k">Au cinéma le 16 décembre 2026</p><h1 class="d4-titre">Avengers :<br><em>Doomsday</em></h1></div></section>
     <div class="cd4">${[["j", "Jours"], ["h", "Heures"], ["m", "Min"], ["s", "Sec"]].map(([k, t]) => `<div class="cc"><b data-cr="${k}">--</b><small>${t}</small></div>`).join("")}</div>
-    <div class="d4-act">${ba.length ? `<button class="b4 b4-vert" data-trailer="${ba[0][1]}">${SVG.jouer}Teaser</button>` : ""}<button class="b4 b4-ligne" data-avdoom>Avant Doomsday</button></div>
     ${prepDoomHTML()}
-    ${ba.length > 1 ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Bandes-annonces</h2></div>
-      <div class="rail-h rail-ba4">${ba.map(([t, n]) => `<button class="ba4" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="ba4-j">${SVG.jouer}</span><b>${esc(t.titre)}</b></button>`).join("")}</div></section>` : ""}
+    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Le film</h2></div>
+      <p class="d4-syn">Fatalis menace tout le multivers. Avengers, Wakandais, Thunderbolts, 4 Fantastiques et X-Men vont devoir s'unir face à lui.</p>
+      <div class="d4-fiche"><div><span>Réalisation</span><b>Anthony et Joe Russo</b></div><div><span>Sortie</span><b>16 décembre 2026</b></div>
+        <div><span>Le méchant</span><b>Fatalis</b></div><div><span>La suite</span><b>Secret Wars · 2027</b></div></div></section>
+    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Le casting<i>${CASTING_DOOM.length}</i></h2></div>
+      <div class="rail-h rail-cast4">${CASTING_DOOM.map(([k, acteur, role, nom]) => IMG_CAST[k] ? `<button${perso(nom)}><img src="${img(IMG_CAST[k])}" alt="" loading="lazy"><b>${esc(acteur)}</b><small>${esc(role)}</small></button>` : "").join("")}</div></section>
+    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Ce qu'on sait</h2></div>
+      <ul class="d4-infos">${INFOS_DOOM.map(t => `<li>${esc(t)}</li>`).join("")}</ul></section>
+    ${ba.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Bandes-annonces<i>${ba.length}</i></h2></div>
+      <div class="rail-h rail-ba4">${ba.map(([t, n]) => `<button class="ba4" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="ba4-j">${SVG.jouer}</span><b>${esc(t.titre.replace(/^Teaser/i, "Bande-annonce"))}</b></button>`).join("")}</div></section>` : ""}
     <div class="fin-page"></div>`;
 }
 function prepDoomHTML(){
@@ -5386,9 +5449,9 @@ function rendreProfil(){
       <section class="s4 s4-col"><div class="s4-tete"><h2 class="h4-sec">Plex</h2></div>
         ${compte === COMPTE_PROPRIO ? (plex.token && plex.serveur ? `
           ${info("Connecté à " + esc(plex.serveur.nom), plexNbFilms() + " films" + (plexNbSeries() ? " · " + plexNbSeries() + " séries" : ""))}
-          ${ligne("plex-partager", "Partager avec les autres identifiants")}
+          ${ligne("plex-partager", "Partager mes films Plex")}
           ${ligne("plex-maj", "Actualiser la bibliothèque")}
-          ${ligne("plex-deco", "Déconnecter Plex")}` : ligne("plex", "Connecter Plex", "Regarder tes films ici"))
+          <button class="l4 danger" data-action="plex-deco"><b>Déconnecter Plex</b><i class="chev4"></i></button>` : ligne("plex", "Connecter Plex"))
         : `${!plexPartage ? info("Pas encore d'accès aux films")
           : plex.etat === "recherche" ? info("Connexion au serveur…")
           : plexNbFilms() ? info("Films disponibles", plexNbFilms() + " films" + (plexNbSeries() ? " · " + plexNbSeries() + " séries" : ""))
@@ -5397,11 +5460,48 @@ function rendreProfil(){
       </section>
       <section class="s4 s4-col"><div class="s4-tete"><h2 class="h4-sec">Réglages</h2></div>
         ${ligne("fonds", "Fonds d'écran", FONDS.length + " fonds HD")}
+        ${ligne("sons", "Tester les sons", "Page provisoire")}
         ${ligne("changer", "Changer de profil")}
         <button class="l4 danger" data-action="vider"><b>Réinitialiser ${univers === "mcu" ? "le MCU" : "le Multivers"}</b><i class="chev4"></i></button>
       </section>
     </div>
     <div class="fin-page"></div>`;
+}
+
+/* ═══════════ TESTER LES SONS (page provisoire) ═══════════ */
+/* Chaque son de l'appli, numéroté, avec l'endroit où on l'entend : on écoute, on dit lesquels changer, puis la page disparaît. */
+const LISTE_SONS = [
+  ["Bienvenue", "Après le choix du profil (thème des Avengers)", () => jouerSon("chargement", SON_CHARGEMENT, .75, 4000)],
+  ["Film coché", "Quand on coche un film", () => jouerCourt("coche", .8)],
+  ["Célébration", "Phase terminée, record battu", () => jouerSon("fete", SON_FETE, .8, 4500)],
+  ["Niveau supérieur", "Passage de niveau", () => jouerNiveau()],
+  ["Étoiles", "Quand on note un film", () => [1, 3, 5, 7, 10].forEach((n, k) => setTimeout(() => sonEtoile(n, n === 10), k * 90))],
+  ["Bonne réponse", "Jeux : réponse juste", () => jouerPierre(1)],
+  ["Ting", "Jeux : héros trouvé, choix", () => jouerTing(1)],
+  ["Erreur", "Jeux : mauvaise réponse", () => jouerErreur(false)],
+  ["Explosion", "Qui gagne ?, Box-office", () => jouerCourt("ko", .8)],
+  ["Réplique", "Qui parle ? (un extrait)", () => { const c = QP_CLIPS[Math.floor(Math.random() * QP_CLIPS.length)], ctx = ctxAudio(); tamponQP(c).then(t => { const s = ctx.createBufferSource(); s.buffer = t; s.connect(ctx.destination); s.start(); }).catch(() => {}); }],
+  ["Pack : tension", "Le pack vibre avant l'ouverture", () => SFX.tension()],
+  ["Pack : frottement", "Le doigt glisse sur le pack", () => { for(let k = 0; k < 6; k++) setTimeout(() => SFX.frotte(), k * 70); }],
+  ["Pack : déchirure", "Le pack s'ouvre (effet + son Marvel)", () => { SFX.dechire(3); jouerCourt("pack", .55); }],
+  ["Son Marvel du pack seul", "Ouverture d'un pack", () => jouerCourt("pack", .55)],
+  ["Carte qui arrive", "Carte face cachée", () => SFX.arrivee()],
+  ["Pressentiment", "Avant une carte rare", () => SFX.pressent(5)],
+  ...[1, 2, 3, 4, 5, 6].map(r => ["Carte " + "★".repeat(r), "Retournement d'une carte " + r + "★", () => SFX.retourne(r)]),
+  ["Carte légendaire", "Carte 5★ ou 6★ (final d'Infinity War)", () => jouerCourt("legende", .75)],
+  ["Carte qui part", "On passe à la carte suivante", () => SFX.part()],
+  ["Bilan du pack", "Récapitulatif", () => SFX.bilan(4)],
+  ["Forge", "Créer une carte avec les éclats", () => SFX.forge(5)],
+  ["Portail (plus utilisé)", "Ancien passage MCU ⇄ Multivers", () => jouerCourt("portail", .8)],
+];
+function ouvrirSons(){
+  SFX.pret();
+  document.getElementById("collec-in").innerHTML = `<div class="sons4"><h2 class="fiche-titre">Tester les sons</h2>
+    <p class="resume">Touche une ligne pour l'écouter. Dis-moi les numéros à changer.</p>
+    ${LISTE_SONS.map(([n, ou], k) => `<button class="l4 son4" data-son="${k}"><span class="son4-n">${k + 1}</span><b>${n}<small>${ou}</small></b><i class="son4-p"></i></button>`).join("")}</div>`;
+  document.getElementById("collec-in").onclick = e => { const b = e.target.closest("[data-son]"); if(!b) return;
+    b.classList.remove("joue"); void b.offsetWidth; b.classList.add("joue"); try{ LISTE_SONS[+b.dataset.son][2](); }catch(err){} };
+  ouvrirFeuille("collec");
 }
 
 /* ═══════════ NOTES ═══════════ */
@@ -5723,6 +5823,7 @@ function fermerFeuille(id){
   setTimeout(() => { f.classList.remove("on", "part", "morph"); f.style.zIndex = ""; majSonVue(); }, 280);
   if(id === "plex-modale") clearInterval(plexAttente);
   if(id === "jeu"){ JEU.actif = false; clearInterval(JEU.minuterie); }
+  if(id === "pack" && document.getElementById("jeu").classList.contains("on") && !JEU.actif) fermerFeuille("jeu");
   if(id === "fiche") ficheOuverte = null;
   if(!document.querySelector(".feuille.on:not(.part):not(#" + id + ")")) document.body.style.overflow = "";
 }
@@ -8119,7 +8220,7 @@ const JALONS = [[25, "std"], [50, "hero"], [100, "hero"], [150, "leg"], [200, "l
 function verifierJalons(){
   const c = collec(), n = nbPossedees(), faits = c.jalons = c.jalons || [], gains = [];
   JALONS.forEach(([k, t]) => { if(n >= k && !faits.includes("n" + k)){ faits.push("n" + k); gains.push({ t, o:"Palier : " + k + " cartes" }); } });
-  [1, 2, 3, 4, 5, 6].forEach(r => { if(nbPossedees(PAR_RARETE[r]) === PAR_RARETE[r].length && !faits.includes("r" + r)){ faits.push("r" + r); gains.push({ t:"leg", o:"Rang complet : " + RARETES[r] }); } });
+  [1, 2, 3, 4, 5, 6].forEach(r => { if(nbPossedees(PAR_RARETE[r]) === PAR_RARETE[r].length && !faits.includes("r" + r)){ faits.push("r" + r); gains.push({ t:"leg", o:"Rang complet : " + r + "★" }); } });
   SERIES.forEach(s => { if(s.ids.every(i => c.col[i]) && !faits.includes("s" + s.k)){ faits.push("s" + s.k); gains.push({ t:s.pack, o:"Série complète : " + s.nom }); } });
   c.packs.push(...gains); if(gains.length) sauver();
   return gains;
@@ -8237,7 +8338,7 @@ function carteHTML(i, { etat:e = possede(i) ? "face" : "verrou", neuve = false, 
   return `<span class="carte v5 r${r}${e === "verrou" ? " verrou" : ""}" ${attr}><span class="c-in"><span class="c-photo">
     <img class="c-img" src="${src}"${u ? ` data-hd="${u}"` : ""} alt="" loading="lazy" decoding="async"><span class="c-trame"></span><span class="c-voile"></span>
     ${e === "verrou" ? `<span class="c-point">?</span>` : `<span class="c-holo"></span><span class="c-reflet"></span>`}</span>
-    <span class="c-rang"><b>${r}</b>${ETOILE}<em>${RARETES[r]}</em></span><span class="c-numero">#${num}</span>
+    <span class="c-rang"><b>${r}</b>${ETOILE}</span><span class="c-numero">#${num}</span>
     ${neuve || (e === "face" && (collec().nv || {})[i]) ? `<span class="c-new">New</span>` : ""}
     <span class="c-bas"><span class="c-equipe"><i>${esc(equipeDe(i))}</i></span>
       <b class="c-nom ${classeNom(nom)}">${esc(nom)}</b></span></span></span>`;
@@ -8292,7 +8393,7 @@ function rendreCollection(){
     <div class="cl-barre2">${barre}</div>
     ${np ? `<button class="pack4 cc" data-ouvrir-packs><span class="pack4-pq">${paquet(c.packs[0].t)}</span><span class="pack4-t"><b>${np > 1 ? np + " packs à ouvrir" : "1 pack à ouvrir"}</b><small>${esc(c.packs[0].o || "Gagné dans les jeux")}</small></span><span class="pack4-b cc">Ouvrir</span></button>` : ""}
     <div class="c4-mini"><span class="c4-ecl">${ECLAT}<b>${c.ecl}</b> éclats</span>${pj ? `<span>Encore <b>${pj[0] - n}</b> cartes pour un pack ${PACKS[pj[1]].nom}</span>` : `<span>Tous les paliers atteints</span>`}</div>
-    <div class="cl-rangs"><button class="cl-rang cl-tri2" data-cl-tri>${CL.tri === "num" ? "N°" : "Rareté"}</button>${[1, 2, 3, 4, 5, 6].map(r => `<button class="cl-rang r${r}${CL.rar === r ? " on" : ""}" data-cl-rar="${r}"><i></i>${RARETES[r]}<em>${nbPossedees(PAR_RARETE[r])}/${PAR_RARETE[r].length}</em></button>`).join("")}</div>
+    <div class="cl-rangs"><button class="cl-rang cl-tri2" data-cl-tri>${CL.tri === "num" ? "N°" : "Rareté"}</button>${[1, 2, 3, 4, 5, 6].map(r => `<button class="cl-rang r${r}${CL.rar === r ? " on" : ""}" data-cl-rar="${r}"><i></i>${r}★<em>${nbPossedees(PAR_RARETE[r])}/${PAR_RARETE[r].length}</em></button>`).join("")}</div>
     <div class="pc-outils cl-outils2">
       <div class="onglets">${[["toutes", "Toutes"], ["obtenues", "Obtenues"], ["manquantes", "À trouver"], ["series", "Séries"]].map(([k, t]) =>
         `<button data-cl-vue="${k}" class="${CL.vue === k ? "on" : ""}">${t}</button>`).join("")}</div>
@@ -8345,7 +8446,7 @@ function dosInfo(i){
     <span class="di"><span class="di-num">N° ${String(NUM_CARTE.get(i)).padStart(3, "0")}<i> / ${CARTES.length}</i></span>
       <span class="di-medaillon"><img src="${photo(i)}" alt=""></span>
       <b class="di-nom ${classeNom(p[0])}">${esc(p[0])}</b>${alias.length ? `<span class="di-alias">${alias.map(esc).join(" · ")}</span>` : ""}
-      <span class="c-rar"><i>${r}${ETOILE}</i><em>${RARETES[r]}</em></span><span class="di-tag">${esc(equipeDe(i))}</span>
+      <span class="c-rar"><i>${r}${ETOILE}</i></span><span class="di-tag">${esc(equipeDe(i))}</span>
       <span class="di-lignes">${act && !act.startsWith("Voix") ? ligne("Interprète", esc(act.split(", ")[0])) : ""}
         ${f.premiere ? ligne("Première apparition", esc(f.premiere.t) + " · " + f.premiere.a) : ""}
         ${f.n ? ligne("Apparitions", f.n + " titre" + (f.n > 1 ? "s" : "")) : ""}
@@ -8362,7 +8463,7 @@ function rendreCarte(forge = false){
     <div class="cd-scene${forge ? " forge" : ""}" id="cd-scene"><div class="cd-flip" id="cd-flip"><div class="cd-tourne">
       <div class="cd-face av">${carteHTML(i, { etat:a ? "face" : "verrou", hd:true })}</div></div></div></div>
     <div class="cd4-t">
-      <p class="k">${RARETES[r]} · N° ${String(NUM_CARTE.get(i)).padStart(3, "0")}</p>
+      <p class="k">${"★".repeat(r)} · N° ${String(NUM_CARTE.get(i)).padStart(3, "0")}</p>
       <h2>${esc(p[0])}</h2>
       <p class="cd4-etat">${a ? `×${c.col[i]}${d ? " · obtenue le " + new Date(d).toLocaleDateString("fr-FR", { day:"numeric", month:"long" }) : ""}` : "Pas encore obtenue"}</p>
       <div class="cd4-l">${ligne("Vrai nom", esc(civil))}${ligne("Interprète", act && !act.startsWith("Voix") ? esc(act) : "")}${ligne("Équipe", esc(equipeDe(i)))}${ligne("Première apparition", f ? esc(f.t) + " · " + f.a : "")}</div>
@@ -8552,7 +8653,7 @@ function retournerCarte(){
     et.className = "pk-etiquette r" + x.r;
     if(x.r >= 4){   // le nom du rang traverse l'écran derrière la carte (Légende et au-dessus)
       pk.querySelectorAll(".pk-balayage").forEach(n => n.remove());
-      const mot = RARETES[x.r].toUpperCase();
+      const mot = "★".repeat(x.r);
       pk.insertAdjacentHTML("afterbegin", `<div class="pk-balayage r${x.r}">${[0, 1, 2].map(k => `<span style="--k:${k}">${(mot + " · ").repeat(6)}</span>`).join("")}</div>`);
     }
   }, x.r >= 6 ? 520 : 330);
@@ -8696,7 +8797,7 @@ function equipiers(i){
 function resultatsCartes(brut, q, z){
   const c = collec().col;
   const ligne = i => `<button class="rc-l rc-c r${RARETE[i]}" data-carte-rc="${i}"><span class="rc-mini">${carteHTML(i)}</span><span><b>${marque(PERSOS[i][0], q)}</b>
-    <small><i class="rc-rang">${RARETE[i]}★ ${RARETES[RARETE[i]]}</i> · ${esc(equipeDe(i))}</small></span>${c[i] ? `<em>×${c[i]}</em>` : `<em class="manque">À trouver</em>`}</button>`;
+    <small><i class="rc-rang">${RARETE[i]}★</i> · ${esc(equipeDe(i))}</small></span>${c[i] ? `<em>×${c[i]}</em>` : `<em class="manque">À trouver</em>`}</button>`;
   if(q.length < 2){
     const d = collec().dates || {}, rec = CARTES.filter(i => c[i]).sort((a, b) => (d[b] || 0) - (d[a] || 0)).slice(0, 8);
     z.innerHTML = rec.length ? `<p class="rc-sect">Dernières cartes obtenues</p>${rec.map(ligne).join("")}` : `<p class="rc-rien">Tape un nom pour trouver une carte</p>`;
@@ -8730,7 +8831,7 @@ function corpsPerso(i, { equipe = true } = {}){
   const fy = typeof FY_PERSO !== "undefined" && FY_PERSO[i] ? Math.round(FY_PERSO[i] * 100) : 30, u = photoHD(i);
   const id = [["Identité", civil], ["Espèce", inf.s], ["Origine", inf.o], ["Interprète", f.a ? f.a + (mcu ? " (MCU)" : "") : ""],
     ["À l'écran depuis", premiere ? premiere.it.a + " · " + premiere.it.t : ""], ["Dans les comics", inf.fa ? inf.fa + (inf.an ? " · " + inf.an : "") : inf.an || ""],
-    ["Créé par", inf.cr], ["Carte", RARETES[r] + " " + "★".repeat(r) + (possede(i) ? " · obtenue" : " · à trouver")]].filter(x => x[1]);
+    ["Créé par", inf.cr], ["Carte", "★".repeat(r) + (possede(i) ? " · obtenue" : " · à trouver")]].filter(x => x[1]);
   const eq = equipiers(i);
   return `${inf.b ? `<p class="pf-bio">${esc(inf.b)}</p>` : ""}
     <div class="pf-stats"><span><b>${items.length}</b><small>apparition${items.length > 1 ? "s" : ""}</small></span><span><b>${premiere ? premiere.it.a : "—"}</b><small>à l'écran</small></span><span><b>${vus.length}<i>/${sortis.length}</i></b><small>vu${vus.length > 1 ? "s" : ""}</small></span></div>
@@ -9937,6 +10038,7 @@ document.addEventListener("click", e => {
     else if(a === "deco"){ quitterApp(); sortirCompte(); demarrerAmbiance(); }
     else if(a === "plex") plexConnecter();
     else if(a === "fonds") allerA("fonds");
+    else if(a === "sons") ouvrirSons();
     else if(a === "plex-reessayer") plexPreparerPartage();
     else if(a === "plex-lien"){
       const t = prompt("Colle le lien d'accès envoyé par l'identifiant 1 :");
@@ -10241,8 +10343,9 @@ function bienvenue(p, source, ms){
   el.style.setProperty("--dy", r && r.width ? (r.top + r.height / 2 - c.top - c.height / 2) + "px" : "0px");
   el.style.setProperty("--sc", r && r.width ? r.width / c.width : .6);
   el.querySelectorAll("*").forEach(x => { x.style.animation = "none"; void x.offsetWidth; x.style.animation = ""; });
-  setTimeout(() => el.classList.add("part"), ms - 1000);
-  setTimeout(() => { el.hidden = true; el.classList.remove("part"); majSonVue(); }, ms);
+  const t1 = setTimeout(() => el.classList.add("part"), ms - 1000), t2 = setTimeout(fin, ms);
+  function fin(){ clearTimeout(t1); clearTimeout(t2); el.onclick = null; if(el.hidden) return; el.hidden = true; el.classList.remove("part"); majSonVue(); }
+  el.onclick = () => { clearTimeout(t1); el.classList.add("part"); setTimeout(fin, 450); };   // un toucher passe la Bienvenue
 }
 
 /* Servie par le site (Netlify) : vrai manifeste + service worker (app gardée en mémoire, ouverture instantanée, hors ligne).
