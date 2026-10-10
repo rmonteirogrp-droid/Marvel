@@ -3784,6 +3784,19 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .sons4{padding-top:64px}
 .s4-tete a,.s4-tete button,.s4-tete .tout4{white-space:nowrap;flex:none}
 .s4-tete h2{min-width:0}
+
+/* V4.4 — fiche : l'affiche a la même taille pour un film et une série (les épisodes viennent en dessous) */
+#fiche-in{display:block;min-height:0}
+#fiche .f4-ecran{display:flex;flex-direction:column;min-height:calc(100 * var(--svh,1vh))}
+#fiche .fiche-texte.f4-ep{margin-top:0;padding-top:0}
+#fiche .f4-ep .episodes{margin-top:0}
+/* Doomsday : entrée Avant Doomsday en simple ligne */
+.prep4b{position:relative;display:flex;align-items:center;gap:12px;width:calc(100% - 32px);margin:18px 16px 6px;padding:16px 0 18px;background:none;border:0;border-top:1px solid var(--filet4,rgba(255,255,255,.12));border-bottom:1px solid var(--filet4,rgba(255,255,255,.12));color:#fff;text-align:left}
+.prep4b-l{flex:1;display:flex;flex-direction:column;gap:3px}
+.prep4b-l b{font:800 17px/1.1 var(--rc);text-transform:uppercase;letter-spacing:.04em}
+.prep4b-l small{font:400 14px var(--rc);color:var(--t4m,#aaa)}
+.prep4b-bar{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
+.prep4b-bar i{display:block;height:100%;background:var(--a)}
 </style>
 </head>
 <body>
@@ -3919,8 +3932,6 @@ const TRAILERS = [
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/06/15/40/20631918_hd_013.mp4", titre:"Teaser · X-Men", langue:"VF", vignette:"/m/41ca90bafc7457bb.avif" },
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/13/15/36/20632197_hd_013.mp4", titre:"Teaser · Wakanda et 4 Fantastiques", langue:"VF", vignette:"/m/792959f82eb5ddc5.avif" },
 ];
-/* Page Doomsday : affiches officielles des personnages (Marvel Studios, via le wiki Marvel). */
-const IMG_CAST = {"Ant-Man": "/m/35e536c1d9cf281e.webp", "Black_Panther": "/m/24d467ba47dcaf84.webp", "Black_Widow": "/m/099825e895ac91ef.webp", "Captain_America": "/m/9b07f6bd72249779.webp", "Doctor_Doom": "/m/fc75de6c7a4ee6a9.webp", "Gambit": "/m/edce75f4c72987af.webp", "Loki": "/m/b466720d5997ea64.webp", "Mister_Fantastic": "/m/b9b231090cb84ec3.webp", "Professor_X": "/m/284d493f56cbe0c1.webp", "Shang-Chi": "/m/1e852904f659cf23.webp", "Thor": "/m/c66e3529b0fcab20.webp", "Winter_Soldier": "/m/b062bdd0dde9bd18.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
 const IMG_JEUX = {"affiche": "/m/13006dcea8ed2b37.webp", "akinator": "/m/e69e7b85d44000f4.webp", "dossier": "/m/6060eeba44e79f4b.webp", "filmo": "/m/b22ab835778bb3fc.webp", "heros": "/m/07f57a7e4258334d.webp", "ordre": "/m/4d4878bf40541d8d.webp", "qui": "/m/47cc74be789e3325.webp", "quiparle": "/m/0d9ae9143ea5662d.webp", "replique": "/m/7ccb68b27acdc849.webp", "vs": "/m/4adcd19185c2f16a.webp"};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
@@ -5216,12 +5227,11 @@ function majAccueil(complet){
   const ba = piocherBA(univers), it = ba && ba.id ? parId(ba.id) : tous(univers).find(i => !ici().vus[i.id] && !pasSorti(i)) || null;
   const aff = document.getElementById("hero-aff");
   if(aff && it){ const src = affiche(it); if(aff.getAttribute("src") !== src) aff.src = src; }
-  h.innerHTML = it ? `<button class="h4-film" data-fiche="${it.id}"><span class="k">${ba ? "Bande-annonce" : univers === "mcu" ? "MCU" : "Multivers"}</span>
-      <span class="h4-titre${it.t.length > 18 ? " long" : ""}">${esc(it.t)}<i class="chev4"></i></span>
-      <span class="h4-meta">${infosTitre(it)}${vusDe(it.id)[it.id] ? " · vu" : ""}</span></button>
+  h.innerHTML = it ? `<button class="h4-film" data-fiche="${it.id}"><span class="k">${it.k === "film" ? "Film" : "Série"}</span>
+      <span class="h4-titre${it.t.length > 18 ? " long" : ""}">${esc(it.t)}<i class="chev4"></i></span></button>
       ${plexCle(it) ? `<div class="h4-actions"><button class="b4 b4-rouge" data-film="${it.id}">${SVG.jouer}Regarder</button></div>` : ""}`
     : `<p class="k">${univers === "mcu" ? "MCU" : "Multivers"}</p><h2 class="h4-titre">Tout est vu</h2>`;
-  const e = ici().vus, nonVus = tous(univers).filter(i => !e[i.id] && !pasSorti(i));
+  const e = ici().vus;
   const cartes = [];
   if(univers === "mcu"){
     const endgame = tous("mcu").find(i => i.t === "Avengers: Endgame");
@@ -5229,11 +5239,10 @@ function majAccueil(complet){
     tous("mcu").forEach(i => { if(SORTIES[i.t] && jours(SORTIES[i.t]))
       cartes.push({aff:affiche(i), t:i.t, d:dateFr(SORTIES[i.t]) + " · " + (i.k==="film" ? "au cinéma" : "Disney+"), tag:jours(SORTIES[i.t]), id:i.id}); });
   }
-  // Puis : ce qui reste à voir, « Reprendre » (Plex), chaque phase ou franchise en affiches, les sorties
-  const groupes = BIB[univers].map((g, gi) => { const dispo = g.items.filter(i => e[i.id] || !pasSorti(i)), v = dispo.filter(i => e[i.id]).length;
-    return `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">${esc(g.groupe.split(" · ")[0].split(" / ")[0])}<i>${v} / ${dispo.length}</i></h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>${railAff(g.items)}</section>`; }).join("");
+  // Puis : « Reprendre » (Plex), les sorties, chaque phase ou franchise en affiches (même construction pour le MCU et le Multivers)
+  const groupes = BIB[univers].map((g, gi) =>
+    `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">${esc(g.groupe.split(" · ")[0].split(" / ")[0])}</h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>${railAff(g.items)}</section>`).join("");
   document.getElementById("acc-suite").innerHTML = `
-    ${nonVus.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Pas encore vus<i>${nonVus.length}</i></h2><button class="s4-lien" data-vue="parcours">Parcours ›</button></div>${railAff(nonVus.slice(0, 20))}</section>` : ""}
     <div id="reprendre"></div>
     ${cartes.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">À l'affiche et bientôt</h2></div>
       <div class="sorties4">${cartes.map(c => `<button class="sortie4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em>J-${c.tag}</em>` : ""}</button>`).join("")}</div></section>` : ""}
@@ -5334,13 +5343,7 @@ function majParcours(){
 
 /* ═══════════ DOOMSDAY ═══════════ */
 /* Doomsday : l'affiche de Fatalis, le compte à rebours, la préparation (une seule entrée vers Avant Doomsday),
-   le film en bref, le casting, ce qu'on sait, puis les bandes-annonces. */
-const CASTING_DOOM = [["Doctor_Doom", "Robert Downey Jr.", "Victor von Doom", "Docteur Fatalis"], ["Thor", "Chris Hemsworth", "Thor", "Thor"],
-  ["Captain_America", "Anthony Mackie", "Sam Wilson", "Falcon"], ["Winter_Soldier", "Sebastian Stan", "Bucky Barnes", "Bucky Barnes"],
-  ["Loki", "Tom Hiddleston", "Loki", "Loki"], ["Black_Widow", "Florence Pugh", "Yelena Belova", "Yelena Belova"],
-  ["Black_Panther", "Letitia Wright", "Shuri", "Shuri"], ["Ant-Man", "Paul Rudd", "Scott Lang", "Ant-Man"],
-  ["Shang-Chi", "Simu Liu", "Shang-Chi", "Shang-Chi"], ["Mister_Fantastic", "Pedro Pascal", "Reed Richards", "Mister Fantastic"],
-  ["Professor_X", "Patrick Stewart", "Charles Xavier", "Professeur X"], ["Gambit", "Channing Tatum", "Remy LeBeau", "Gambit"]];
+   le film en bref, les bandes-annonces, puis ce qu'on sait. */
 const INFOS_DOOM = [
   "Robert Downey Jr. revient dans le MCU, cette fois dans la peau de Victor von Doom.",
   "Les frères Russo, réalisateurs d'Infinity War et d'Endgame, sont aux commandes.",
@@ -5350,7 +5353,6 @@ const INFOS_DOOM = [
   "La suite directe, Avengers: Secret Wars, est prévue pour décembre 2027."];
 function rendreDoomsday(){
   const ba = TRAILERS.map((t, n) => [t, n]).filter(([t]) => t.langue === "VF");
-  const perso = n => { const i = typeof indexDe === "function" ? indexDe(n) : undefined; return i !== undefined && typeof PERSOFICHE !== "undefined" ? ` data-perso="${i}"` : ""; };
   document.getElementById("v-doomsday").innerHTML = `
     <section class="d4h"><img src="${img(IMG_DOOM)}" alt="">
       <div class="d4h-in"><p class="k">Au cinéma le 16 décembre 2026</p><h1 class="d4-titre">Avengers :<br><em>Doomsday</em></h1></div></section>
@@ -5360,20 +5362,16 @@ function rendreDoomsday(){
       <p class="d4-syn">Fatalis menace tout le multivers. Avengers, Wakandais, Thunderbolts, 4 Fantastiques et X-Men vont devoir s'unir face à lui.</p>
       <div class="d4-fiche"><div><span>Réalisation</span><b>Anthony et Joe Russo</b></div><div><span>Sortie</span><b>16 décembre 2026</b></div>
         <div><span>Le méchant</span><b>Fatalis</b></div><div><span>La suite</span><b>Secret Wars · 2027</b></div></div></section>
-    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Le casting<i>${CASTING_DOOM.length}</i></h2></div>
-      <div class="rail-h rail-cast4">${CASTING_DOOM.map(([k, acteur, role, nom]) => IMG_CAST[k] ? `<button${perso(nom)}><img src="${img(IMG_CAST[k])}" alt="" loading="lazy"><b>${esc(acteur)}</b><small>${esc(role)}</small></button>` : "").join("")}</div></section>
-    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Ce qu'on sait</h2></div>
-      <ul class="d4-infos">${INFOS_DOOM.map(t => `<li>${esc(t)}</li>`).join("")}</ul></section>
     ${ba.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Bandes-annonces<i>${ba.length}</i></h2></div>
       <div class="rail-h rail-ba4">${ba.map(([t, n]) => `<button class="ba4" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="ba4-j">${SVG.jouer}</span><b>${esc(t.titre.replace(/^Teaser/i, "Bande-annonce"))}</b></button>`).join("")}</div></section>` : ""}
+    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Ce qu'on sait</h2></div>
+      <ul class="d4-infos">${INFOS_DOOM.map(t => `<li>${esc(t)}</li>`).join("")}</ul></section>
     <div class="fin-page"></div>`;
 }
 function prepDoomHTML(){
-  const { l, n, pct } = chiffresAvDoom(), vus = l.filter(i => vusDe(i.id)[i.id]), reste = l.filter(i => !vusDe(i.id)[i.id]);
-  const montre = reste.slice(0, 3).concat(vus.slice(-2)).slice(0, 5);   // d'abord ce qu'il reste à voir
-  return `<button class="prep4 cc" id="d4-prep" data-avdoom><span class="prep4-l"><b>${n === l.length ? "Tu es prêt pour Doomsday" : "Prêt pour Doomsday ?"}</b><span>${n} / ${l.length} essentiels</span></span>
-    <span class="bar4"><i style="width:${pct}%"></i></span>
-    <span class="prep4-a">${montre.map(it => `<img src="${affiche(it)}" class="${vusDe(it.id)[it.id] ? "" : "pas"}" alt="">`).join("")}</span></button>`;
+  const { l, n, pct } = chiffresAvDoom();
+  return `<button class="prep4b" id="d4-prep" data-avdoom><span class="prep4b-l"><b>Avant Doomsday</b><small>${n} sur ${l.length} films essentiels vus</small></span><i class="chev4"></i>
+    <span class="prep4b-bar"><i style="width:${pct}%"></i></span></button>`;
 }
 function majRebours(){
   const c = document.querySelectorAll("[data-cr]");
@@ -5448,7 +5446,6 @@ function rendreProfil(){
         ${[["MCU", a], ["Multivers", b]].map(([nom, st]) => `<div class="pu4"><span><b>${nom}</b><em>${st.vus} / ${st.total}</em></span><span class="bar4"><i data-largeur="${st.pct}%" style="width:0"></i></span></div>`).join("")}</section>
       <section class="s4 s4-col"><div class="s4-tete"><h2 class="h4-sec">Plex</h2></div>
         ${compte === COMPTE_PROPRIO ? (plex.token && plex.serveur ? `
-          ${info("Connecté à " + esc(plex.serveur.nom), plexNbFilms() + " films" + (plexNbSeries() ? " · " + plexNbSeries() + " séries" : ""))}
           ${ligne("plex-partager", "Partager mes films Plex")}
           ${ligne("plex-maj", "Actualiser la bibliothèque")}
           <button class="l4 danger" data-action="plex-deco"><b>Déconnecter Plex</b><i class="chev4"></i></button>` : ligne("plex", "Connecter Plex"))
@@ -5664,7 +5661,7 @@ function ouvrirFiche(id, opt = {}){
   const it = parId(id); if(!it) return;
   ficheOuverte = it;
   const g = groupeDe(it), vu = !!vusDe(id)[id];
-  document.getElementById("fiche-in").innerHTML = `
+  document.getElementById("fiche-in").innerHTML = `<div class="f4-ecran">
     <div class="fiche-visuel"><img src="${opt.aff || affiche(it)}" data-hd="${opt.aff ? "" : hdUrl(it, "original")}" alt=""><span></span>
       <div class="f4-coin">${typeof spoilDe === "function" && spoilDe(it) && !pasSorti(it) ? `<button class="spoil-btn" data-spoil="${it.id}" aria-label="Spoiler du film"><i></i>Spoiler</button>` : ""}
 </div></div>
@@ -5681,8 +5678,8 @@ function ouvrirFiche(id, opt = {}){
       </div>
       ${pasSorti(it) ? "" : blocNote(it)}
       <p class="resume">${esc(it.s)}</p>
-      ${plexSerie(it) && !plexCle(it) ? `<section class="episodes"><p class="surtitre">Épisodes</p><div id="ep-liste"><div class="ep-attente"><i></i>Lecture de ta bibliothèque Plex…</div></div></section>` : ""}
-    </div>`;
+    </div></div>
+    ${plexSerie(it) && !plexCle(it) ? `<div class="fiche-texte f4-ep"><section class="episodes"><p class="surtitre">Épisodes</p><div id="ep-liste"><div class="ep-attente"><i></i>Lecture de ta bibliothèque Plex…</div></div></section></div>` : ""}`;
   majBoutonFiche(it);
   ouvrirFeuille("fiche");
   morphOuvrir(opt.depuis, opt.aff ? null : prechargerHD(it));
@@ -8338,7 +8335,7 @@ function carteHTML(i, { etat:e = possede(i) ? "face" : "verrou", neuve = false, 
   return `<span class="carte v5 r${r}${e === "verrou" ? " verrou" : ""}" ${attr}><span class="c-in"><span class="c-photo">
     <img class="c-img" src="${src}"${u ? ` data-hd="${u}"` : ""} alt="" loading="lazy" decoding="async"><span class="c-trame"></span><span class="c-voile"></span>
     ${e === "verrou" ? `<span class="c-point">?</span>` : `<span class="c-holo"></span><span class="c-reflet"></span>`}</span>
-    <span class="c-rang"><b>${r}</b>${ETOILE}</span><span class="c-numero">#${num}</span>
+    <span class="c-numero">#${num}</span>
     ${neuve || (e === "face" && (collec().nv || {})[i]) ? `<span class="c-new">New</span>` : ""}
     <span class="c-bas"><span class="c-equipe"><i>${esc(equipeDe(i))}</i></span>
       <b class="c-nom ${classeNom(nom)}">${esc(nom)}</b></span></span></span>`;
