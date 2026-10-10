@@ -1,6 +1,6 @@
 /* Service worker Marvel : l'app est gardée sur le téléphone ; images, vidéos et sons (/m/, /p/) sont gardés après le premier affichage.
-   L'app vient toujours du réseau quand il répond (dernière version tout de suite), de la copie gardée sinon. */
-const CACHE = "marvel-6d0968784e11";
+   L'app s'ouvre depuis la copie gardée (instantané) ; la nouvelle version, récupérée en arrière-plan, sert à l'ouverture suivante. */
+const CACHE = "marvel-5dc9985dfff1";
 const FICHIERS = ["./", "./index.html", "./manifest.webmanifest", "./icone-180.png", "./icone-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FICHIERS.map(u => new Request(u, { cache:"reload" })))).then(() => self.skipWaiting()));
@@ -14,11 +14,12 @@ self.addEventListener("fetch", e => {
   const u = new URL(r.url); if(u.origin !== self.location.origin) return;   // TMDB, Plex, YouTube : jamais en cache ici
   if(u.pathname.includes("/classique")) return;   // l'ancien design : toujours le réseau
   if(u.pathname.startsWith("/api/")) return;   // sauvegarde en ligne : jamais de cache
-  if(r.mode === "navigate"){   // la dernière version d'abord (vérification rapide, 304 si rien n'a changé) ; la copie gardée seulement sans réseau
-    e.respondWith(Promise.race([
-      fetch(r, { cache:"no-cache" }).then(rep => { if(rep.ok){ const c = rep.clone(); caches.open(CACHE).then(k => k.put("./index.html", c)); } return rep; }),
-      new Promise((_, ko) => setTimeout(ko, 6000))
-    ]).catch(() => caches.match("./index.html").then(x => x || fetch(r))));
+  if(r.mode === "navigate"){   // ouverture instantanée : la copie gardée tout de suite ; la dernière version est récupérée en arrière-plan pour la prochaine ouverture
+    e.respondWith(caches.match("./index.html").then(x => {
+      const reseau = fetch(r, { cache:"no-cache" }).then(rep => { if(rep.ok){ const c = rep.clone(); caches.open(CACHE).then(k => k.put("./index.html", c)); } return rep; });
+      if(x){ e.waitUntil(reseau.then(() => {}, () => {})); return x; }
+      return reseau.catch(() => fetch(r));
+    }));
     return;
   }
   if(u.pathname.startsWith("/m/") || u.pathname.includes("/p/")){   // photos HD : gardées après le premier affichage (cache à part, conservé entre les versions)
