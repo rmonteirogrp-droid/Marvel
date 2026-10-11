@@ -3797,6 +3797,16 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .prep4b-l small{font:400 14px var(--rc);color:var(--t4m,#aaa)}
 .prep4b-bar{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
 .prep4b-bar i{display:block;height:100%;background:var(--a)}
+
+/* V4.5 — accueil : bouton lecture rond en face du titre ; bandeau sans flou */
+.h4-ligne{display:flex;align-items:center;gap:14px}
+.h4-ligne .h4-film{flex:1;min-width:0}
+.h4-lire{flex:none;width:58px;height:58px;border-radius:50%;border:0;background:var(--a);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.h4-lire svg{width:24px;height:24px;fill:#fff;margin-left:3px}
+.h4-lire:active{transform:scale(.94)}
+.v4h .ecran-cine{transition:height .35s ease;background:#000}
+.v4h .hero-aff{filter:brightness(.55);transform:none}
+.v4h .ecran-cine:has(video.on) .hero-aff{opacity:0}
 </style>
 </head>
 <body>
@@ -4712,8 +4722,10 @@ function lancerBA(id, cle){
    (sans les bandes noires incrustées dans la vidéo, en haut/bas comme sur les côtés), puis on agrandit la vidéo
    pour que cette zone remplisse tout l'écran. Plusieurs mesures, gardées pour toute la session. */
 function cadrerBA(v, zone){
-  const box = v.parentNode, W = box.clientWidth, H = box.clientHeight, vw = v.videoWidth, vh = v.videoHeight; if(!W || !H || !vw) return;
-  const z = zone || { x:0, y:0, w:vw, h:vh }, s = box.closest(".v4h") ? Math.min(W / z.w, H / z.h) : Math.max(W / z.w, H / z.h);   // accueil : l'image entière, jamais agrandie
+  const box = v.parentNode, W = box.clientWidth, vw = v.videoWidth, vh = v.videoHeight; let H = box.clientHeight; if(!W || !H || !vw) return;
+  const z = zone || { x:0, y:0, w:vw, h:vh }, acc = !!box.closest(".v4h");
+  if(acc){ H = Math.round(Math.min(W * 9 / 16, Math.max(W / 2.4, W * z.h / z.w))); box.style.height = H + "px"; box.style.aspectRatio = "auto"; }   // accueil : le cadre épouse l'image, sans bandes floues
+  const s = acc ? Math.min(W / z.w, H / z.h) : Math.max(W / z.w, H / z.h);   // accueil : l'image entière, jamais agrandie
   Object.assign(v.style, { objectFit:"fill", right:"auto", bottom:"auto", width:vw * s + "px", height:vh * s + "px",
     left:(W / 2 - (z.x + z.w / 2) * s) + "px", top:(H / 2 - (z.y + z.h / 2) * s) + "px" });
 }
@@ -5227,9 +5239,10 @@ function majAccueil(complet){
   const ba = piocherBA(univers), it = ba && ba.id ? parId(ba.id) : tous(univers).find(i => !ici().vus[i.id] && !pasSorti(i)) || null;
   const aff = document.getElementById("hero-aff");
   if(aff && it){ const src = affiche(it); if(aff.getAttribute("src") !== src) aff.src = src; }
-  h.innerHTML = it ? `<button class="h4-film" data-fiche="${it.id}"><span class="k">${it.k === "film" ? "Film" : "Série"}</span>
-      <span class="h4-titre${it.t.length > 18 ? " long" : ""}">${esc(it.t)}<i class="chev4"></i></span></button>
-      ${plexCle(it) ? `<div class="h4-actions"><button class="b4 b4-rouge" data-film="${it.id}">${SVG.jouer}Regarder</button></div>` : ""}`
+  const lire = plexCle(it);
+  h.innerHTML = it ? `<div class="h4-ligne"><button class="h4-film" data-fiche="${it.id}"><span class="k">${it.k === "film" ? "Film" : "Série"}</span>
+      <span class="h4-titre${it.t.length > 18 ? " long" : ""}">${esc(it.t)}${lire ? "" : `<i class="chev4"></i>`}</span></button>
+      ${lire ? `<button class="h4-lire" data-film="${it.id}" aria-label="Lancer le film">${SVG.jouer}</button>` : ""}</div>`
     : `<p class="k">${univers === "mcu" ? "MCU" : "Multivers"}</p><h2 class="h4-titre">Tout est vu</h2>`;
   const e = ici().vus;
   const cartes = [];
@@ -5416,17 +5429,9 @@ const pointsProfil = () => niveauDe(profil);
 /* Passage de niveau : un écran bref (« Niveau 12 ») avec un son, quand on coche un titre ou qu'on gagne une carte. */
 function verifierNiveau(){
   const e = etat[profil]; if(!e) return;
-  const { niv, rang } = niveauDe(profil), avant = e.niv;
+  const { niv } = niveauDe(profil), avant = e.niv;
   e.niv = niv;
-  if(avant === undefined || niv <= avant){ if(avant !== niv) sauver(); return; }
-  sauver();
-  const el = document.createElement("div"); el.className = "niv4";
-  el.innerHTML = `<div class="niv4-in"><p class="k">Niveau supérieur</p><b>Niveau ${niv}</b><span>${esc(rang)}</span></div>`;
-  document.body.appendChild(el);
-  const fin = () => { el.classList.add("part"); setTimeout(() => el.remove(), 400); };
-  el.addEventListener("click", fin); setTimeout(fin, 2200);
-  if(typeof jouerNiveau === "function") jouerNiveau();
-  if(navigator.vibrate) navigator.vibrate([18, 40, 30]);
+  if(avant !== niv) sauver();   // pas d'écran ni de son : le niveau se met à jour dans le profil
 }
 
 function rendreProfil(){
