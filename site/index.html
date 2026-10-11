@@ -3904,6 +3904,86 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .d4-tuiles small{font:700 11px var(--rc);letter-spacing:.14em;text-transform:uppercase;color:var(--t4m,#999)}
 .d4-tuiles b{font:900 22px/1 var(--rc);text-transform:uppercase;color:#fff}
 #v-doomsday .rail-ba4 b{font-size:12px;letter-spacing:.06em}
+
+/* ══════ V4.7 — Accueil : titre sur une ligne, rail Prochainement ══════ */
+.h4-t{display:block;-webkit-line-clamp:unset;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.v4h .h4-titre{font-size:clamp(28px,calc(9 * var(--vw)),40px) !important}
+.rail-bt4{display:flex;gap:10px;margin:0 -16px;padding:0 16px 4px;overflow-x:auto;scrollbar-width:none}
+.rail-bt4::-webkit-scrollbar{display:none}
+.bt4{flex:0 0 132px;text-align:left;background:none;border:0;padding:0;color:#fff}
+.bt4-v{position:relative;display:block;aspect-ratio:2/3;overflow:hidden;background:#111;border-top:3px solid var(--a)}
+.bt4-v img{width:100%;height:100%;object-fit:cover}
+.bt4-v em{position:absolute;left:7px;top:7px;padding:3px 6px;background:var(--a);font:900 12px var(--rc);font-style:normal;color:#fff}
+.bt4 b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:8px;font:800 13px/1.15 var(--rc);text-transform:uppercase}
+.bt4 small{display:block;margin-top:3px;font:400 12px var(--rc);color:var(--t4m,#999)}
+/* Fiche : titre sur deux lignes au plus */
+#fiche .fiche-titre{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ══════ V4.7 — Doomsday ══════ */
+.d5h .hero-bas .k::before{background:#2bbd62}
+.cd5{display:flex;align-items:center;gap:6px;margin:14px 16px 0;font:700 12px var(--rc);letter-spacing:.14em;text-transform:uppercase;color:#9a9a9a}
+.cd5 i{width:8px;height:8px;margin-right:4px;border-radius:50%;background:#2bbd62;box-shadow:0 0 10px #2bbd62;animation:cd5 1.6s infinite}
+.cd5 b{margin-left:6px;font:900 20px var(--rc);letter-spacing:0;color:#fff;font-variant-numeric:tabular-nums}
+.cd5 small{font:700 11px var(--rc);letter-spacing:.06em;color:#777;text-transform:lowercase}
+@keyframes cd5{50%{opacity:.35}}
+.br5{position:relative;display:flex;align-items:center;width:calc(100% - 32px);margin:18px 16px 0;padding:0 16px 0 0;border:0;background:#0a120d;overflow:hidden;text-align:left;color:#fff;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%)}
+.br5::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#050a07 0%,#050a07 36%,rgba(5,10,7,.7) 62%,rgba(5,10,7,.2) 100%)}
+.br5::after{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;z-index:2;background:#2bbd62}
+.br5-fond{position:absolute;right:-34px;top:-18px;bottom:-18px;width:62%;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;transform:rotate(-9deg)}
+.br5-fond img{width:100%;aspect-ratio:2/3;object-fit:cover;filter:saturate(.7) brightness(.75)}
+.br5-in{position:relative;z-index:3;flex:1;display:block;padding:22px 0 22px 24px}
+.br5-t{display:block;font:900 40px/.9 var(--rc);text-transform:uppercase}
+.br5-t em{font-style:normal;color:#2bbd62}
+.br5-s{display:block;margin-top:6px;font:400 15px var(--rc);color:#bbb}
+.br5-p{display:flex;align-items:center;gap:12px;margin-top:16px;width:62%}
+.br5-bar{flex:1;height:6px;background:rgba(255,255,255,.14);overflow:hidden}
+.br5-bar i{display:block;height:100%;background:#2bbd62;box-shadow:0 0 12px #2bbd62;transition:width .4s}
+.br5-n{font:900 22px var(--rc);color:#fff}.br5-n small{font-size:13px;color:#888}
+.br5 .chev4{position:relative;z-index:3;border-color:#fff}
+.rail-af5{display:flex;gap:8px;margin:0 -16px;padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.af5{flex:0 0 132px;aspect-ratio:2/3;padding:0;border:0;background:#111;overflow:hidden}
+.af5 img{width:100%;height:100%;object-fit:cover}
+.vis5{position:fixed;inset:0;z-index:600;background:#000;display:flex;flex-direction:column;animation:vis5 .25s ease-out}
+.vis5.part{opacity:0;transition:opacity .25s}
+@keyframes vis5{from{opacity:0}}
+.vis5-h{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 12px) 16px 10px;font:700 13px var(--rc);letter-spacing:.14em;color:#fff}
+.vis5-x{width:38px;height:38px;border:0;background:#1b1b1b;color:#fff;font-size:18px;display:grid;place-items:center}
+.vis5-x svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.4}
+.vis5-l{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.vis5-l::-webkit-scrollbar{display:none}
+.vis5-i{flex:0 0 100%;scroll-snap-align:center;display:flex;align-items:center;justify-content:center;padding:0 20px}
+.vis5-i img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 30px 80px rgba(43,189,98,.22)}
+.vis5-b{display:flex;justify-content:space-between;align-items:center;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px)}
+.vis5-pts{display:flex;gap:6px}.vis5-pts i{width:6px;height:6px;background:#444;transition:width .2s}.vis5-pts i.on{width:18px;background:#2bbd62}
+.vis5-dl{padding:12px 18px;border:0;background:#fff;color:#000;font:900 13px var(--rc);letter-spacing:.1em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%)}
+/* Le Briefing (page des films) : en-tête photo, puis la liste comme le parcours */
+#avdoom-in .br6-h{position:relative;height:300px;overflow:hidden;margin:calc(-1 * env(safe-area-inset-top)) 0 0}
+.br6-h img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.br6-h::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4),transparent 30%,rgba(0,0,0,.55) 65%,#000)}
+.br6-t{position:absolute;z-index:2;left:16px;right:16px;bottom:8px}
+.br6-t .k::before{background:#2bbd62}
+.br6-t h1{margin:8px 0 0;font:900 52px/.88 var(--rc);text-transform:uppercase;color:#fff}
+.br6-p{display:flex;align-items:center;gap:12px;margin:14px 16px 6px}
+.br6-p .br5-bar{height:8px}
+.br6-l{padding:0 16px}
+#avdoom{background:#000}
+#avdoom-in{padding:0 0 calc(var(--bas) + 40px) !important}
+#avdoom-in .br6-h{height:calc(320px + var(--haut));margin:0}
+
+/* ══════ V4.7 — Défi du jour : la photo bien visible, le texte en bas ══════ */
+.duj4{height:250px}
+.duj4>img{object-position:50% 30% !important}
+.duj4::after{background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 34%,transparent 62%) !important}
+.duj4-t{top:auto !important;right:16px !important;bottom:16px}
+.duj4-t b{font-size:30px}
+.duj4-t small{display:none}
+.duj4-bas{display:flex;align-items:center;gap:12px;margin-top:12px}
+.duj4-bas .b4{margin:0 !important;height:40px}
+.duj4-bonus{font:700 12px var(--rc);letter-spacing:.08em;text-transform:uppercase;color:#ffd23a}
+/* Jeux : tuiles avec les nouveaux visuels */
+.jc4 img{object-position:50% 25%}
+.e4-bientot{font:700 12px var(--rc);letter-spacing:.12em;text-transform:uppercase;color:var(--a)}
 </style>
 </head>
 <body>
@@ -4039,8 +4119,12 @@ const TRAILERS = [
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/06/15/40/20631918_hd_013.mp4", titre:"Teaser · X-Men", langue:"VF", vignette:"/m/41ca90bafc7457bb.avif" },
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/13/15/36/20632197_hd_013.mp4", titre:"Teaser · Wakanda et 4 Fantastiques", langue:"VF", vignette:"/m/792959f82eb5ddc5.avif" },
 ];
+/* Doomsday : les affiches officielles (TMDB), dans l'ordre de parution. */
+const IMG_AFF_DOOM = ["/m/7b49eb5c588b7112.webp", "/m/39dd2b3b69ad14ca.webp", "/m/ab8a2034d8ce2c13.webp", "/m/0d73e8efc3143c37.webp", "/m/5c1513428762668c.webp", "/m/25f8e7d21a2c23e8.webp", "/m/1af2d0043a7f6e86.webp"];
+/* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
+const IMG_AVENIR = {"bp3": "/m/2dc29acc389e325f.webp", "ghost28": "/m/58172eb926183266.webp", "mzfk": "/m/159d04944125e8f7.webp", "mzws": "/m/42acfec72c8f055d.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/538ea54f418de837.webp", "zodiac": "/m/503eab334d682649.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/13006dcea8ed2b37.webp", "akinator": "/m/83ec06f5e8c9f996.webp", "dossier": "/m/6060eeba44e79f4b.webp", "filmo": "/m/b22ab835778bb3fc.webp", "heros": "/m/07f57a7e4258334d.webp", "ordre": "/m/4d4878bf40541d8d.webp", "pierres": "/m/4adcd19185c2f16a.webp", "qui": "/m/47cc74be789e3325.webp", "quiparle": "/m/0d9ae9143ea5662d.webp", "replique": "/m/7ccb68b27acdc849.webp", "swipe": "/m/1791ed91a2991927.webp", "uatu": "/m/9a2d41519ad1bcad.webp", "vs": "/m/29660536bbcb4ae7.webp"};
+const IMG_JEUX = {"affiche": "/m/f4d685d8556ad2de.webp", "akinator": "/m/839fa8e8d9709d3d.webp", "dossier": "/m/a3987572dcddff74.webp", "filmo": "/m/8a5c45c27cf192aa.webp", "heros": "/m/5cdf1f6d330e34cb.webp", "ordre": "/m/7555fb33bd17085f.webp", "pierres": "/m/5fcc2b97bcf17f09.webp", "qui": "/m/0d1c5f0b61a43371.webp", "quiparle": "/m/2c6f7f5e2e848889.webp", "replique": "/m/4406b7738ae755a3.webp", "swipe": "/m/41cb2eb7259aea26.webp", "vs": "/m/3312e000b730ee0a.webp"};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
 const VIDEO_MCU = "/m/2a6ff54e8b058429.mp4";
 /* Son MCU : ouverture puis final de la bande-annonce VF d'Avengers: Infinity War. */
@@ -4264,6 +4348,42 @@ const PHASES_DISNEY = [
   BIB.multi.splice(0, BIB.multi.length, ...ordre);
   BIB.multi.forEach(g => g.items = parDate(g.items));
 })();
+/* ═══════════ PROCHAINES SORTIES ═══════════
+   Sorties officielles ou annoncées (Marvel, Disney+, salons), rangées là où elles iront : verrouillées jusqu'à leur sortie.
+   « sortie » = date exacte ; « quand » = fenêtre annoncée sans date (le titre reste verrouillé jusqu'à ce qu'on la précise). */
+const A_VENIR = [
+  ["mcu", "Phase 6", { id:"m_dd3", t:"Daredevil: Born Again S3", a:"2027", k:"serie", i:"daredevil", quand:"Mars 2027", tri:"2027-03-31", de:"Daredevil: Born Again S2",
+    s:"La dernière saison de la série : Matt Murdock continue son combat à Hell's Kitchen." }],
+  ["mcu", "Phase 6", { id:"m_sw27", t:"Avengers: Secret Wars", a:"2027", k:"film", i:"avengers", sortie:"2027-12-17", img:"sw27", hd:"f0YBuh4hyiAheXhh4JnJWoKi9g5.jpg",
+    s:"La suite directe d'Avengers : Doomsday, réalisée par les frères Russo. Elle referme la Saga du Multivers." }],
+  ["mcu", "@Après Secret Wars", { id:"m_xm28", t:"X-Men", a:"2028", k:"film", i:"xmenblue", sortie:"2028-05-05", img:"xmen28",
+    s:"Les mutants font leur entrée dans le MCU. Réalisé par Jake Schreier." }],
+  ["mcu", "@Après Secret Wars", { id:"m_gr28", t:"Ghost Rider", a:"2028", k:"film", i:"ghostrider", sortie:"2028-07-28", img:"ghost28", presse:1,
+    s:"Le Ghost Rider dans le MCU. Date annoncée par la presse, pas encore par Marvel." }],
+  ["mcu", "@Après Secret Wars", { id:"m_bp3", t:"Black Panther 3", a:"2028", k:"film", i:"panther", sortie:"2028-12-15", img:"bp3",
+    s:"Le retour du Wakanda au cinéma." }],
+  ["mcu", "@Après Secret Wars", { id:"m_zod", t:"Zodiac", a:"2028", k:"serie", i:"shield", quand:"2028", tri:"2028-06-30", img:"zodiac",
+    s:"Nouvelle série d'espionnage en prises de vues réelles, annoncée au New York Comic Con 2026." }],
+  ["multi", "Animation Marvel", { id:"x_yfns2", t:"Votre fidèle serviteur Spider-Man S2", a:"2027", k:"serie", i:"spiderman", sortie:"2027-01-13", de:"Votre fidèle serviteur Spider-Man",
+    s:"La deuxième saison des débuts de Peter Parker en animation." }],
+  ["multi", "Animation Marvel", { id:"x_x97s3", t:"X-Men '97 S3", a:"2027", k:"serie", i:"xmenblue", quand:"2027", tri:"2027-06-30", de:"X-Men '97 S2",
+    s:"La troisième saison, présentée au New York Comic Con 2026." }],
+  ["multi", "Animation Marvel", { id:"x_mzws", t:"Marvel Zombies : The Winter Soldier", a:"2027", k:"film", i:"zombies", quand:"Halloween 2027", tri:"2027-10-31", img:"mzws",
+    s:"Un épisode spécial de Marvel Zombies pour Halloween, centré sur le Soldat de l'hiver." }],
+  ["multi", "Animation Marvel", { id:"x_mzfk", t:"Marvel Zombies : The Fist of Khonshu", a:"2028", k:"film", i:"zombies", quand:"Halloween 2028", tri:"2028-10-31", img:"mzfk",
+    s:"Un épisode spécial de Marvel Zombies pour Halloween, autour du Poing de Khonshu." }],
+];
+A_VENIR.forEach(([u, ou, x]) => {
+  const it = { p:"", dd:0, d:0, v:true, avenir:true, ...x }, de = x.de && tous(u).find(i => i.t === x.de);
+  if(de){ it.hd = it.hd || de.hd; if(!x.img) it.affiche = de.affiche; if(!it.i) it.i = de.i; }
+  if(x.img && typeof IMG_AVENIR !== "undefined" && IMG_AVENIR[x.img]) it.affiche = IMG_AVENIR[x.img];
+  let g = ou[0] === "@" ? BIB[u].find(g => g.groupe === ou.slice(1)) : BIB[u].find(g => g.groupe.startsWith(ou));
+  if(!g && ou[0] === "@"){ g = { groupe:ou.slice(1), note:it.a, items:[] }; BIB[u].push(g); }
+  if(g && !g.items.some(i => i.id === it.id)) g.items.push(it);
+});
+/* Date de sortie d'un titre à venir (ISO) et son libellé (« 17 déc. 2027 », « Mars 2027 »…). */
+const dateSortie = it => it && (it.sortie || SORTIES[it.t]) || "";
+const quandSortie = it => dateSortie(it) ? new Date(dateSortie(it) + "T00:00:00").toLocaleDateString("fr-FR", { day:"numeric", month:"short", year:"numeric" }) : it.quand || it.a;
 /* Reprise des coches et des notes (une fois par profil). */
 function migrerIds(e){
   if(!e.v3){
@@ -4299,7 +4419,7 @@ function migrerIds(e){
   ["mcu", "multi"].forEach(u => tous(u).concat(BONUS[u]).forEach(it => { if(pasSorti(it) && e[u] && e[u].vus[it.id]) delete e[u].vus[it.id]; }));
 }
 /* Pas encore sorti : date de sortie à venir (SORTIES) ou titre marqué « à venir ». */
-const pasSorti = it => it && (SORTIES[it.t] ? new Date(SORTIES[it.t] + "T00:00:00") > new Date() : !!it.v);
+const pasSorti = it => it && ((it.sortie || SORTIES[it.t]) ? new Date((it.sortie || SORTIES[it.t]) + "T00:00:00") > new Date() : !!it.v);
 
 /* Lecture YouTube dans le lecteur plein écran de l'app. */
 function lireYT(id){
@@ -4498,7 +4618,8 @@ function affiche(it){
 const avatar = k => img(ICO_PERSO[avNorm(k)]);
 const typeTitre = it => it.court ? "Court métrage" : it.k === "film" ? "Film" : it.saisons ? `Série · ${it.saisons} saisons` : "Série";
 /* Ligne d'infos d'une liste : « Film » est sous-entendu (l'affiche suffit), seuls les autres formats sont précisés. */
-const infosTitre = it => [it.a, it.k === "film" && !it.court ? "" : typeTitre(it), fmtDuree(it.d)].filter(Boolean).join(" · ");
+const infosTitre = it => pasSorti(it) ? [it.k === "film" ? "" : typeTitre(it), quandSortie(it)].filter(Boolean).join(" · ")   // à venir : la date de sortie
+  : [it.a, it.k === "film" && !it.court ? "" : typeTitre(it), fmtDuree(it.d)].filter(Boolean).join(" · ");
 
 /* Pas disponible (pas encore sorti, ou absent du serveur Plex) : petite caméra barrée rouge à côté du titre. */
 const SVG_INDISPO = `<svg class="indispo-ico" viewBox="0 0 24 24" role="img" aria-label="Non disponible"><path d="M10.6 6.5H14a2 2 0 0 1 2 2v3.2l5-3.4v8.4"/><path d="M16 16.2a2 2 0 0 1-2 1.8H5a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2h.6"/><path d="M3 3l18 18"/></svg>`;
@@ -4507,7 +4628,7 @@ const SVG_INDISPO = `<svg class="indispo-ico" viewBox="0 0 24 24" role="img" ari
 const AVANT_DOOMSDAY = new Set(["X-Men", "X-Men 2", "Captain America: First Avenger", "Avengers", "Avengers: Infinity War", "Avengers: Endgame",
   "Loki", "Loki S1", "Loki S2", "Shang-Chi et la Légende des Dix Anneaux", "Spider-Man: No Way Home", "Black Panther: Wakanda Forever",
   "Captain America: Brave New World", "Deadpool & Wolverine", "Doctor Strange in the Multiverse of Madness", "Thunderbolts*", "Les 4 Fantastiques : Premiers pas"]);
-["mcu", "multi"].forEach(u => tous(u).forEach(i => { if(AVANT_DOOMSDAY.has(i.t)) i.dd = true; else delete i.dd; }));
+["mcu", "multi"].forEach(u => tous(u).forEach(i => { if(AVANT_DOOMSDAY.has(i.t) && !i.avenir) i.dd = true; else delete i.dd; }));   // les sorties à venir homonymes (X-Men 2028) n'en font pas partie
 /* Non disponible : pas encore sorti, ou absent du serveur Plex (seulement si Plex est connecté et la bibliothèque lue). */
 const indispo = it => !pasSorti(it) && (typeof plex !== "undefined" && plex.token && plex.serveur && plex.indexe && plex.films && !plexCle(it) && !plexSerie(it));
 function dateFr(iso){
@@ -5339,30 +5460,34 @@ function majAccueil(complet){
       <span class="h4-titre ${it.t.length > 22 ? "t3" : it.t.length > 12 ? "t2" : "t1"}"><span class="h4-t">${esc(it.t)}</span>${lire ? "" : `<i class="chev4"></i>`}</span></button>
       ${lire ? `<button class="h4-lire" data-film="${it.id}" aria-label="Lancer le film">${SVG.jouer}</button>` : ""}</div>`
     : `<p class="k">${univers === "mcu" ? "MCU" : "Multivers"}</p><h2 class="h4-titre">Tout est vu</h2>`;
-  const tt = h.querySelector(".h4-t"); if(tt) requestAnimationFrame(() => ajusterTitre(tt));
+  const tt = h.querySelector(".h4-t"); if(tt) requestAnimationFrame(() => ajusterTitre(tt, 1, 22));
   const e = ici().vus;
+  // Prochainement : les titres à venir de l'univers, du plus proche au plus lointain (Endgame Extended en tête côté MCU)
   const cartes = [];
   if(univers === "mcu"){
     const endgame = tous("mcu").find(i => i.t === "Avengers: Endgame");
     cartes.push({aff:img(IMG_EXTENDED), t:"Endgame Extended", d:"De retour au cinéma", tag:"", id:endgame ? endgame.id : null, encore:true});
-    tous("mcu").forEach(i => { if(SORTIES[i.t] && jours(SORTIES[i.t]))
-      cartes.push({aff:affiche(i), t:i.t, d:dateFr(SORTIES[i.t]) + " · " + (i.k==="film" ? "au cinéma" : "Disney+"), tag:jours(SORTIES[i.t]), id:i.id}); });
   }
+  tous(univers).filter(pasSorti).map(i => [i, dateSortie(i) || i.tri || (i.a + "-12-31")]).sort((x, y) => x[1] < y[1] ? -1 : 1).forEach(([i]) => {
+    const j = dateSortie(i) && jours(dateSortie(i));
+    cartes.push({aff:affiche(i), t:i.t, d:quandSortie(i), tag:j && j <= 365 ? j : "", id:i.id});
+  });
   // Puis : « Reprendre » (Plex), les sorties, chaque phase ou franchise en affiches (même construction pour le MCU et le Multivers)
   const groupes = BIB[univers].map((g, gi) =>
     `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">${esc(g.groupe.split(" · ")[0].split(" / ")[0])}</h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>${railAff(g.items)}</section>`).join("");
   document.getElementById("acc-suite").innerHTML = `
     <div id="reprendre"></div>
-    ${cartes.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">À l'affiche et bientôt</h2></div>
-      <div class="sorties4">${cartes.map(c => `<button class="sortie4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em>J-${c.tag}</em>` : ""}</button>`).join("")}</div></section>` : ""}
+    ${cartes.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Prochainement</h2></div>
+      <div class="rail-h rail-bt4">${cartes.map(c => `<button class="bt4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><span class="bt4-v"><img src="${c.aff}" alt="" loading="lazy">${c.tag ? `<em>J-${c.tag}</em>` : ""}</span><b>${esc(c.t)}</b><small>${c.d}</small></button>`).join("")}</div></section>` : ""}
     ${groupes}`;
   rendreReprendre();
 }
 /* Titre du bandeau : jamais plus de deux lignes, la police rapetisse si besoin. */
-function ajusterTitre(el){
+function ajusterTitre(el, max = 2, min = 20){
   el.style.fontSize = ""; let t = parseFloat(getComputedStyle(el).fontSize);
+  if(max === 1){ while(el.scrollWidth > el.clientWidth + 1 && t > min){ t -= 1; el.style.fontSize = t + "px"; } return; }
   const lignes = () => el.scrollHeight / (parseFloat(getComputedStyle(el).lineHeight) || t);   // la ligne a sa hauteur réelle (lettres qui dépassent comprises)
-  while(lignes() > 2.4 && t > 20){ t -= 2; el.style.fontSize = t + "px"; }
+  while(lignes() > max + .4 && t > min){ t -= 2; el.style.fontSize = t + "px"; }
 }
 function lancerVideoAccueil(){ lancerVideo("hero-video", univers === "mcu" ? VIDEO_MCU : VIDEO_MULTI, univers); }
 
@@ -5429,7 +5554,7 @@ function rendreChemin(){
       <ol class="chemin">${l.map((it, n) => `<li class="pas${e[it.id] ? " vu" : ""}" data-id="${it.id}" style="animation-delay:${Math.min(n, 10) * 30}ms">
         <span class="no4">${ordre.get(it) || ""}</span>
         <button class="pas-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy" decoding="async">
-          <span class="pas-txt"><em>À suivre</em><b><span>${esc(it.t)}</span>${indispo(it) ? SVG_INDISPO : ""}</b><small>${infosTitre(it)}${it.v ? " · à venir" : ""}${pastilleNote(it.id)}</small></span></button>
+          <span class="pas-txt"><em>À suivre</em><b><span>${esc(it.t)}</span>${indispo(it) ? SVG_INDISPO : ""}</b><small>${infosTitre(it)}${pastilleNote(it.id)}</small></span></button>
         <button class="noeud coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button>
       </li>`).join("")}</ol></section>`;
   }).join("");
@@ -5448,7 +5573,7 @@ function majParcours(){
   document.querySelectorAll("#pc-liste .etape").forEach(sec => {
     const l = BIB[univers][+sec.dataset.groupe].items.filter(filtreOk).filter(compte), v = l.filter(i => e[i.id]).length;
     sec.classList.toggle("fini", v === l.length);
-    sec.querySelector(".etape-compte").innerHTML = `${v}<i>/${l.length}</i>`;
+    sec.querySelector(".etape-compte").innerHTML = l.length ? `${v}<i>/${l.length}</i>` : `<small class="e4-bientot">Bientôt</small>`;   // groupe encore à venir
     requestAnimationFrame(() => { sec.querySelector(".filet-prog i").style.width = (l.length ? Math.round(v / l.length * 100) : 0) + "%"; });
   });
   document.querySelectorAll("#pc-liste .pas.suivant").forEach(p => p.classList.remove("suivant"));
@@ -5460,22 +5585,47 @@ function majParcours(){
 /* Doomsday : l'affiche de Fatalis, le compte à rebours, la préparation (une seule entrée vers Avant Doomsday),
    les bandes-annonces, puis le film en quatre cases. */
 function rendreDoomsday(){
-  const ba = TRAILERS.map((t, n) => [t, n]).filter(([t]) => t.langue === "VF");
+  const ba = TRAILERS.map((t, n) => [t, n]).filter(([t]) => t.langue === "VF"), aff = typeof IMG_AFF_DOOM !== "undefined" ? IMG_AFF_DOOM : [];
   document.getElementById("v-doomsday").innerHTML = `
-    <section class="d4h"><img src="${img(IMG_DOOM)}" alt="">
-      <div class="d4h-in"><p class="k">Au cinéma le 16 décembre 2026</p><h1 class="d4-titre">Avengers :<br><em>Doomsday</em></h1></div></section>
-    <div class="cd4">${[["j", "Jours"], ["h", "Heures"], ["m", "Min"], ["s", "Sec"]].map(([k, t]) => `<div class="cc"><b data-cr="${k}">--</b><small>${t}</small></div>`).join("")}</div>
+    <section class="hero v4h d5h">
+      <div class="ecran-cine"><img class="hero-aff" src="${img(IMG_DOOM)}" alt=""><video id="doom-video" muted playsinline loop preload="auto" aria-hidden="true"></video></div>
+      <div class="hero-bas"><p class="k">Teaser</p><h2 class="h4-titre"><span class="h4-t">Avengers : Doomsday</span></h2></div>
+    </section>
+    <div class="cd5"><i></i>Au cinéma dans <b data-cr="j">--</b><small>j</small><b data-cr="h">--</b><small>h</small><b data-cr="m">--</b><small>min</small></div>
     ${prepDoomHTML()}
     ${ba.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Bandes-annonces</h2></div>
       <div class="rail-h rail-ba4">${ba.map(([t, n]) => `<button class="ba4" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="ba4-j">${SVG.jouer}</span><b>${esc(t.titre.replace(/^Teaser/i, "Bande-annonce"))}</b></button>`).join("")}</div></section>` : ""}
-    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Le film</h2></div>
-      <div class="d4-tuiles">${[["Réalisation", "Frères Russo"], ["Sortie", "16 déc. 2026"], ["Méchant", "Fatalis"], ["Suite", "Secret Wars"]].map(([k, v]) => `<div class="cc"><small>${k}</small><b>${v}</b></div>`).join("")}</div></section>
+    ${aff.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Les affiches</h2></div>
+      <div class="rail-h rail-af5">${aff.map((a, k) => `<button class="af5" data-affdoom="${k}"><img src="${img(a)}" alt="" loading="lazy"></button>`).join("")}</div></section>` : ""}
     <div class="fin-page"></div>`;
+  lancerVideo("doom-video", null, "doom");
 }
+/* Le Briefing : l'entrée vers les films à voir avant Doomsday (mosaïque d'affiches, progression). */
 function prepDoomHTML(){
-  const { l, n, pct } = chiffresAvDoom();
-  return `<button class="prep4b" id="d4-prep" data-avdoom><span class="prep4b-l"><b>Avant Doomsday</b><small>${n} sur ${l.length} films essentiels vus</small></span><i class="chev4"></i>
-    <span class="prep4b-bar"><i style="width:${pct}%"></i></span></button>`;
+  const { l, n, pct } = chiffresAvDoom(), reste = l.filter(i => !vusDe(i.id)[i.id]);
+  return `<button class="br5" id="d4-prep" data-avdoom><span class="br5-fond">${reste.concat(l.filter(i => !reste.includes(i))).slice(0, 9).map(i => `<img src="${affiche(i)}" alt="">`).join("")}</span>
+    <span class="br5-in"><span class="br5-t">Le <em>Briefing</em></span><span class="br5-s">${n === l.length ? "Tu es prêt pour Doomsday" : l.length + " films à voir avant Doomsday"}</span>
+      <span class="br5-p"><span class="br5-bar"><i style="width:${pct}%"></i></span><span class="br5-n">${n}<small>/${l.length}</small></span></span></span><i class="chev4"></i></button>`;
+}
+/* Affiches officielles en plein écran : on glisse de l'une à l'autre, on peut l'enregistrer. */
+function ouvrirAffichesDoom(k){
+  const aff = IMG_AFF_DOOM, v = document.createElement("div"); v.className = "vis5"; v.id = "vis5";
+  v.innerHTML = `<div class="vis5-h"><span id="vis5-n">${k + 1} / ${aff.length}</span><button class="vis5-x" data-vis5-x aria-label="Fermer">${SVG.croix || "✕"}</button></div>
+    <div class="vis5-l" id="vis5-l">${aff.map(a => `<div class="vis5-i"><img src="${img(a)}" alt=""></div>`).join("")}</div>
+    <div class="vis5-b"><span class="vis5-pts" id="vis5-pts">${aff.map((a, i) => `<i class="${i === k ? "on" : ""}"></i>`).join("")}</span><button class="vis5-dl" data-vis5-dl>Enregistrer</button></div>`;
+  document.body.appendChild(v);
+  const l = v.querySelector("#vis5-l"), cur = () => Math.round(l.scrollLeft / l.clientWidth);
+  requestAnimationFrame(() => l.scrollTo({ left:k * l.clientWidth }));
+  l.addEventListener("scroll", () => { const c = cur(); v.querySelector("#vis5-n").textContent = (c + 1) + " / " + aff.length;
+    v.querySelectorAll("#vis5-pts i").forEach((p, i) => p.classList.toggle("on", i === c)); });
+  v.addEventListener("click", async e => {
+    if(e.target.closest("[data-vis5-x]")){ v.classList.add("part"); setTimeout(() => v.remove(), 250); return; }
+    if(e.target.closest("[data-vis5-dl]")){
+      const b = await (await fetch(img(aff[cur()]))).blob(), f = new File([b], `avengers-doomsday-affiche-${cur() + 1}.webp`, { type:b.type });
+      if(navigator.canShare && navigator.canShare({ files:[f] })){ navigator.share({ files:[f] }).catch(() => {}); return; }
+      const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = f.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    }
+  });
 }
 function majRebours(){
   const c = document.querySelectorAll("[data-cr]");
@@ -5658,7 +5808,7 @@ const libNote = n => n ? `<b>${fmtNote(n)}</b><i>/5</i> <span>${LIBELLES_NOTE[n]
     }
     sauver();
     document.querySelectorAll(`#pc-liste .pas[data-id="${a.id}"] .pas-txt small`).forEach(sm => {
-      const it = parId(a.id); sm.innerHTML = `${infosTitre(it)}${it.v ? " · à venir" : ""}${pastilleNote(a.id)}`; });
+      const it = parId(a.id); sm.innerHTML = `${infosTitre(it)}${pastilleNote(a.id)}`; });
     if(vue === "profil") rendreProfil();
   };
   document.addEventListener("pointerup", fin); document.addEventListener("pointercancel", fin);
@@ -5764,7 +5914,7 @@ function ouvrirFiche(id, opt = {}){
     <div class="fiche-texte">
       <p class="surtitre">${esc(g ? g.groupe.split(" · ")[0] : tousBonus().includes(it) ? "Bonus · MCU" : "")}</p>
       <h2 class="fiche-titre">${esc(it.t)}</h2>
-      <p class="meta">${it.a} · ${typeTitre(it)} · ${fmtDuree(it.d)}${it.v ? " · à venir" : ""}</p>
+      <p class="meta">${[pasSorti(it) ? "" : it.a, typeTitre(it), fmtDuree(it.d), pasSorti(it) ? "Sortie : " + quandSortie(it) + (it.presse ? " (selon la presse)" : "") : ""].filter(Boolean).join(" · ")}</p>
       <div class="fiche-actions">
         <div class="duo">
           ${plexCle(it) ? `<button class="b4 b4-rouge" id="btn-film">${SVG.jouer}Regarder</button>`
@@ -5777,6 +5927,7 @@ function ouvrirFiche(id, opt = {}){
     </div></div>
     ${plexSerie(it) && !plexCle(it) ? `<div class="fiche-texte f4-ep"><section class="episodes"><p class="surtitre">Épisodes</p><div id="ep-liste"><div class="ep-attente"><i></i>Lecture de ta bibliothèque Plex…</div></div></section></div>` : ""}`;
   majBoutonFiche(it);
+  const ft = document.querySelector("#fiche-in .fiche-titre"); if(ft) requestAnimationFrame(() => ajusterTitre(ft, 2, 26));   // jamais plus de deux lignes
   ouvrirFeuille("fiche");
   morphOuvrir(opt.depuis, opt.aff ? null : prechargerHD(it));
   monterHD(document.getElementById("fiche-in"));
@@ -5821,12 +5972,13 @@ function morphOuvrir(img, hd){
   const lancer = () => {
     const b = cible.getBoundingClientRect();
     if(net()) cible.src = hd.src;
-    const c = cloneMorph(net() ? hd.src : img.currentSrc || img.src, a, b, 520, () => { cible.style.visibility = ""; });
-    if(hd && !net()) hd.addEventListener("load", () => { c.src = hd.src; cible.src = hd.src; }, { once:true });   // arrivée en vol : bascule discrète
+    cloneMorph(net() ? hd.src : img.currentSrc || img.src, a, b, 520, () => { cible.style.visibility = "";
+      // image nette arrivée trop tard : on la pose une fois décodée, après l'animation (un seul mouvement, pas de seconde vague)
+      if(hd && !net()) hd.decode().then(() => { if(cible.isConnected) cible.src = hd.src; }).catch(() => {}); });
   };
   if(!hd || net()) { lancer(); return; }
   let fait = false; const go = () => { if(!fait){ fait = true; lancer(); } };
-  hd.addEventListener("load", go, { once:true }); hd.addEventListener("error", go, { once:true }); setTimeout(go, 220);
+  (hd.decode ? hd.decode() : Promise.reject()).then(go, go); setTimeout(go, 650);
 }
 function morphFermer(){
   const f = document.getElementById("fiche"), img = morphSource, cible = f.querySelector(".fiche-visuel img"); morphSource = null;
@@ -6124,7 +6276,7 @@ function rendreDefis(){
     <div class="colonne j4">
       <h1 class="h4-page">Jeux</h1>
       <button class="duj4 cc2" data-jeu="${d.id}">${d.image}<span class="duj4-t"><span class="k">Défi du jour</span><b>${d.nom}</b><small>${d.accroche}</small>
-        <span class="b4 b4-rouge">${SVG.jouer}Jouer</span></span><span class="duj4-h">Nouveau dans ${d.heures} h</span></button>
+        <span class="duj4-bas"><span class="b4 b4-rouge">${SVG.jouer}Jouer</span><span class="duj4-bonus">${typeof collec === "function" && collec().defiJour === jourLocal() ? "Bonus du jour récupéré" : "Bonus : un pack Héroïque"}</span></span></span><span class="duj4-h">Nouveau dans ${d.heures} h</span></button>
       <div class="s4-tete"><h2 class="h4-sec">Tous les jeux</h2></div>
       <div class="g4">${autres.map(j => `<button class="jc4 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : "<span class='jc4-vide'></span>"}
         <span class="jc4-t"><b>${j.nom}</b><small>Record <em>${j.rec}</em></small></span></button>`).join("")}</div>
@@ -8664,6 +8816,9 @@ function recompenser(cle, v, record, plafond = 3){
   gains.push({ t:ORDRE_PACKS[Math.min(2, t - 1 + (jour && t < 3 ? 1 : 0))], o:defi, e:jour && t < 3 ? "Bonus du jour" : "" });
   if(jour && t === 3) gains.push({ t:"std", o:"Bonus du jour", e:"Bonus du jour" });
   if(record) gains.push({ t:"std", o:"Nouveau record", e:"Nouveau record" });
+  // Défi du jour : un pack Héroïque en plus, une fois par jour, dès le premier palier atteint sur le jeu du jour
+  const dj = typeof defiDuJour === "function" ? defiDuJour() : null;
+  if(dj && dj.id === cle.split("_")[0] && c.defiJour !== jourLocal()){ c.defiJour = jourLocal(); gains.push({ t:"hero", o:"Défi du jour", e:"Défi du jour" }); }
   c.packs.push(...gains.map(g => ({ t:g.t, o:g.o })));
   sauver();
   const suite = t < 3 ? `<p class="recomp-suite">Pack ${PACKS[ORDRE_PACKS[t]].nom} dès ${fmtPalier(cle, t)}</p>` : "";
@@ -8762,7 +8917,6 @@ function rendreCollection(){
     <div class="c4-tete"><div><p class="k">Ma collection</p><h1 class="h4-page">Cartes</h1></div><span class="c4-n">${n}<i>/${CARTES.length}</i></span></div>
     <div class="cl-barre2">${barre}</div>
     ${np ? `<button class="pack4 cc" data-ouvrir-packs><span class="pack4-pq">${paquet(c.packs[0].t)}</span><span class="pack4-t"><b>${np > 1 ? np + " packs à ouvrir" : "1 pack à ouvrir"}</b><small>${esc(c.packs[0].o || "Gagné dans les jeux")}</small></span><span class="pack4-b cc">Ouvrir</span></button>` : ""}
-    <div class="c4-mini"><span class="c4-ecl">${ECLAT}<b>${c.ecl}</b> éclats</span>${pj ? `<span>Encore <b>${pj[0] - n}</b> cartes pour un pack ${PACKS[pj[1]].nom}</span>` : `<span>Tous les paliers atteints</span>`}</div>
     <div class="cl-rangs"><button class="cl-rang cl-tri2" data-cl-tri>${CL.tri === "num" ? "N°" : "Rareté"}</button>${[1, 2, 3, 4, 5, 6].map(r => `<button class="cl-rang r${r}${CL.rar === r ? " on" : ""}" data-cl-rar="${r}"><i></i>${r}★<em>${nbPossedees(PAR_RARETE[r])}/${PAR_RARETE[r].length}</em></button>`).join("")}</div>
     <div class="pc-outils cl-outils2">
       <div class="onglets">${[["toutes", "Toutes"], ["obtenues", "Obtenues"], ["manquantes", "À trouver"], ["series", "Séries"]].map(([k, t]) =>
@@ -8839,8 +8993,6 @@ function rendreCarte(forge = false){
       <div class="cd4-l">${ligne("Vrai nom", esc(civil))}${ligne("Interprète", act && !act.startsWith("Voix") ? esc(act) : "")}${ligne("Équipe", esc(equipeDe(i)))}${ligne("Première apparition", f ? esc(f.t) + " · " + f.a : "")}</div>
       ${app.length ? `<div class="s4-tete cd4-app"><h2 class="h4-sec">Apparitions<i>${app.length}</i></h2></div>
         <div class="rail-h cd4-rail">${app.map(it => `<button data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy"><b>${esc(it.t)}</b></button>`).join("")}</div>` : ""}
-      ${a ? "" : `<div class="cd4-forge"><button class="b4 b4-rouge b4-plein" data-forger="${i}" ${c.ecl >= cout ? "" : "disabled"}>Forger cette carte · ${cout} éclats</button>
-        <p>${c.ecl >= cout ? "Tu as " + c.ecl + " éclats." : "Encore " + (cout - c.ecl) + " éclats. Chaque doublon en rapporte."}</p></div>`}
       ${l.length > 1 && k >= 0 ? `<div class="cd-nav"><button data-cd-pas="-1" aria-label="Carte précédente">‹</button><span>${k + 1} / ${l.length}</span><button data-cd-pas="1" aria-label="Carte suivante">›</button></div>` : ""}
     </div></div>`;
   activerInclinaison(document.getElementById("cd-scene"));
@@ -9019,7 +9171,7 @@ function retournerCarte(){
     if(x.r >= 6) pk.classList.remove("nuit");
     vibre(x.r >= 6 ? [40, 40, 40, 40, 120] : x.r >= 5 ? [30, 50, 30, 50, 80] : x.r >= 4 ? [20, 40, 40] : 10);
     const et = document.getElementById("pk-etiquette");
-    et.innerHTML = x.neuve ? "" : `<span class="pk-doublon">Doublon · <em>+${x.ecl} éclats</em></span>`;
+    et.innerHTML = x.neuve ? "" : `<span class="pk-doublon">Déjà dans ta collection</span>`;
     et.className = "pk-etiquette r" + x.r;
     if(x.r >= 4){   // le nom du rang traverse l'écran derrière la carte (Légende et au-dessus)
       pk.querySelectorAll(".pk-balayage").forEach(n => n.remove());
@@ -9049,7 +9201,7 @@ function bilanPack(){
   pk.insertAdjacentHTML("beforeend", `<div class="pk-bilan"><p class="surtitre">Pack ${PACKS[PK.t].nom}</p>
     <h2>${neuves ? neuves + " nouvelle" + (neuves > 1 ? "s" : "") + " carte" + (neuves > 1 ? "s" : "") : "Que des doublons"}</h2>
     <div class="pk-eventail" style="--n:${n}">${places.map((x, k) => `<span class="pk-ev" style="--k:${k - (n - 1) / 2};--d:${k * .08}s">${carteHTML(x.i, { etat:"face", neuve:x.neuve, attr:`data-carte="${x.i}" role="button"` })}</span>`).join("")}</div>
-    <p class="meta">${nbPossedees()} / ${CARTES.length} cartes${ecl ? " · +" + ecl + " éclats" : ""}</p>
+    <p class="meta">${nbPossedees()} / ${CARTES.length} cartes</p>
     ${(PK.jalons || []).map(g => `<div class="pk-jalon">${paquet(g.t)}<span><b>${esc(g.o)}</b><small>Pack ${PACKS[g.t].nom} offert</small></span></div>`).join("")}
     ${c.packs.length ? `<button class="btn btn-packs" data-pk-suivant>Ouvrir le suivant <em>${c.packs.length}</em></button>` : ""}
     <button class="btn ${c.packs.length ? "btn-ligne" : "btn-blanc"}" data-pk-collec>Voir ma collection</button>
@@ -9975,6 +10127,372 @@ Object.assign(SPOILERS, {
 /* Le dossier d'un film : clé « Titre|année » pour les titres en double, sinon le titre. */
 const spoilDe = it => it && (SPOILERS[it.t + "|" + it.a] || SPOILERS[it.t]);
 
+/* Spoilers des séries (MCU et Multivers) : même format que les films. Une série en plusieurs saisons est résumée en entier. */
+Object.assign(SPOILERS, {
+  /* ── MCU ── */
+  "WandaVision":{ p:[
+    "Wanda et Vision vivent une vie de sitcom à Westview ; chaque épisode change d'époque, des années 1950 aux années 2000.",
+    "Monica Rambeau, du S.W.O.R.D., découvre que Wanda a enfermé toute la ville dans un « Hex » et contrôle ses habitants.",
+    "Wanda met au monde des jumeaux, Billy et Tommy ; un faux Pietro débarque à Westview.",
+    "La voisine Agnès est en réalité Agatha Harkness, une sorcière venue voler le pouvoir de Wanda.",
+    "Le S.W.O.R.D. réactive le corps de Vision : le Vision blanc affronte celui de Wanda, retrouve ses souvenirs et s'envole.",
+    "Agatha révèle à Wanda qu'elle est la Sorcière Rouge ; Wanda la prend au piège dans le rôle d'Agnès.",
+    "Wanda défait l'Hex et dit adieu à sa famille. **Vision** et les jumeaux disparaissent avec lui."],
+    m:["Vision"], s:"Cachée dans une cabane, Wanda étudie le Darkhold et entend ses fils appeler à l'aide : direction Doctor Strange in the Multiverse of Madness." },
+  "Falcon et le Soldat de l'hiver":{ p:[
+    "Sam rend le bouclier au gouvernement, qui le confie aussitôt à John Walker, le nouveau Captain America.",
+    "Les Flag Smashers de Karli Morgenthau, gonflés au sérum du super-soldat, veulent un monde sans frontières.",
+    "Bucky fait évader Zemo pour remonter la piste du sérum ; à Madripoor, ils retrouvent Sharon Carter.",
+    "Sam rencontre Isaiah Bradley, super-soldat noir oublié, emprisonné et maltraité pendant des décennies.",
+    "Walker prend le sérum ; après la mort de son partenaire **Lemar Hoskins**, il tue un Flag Smasher en public avec le bouclier.",
+    "Sam endosse le costume de Captain America et sauve le Conseil mondial ; **Karli Morgenthau** est abattue par Sharon.",
+    "Walker devient U.S. Agent pour la comtesse Valentina ; Isaiah a enfin sa place au musée."],
+    m:["Lemar Hoskins","Karli Morgenthau"], s:"Graciée, Sharon Carter retourne au gouvernement… en étant secrètement le Power Broker." },
+  "Loki S1":{ p:[
+    "Échappé avec le Tesseract en 2012, Loki est arrêté par la TVA, qui protège la « chronologie sacrée ».",
+    "L'agent Mobius l'enrôle pour traquer un variant qui massacre les agents de la TVA.",
+    "Ce variant, c'est Sylvie, une autre version de Loki ; les deux se retrouvent coincés sur Lamentis-1.",
+    "Ils découvrent que les Gardiens du Temps sont des automates et que les agents de la TVA sont des variants effacés.",
+    "Loki est « élagué » et atterrit dans le Néant, au bout du temps, avec d'autres Loki et le monstre Alioth.",
+    "Dans la citadelle, Celui qui demeure explique qu'il contrôle tout pour empêcher la guerre entre ses propres variants.",
+    "Sylvie le tue malgré tout. **Celui qui demeure** meurt et le multivers se ramifie."],
+    m:["Celui qui demeure"], s:"De retour à la TVA, Loki trouve une statue de Kang à la place des Gardiens du Temps : Mobius ne le reconnaît plus." },
+  "What If...? S1":{ p:[
+    "Peggy Carter prend le sérum à la place de Steve et devient Captain Carter.",
+    "T'Challa est enlevé par Yondu et devient Star-Lord chez les Ravageurs.",
+    "Les futurs Avengers sont assassinés avant leur formation : le tueur est Hank Pym, qui venge la mort de Hope.",
+    "Doctor Strange perd Christine et détruit son univers à force de vouloir la sauver : il devient Strange Supreme.",
+    "Une épidémie de zombies frappe la Terre ; dans un autre monde, Killmonger sauve Tony Stark pour mieux s'emparer du Wakanda.",
+    "Ultron récupère les six pierres et ravage le multivers ; le Gardien Uatu rompt son serment et forme les Gardiens du Multivers.",
+    "Captain Carter, Star-Lord T'Challa, Strange Supreme et les autres battent Ultron grâce au virus d'Arnim Zola."],
+    m:["Ultron"], s:"Captain Carter reste dans un monde qui n'est pas le sien… et y retrouve une trace de Steve." },
+  "Hawkeye":{ p:[
+    "À Noël, Kate Bishop récupère le costume de Ronin lors d'une vente aux enchères : la mafia des Survêtements la prend pour lui.",
+    "Clint Barton vient la sortir d'affaire en promettant d'être rentré pour Noël.",
+    "Maya Lopez, cheffe des Survêtements, veut venger son père, tué par Ronin.",
+    "Armand Duquesne III est assassiné et Jack, le fiancé de la mère de Kate, est accusé. **Armand Duquesne III** meurt.",
+    "Yelena Belova arrive pour tuer Clint, qu'on lui a désigné comme responsable de la mort de Natasha.",
+    "Au Rockefeller Center, Kate affronte Wilson Fisk : sa propre mère, Eleanor, travaille pour lui, a tué Armand et finit arrêtée.",
+    "Maya tue Kazi, son ancien bras droit. **Kazi** meurt. Clint raconte Vormir à Yelena et fête Noël avec Kate."],
+    m:["Armand Duquesne III","Kazi"], s:"Maya Lopez tire sur Fisk et quitte New York : son histoire continue dans Echo." },
+  "Moon Knight":{ p:[
+    "Steven Grant, vendeur au British Museum, perd des pans de mémoire : il partage son corps avec Marc Spector, mercenaire au service du dieu Khonshu.",
+    "Arthur Harrow, ancien avatar de Khonshu, veut libérer la déesse Ammit pour punir les gens avant leurs crimes.",
+    "Layla, la femme de Marc, l'aide en Égypte à trouver la tombe d'Ammit avant Harrow.",
+    "Khonshu est emprisonné dans une statue ; Marc est abattu par Harrow.",
+    "Dans l'au-delà, avec la déesse Taweret, Marc et Steven revivent l'enfance de Marc et la mort de son frère Randall.",
+    "Steven se sacrifie pour sauver Marc, puis les deux reviennent ensemble ; Layla devient l'avatar de Taweret.",
+    "Combat des dieux à Gizeh : Ammit est scellée dans le corps de Harrow."],
+    m:["Arthur Harrow"], s:"Une troisième personnalité, Jake Lockley, sert Khonshu en secret : c'est lui qui tue Harrow." },
+  "Miss Marvel":{ p:[
+    "Kamala Khan, fan absolue de Captain Marvel, enfile un bracelet de famille et projette de la lumière solide.",
+    "Les Clandestins, des djinns exilés menés par Najma, veulent se servir d'elle pour rentrer dans leur dimension, le Noor.",
+    "Le Département du contrôle des dommages traque Kamala à Jersey City.",
+    "À Karachi, Kamala découvre le passé de son arrière-grand-mère **Aisha** pendant la Partition de 1947.",
+    "Najma se sacrifie pour refermer le voile entre les mondes. **Najma** meurt.",
+    "De retour à Jersey City, Kamala protège Kamran, devenu un djinn traqué, avec l'aide de sa communauté.",
+    "Bruno découvre que Kamala porte une mutation dans ses gènes."],
+    m:["Aisha","Najma"], s:"Kamala échange de place avec Carol Danvers : direction The Marvels." },
+  "She-Hulk : Avocate":{ p:[
+    "Jennifer Walters, avocate, est contaminée par le sang de son cousin Bruce Banner et devient She-Hulk.",
+    "Elle dirige une nouvelle division consacrée aux surhumains et défend Emil Blonsky, l'Abomination.",
+    "Ses clients s'enchaînent : Wong, une sorcière arnaqueuse, un costumier pour héros… et Matt Murdock, Daredevil.",
+    "Un groupe de trolls, les Intelligencia, veut voler son sang ; leur chef est Todd Phelps.",
+    "Au gala, Todd diffuse une vidéo intime de Jen : elle se transforme sous la colère et est arrêtée.",
+    "Jen brise le quatrième mur, entre dans les bureaux de Marvel Studios et réécrit sa propre fin avec K.E.V.I.N.",
+    "Bruce revient de Sakaar avec son fils, Skaar."],
+    m:[], s:"Bruce présente Skaar à toute la famille Walters." },
+  "Werewolf by Night":{ p:[
+    "Après la mort d'Ulysses Bloodstone, des chasseurs de monstres sont réunis dans son manoir.",
+    "L'enjeu de la chasse : la Pierre de sang, qui donne force et protection à celui qui la porte.",
+    "Elsa Bloodstone, la fille rebelle, et Jack Russell, chasseur discret, font alliance.",
+    "Jack est venu libérer son ami Ted, alias Man-Thing, la proie de la chasse.",
+    "Verussa expose Jack à la Pierre : il devient un loup-garou et décime les chasseurs. **Jovan** meurt.",
+    "Elsa refuse de l'abattre et le ramène à lui.",
+    "Ted brûle Verussa d'un simple contact. **Verussa Bloodstone** meurt."],
+    m:["Jovan","Verussa Bloodstone"], s:"Elsa devient la gardienne de la Pierre de sang ; Jack et Ted repartent ensemble." },
+  "Les Gardiens de la Galaxie — Spécial fêtes":{ p:[
+    "Depuis la perte de Gamora, Star-Lord a le moral à zéro.",
+    "Mantis et Drax décident de lui offrir le cadeau de Noël parfait : Kevin Bacon.",
+    "Sur Terre, à Hollywood, ils enlèvent l'acteur terrifié.",
+    "Peter est furieux, mais Kevin Bacon finit par se prendre au jeu de la fête à Knowhere.",
+    "Kraglin maîtrise enfin la flèche de Yondu.",
+    "Peter se souvient d'un Noël raté avec Yondu.",
+    "Mantis révèle à Peter qu'elle est sa demi-sœur, fille d'Ego elle aussi."],
+    m:[], s:"Les Gardiens ont racheté Knowhere : direction Les Gardiens de la Galaxie Vol. 3." },
+  "Secret Invasion":{ p:[
+    "Nick Fury revient sur Terre : des Skrulls rebelles, menés par Gravik, ont infiltré les gouvernements.",
+    "Dès le premier épisode, Gravik, déguisé en Fury, abat Maria Hill. **Maria Hill** meurt.",
+    "Gravik veut déclencher une guerre entre les États-Unis et la Russie pour s'emparer de la Terre.",
+    "Talos est tué par Gravik. **Talos** meurt. Sa fille G'iah récupère l'« Harvest », l'ADN des héros.",
+    "James Rhodes est un Skrull depuis des années ; le vrai Rhodey est détenu.",
+    "G'iah absorbe les pouvoirs de l'Harvest et tue Gravik. **Gravik** meurt.",
+    "Le président déclare la guerre aux extraterrestres ; Fury part dans l'espace avec Varra, sa femme skrull."],
+    m:["Maria Hill","Talos","Gravik"], s:"Fury rejoint la station S.A.B.E.R. : direction The Marvels." },
+  "Loki S2":{ p:[
+    "Loki glisse malgré lui d'une époque à l'autre de la TVA.",
+    "Le Métier à temps, qui tisse les branches du temps, menace d'exploser depuis que le multivers se ramifie.",
+    "Mobius et Loki retrouvent Victor Timely, un variant de Celui qui demeure, en 1893.",
+    "Les agents de la TVA se réveillent dans leur ancienne vie sur Terre ; Sylvie vit en 1982.",
+    "Timely tente d'agrandir le Métier et se désintègre. **Victor Timely** meurt.",
+    "Loki apprend à maîtriser ses sauts dans le temps et revient des centaines de fois en arrière pour tout sauver.",
+    "Il détruit le Métier et rassemble lui-même les branches du temps."],
+    m:["Victor Timely"], s:"Loki devient le Dieu des histoires, assis au bout du temps, tenant l'arbre du multivers." },
+  "What If...? S2":{ p:[
+    "Nebula rejoint le Nova Corps et sauve Xandar de Ronan.",
+    "Peter Quill, élevé par Ego, attaque la Terre avant d'être retourné contre son père.",
+    "Le soir de Noël, Happy Hogan devient un monstre pour défendre la tour des Avengers.",
+    "Tony Stark, échoué sur Sakaar, s'allie à Gamora contre le Grandmaster puis Thanos.",
+    "Captain Carter retrouve Steve, piégé dans l'armure du Hydra Stomper ; Kahhori, jeune Mohawk, reçoit le pouvoir du Tesseract.",
+    "Hela, bannie en Chine, maîtrise les Dix Anneaux ; en 1602, Captain Carter renvoie Steve dans son époque.",
+    "Strange Supreme enlève des variants pour ressusciter son univers : Carter et Kahhori l'arrêtent. **Strange Supreme** meurt."],
+    m:["Strange Supreme"], s:"Le Gardien emmène Captain Carter découvrir le multivers." },
+  "Echo":{ p:[
+    "Après avoir tiré sur Fisk, Maya Lopez rentre à Tamaha, en Oklahoma, chez sa famille choctaw.",
+    "Son oncle Henry refuse de l'aider ; son cousin Biscuits la soutient, sa grand-mère Chula lui en veut.",
+    "Des visions des ancêtres choctaws, Chafa, Lowak et Tuklo, accompagnent Maya.",
+    "En flash-back, Maya affronte Daredevil lors d'une mission pour Fisk.",
+    "Fisk, qui a survécu, vient la chercher et lui offre son empire.",
+    "Avec sa grand-mère et Bonnie, Maya utilise un pouvoir ancestral pour faire revivre à Fisk son enfance.",
+    "Fisk repart ; Maya fait la paix avec sa famille."],
+    m:[], s:"Dans son avion, Fisk regarde l'élection municipale de New York : direction Daredevil: Born Again." },
+  "Agatha All Along":{ p:[
+    "Libérée du sort de Wanda par un adolescent mystérieux, Agatha Harkness réunit un nouveau coven.",
+    "Ensemble, ils empruntent la Route des sorcières, où chaque épreuve peut tuer.",
+    "Alice, Sharon, Jennifer et Lilia rejoignent l'aventure ; Rio Vidal, la Mort, les traque.",
+    "**Alice Wu-Gulliver** est tuée par Rio ; **Sharon Davis** meurt sur la route.",
+    "L'adolescent est Billy Maximoff, le fils de Wanda, réincarné dans un autre corps.",
+    "**Lilia Calderu** se sacrifie pour sauver les autres.",
+    "Agatha choisit de mourir à la place de Billy. **Agatha Harkness** meurt et revient en fantôme."],
+    m:["Alice Wu-Gulliver","Sharon Davis","Lilia Calderu","Agatha Harkness"], s:"Billy part à la recherche de son frère Tommy, guidé par le fantôme d'Agatha." },
+  "What If...? S3":{ p:[
+    "Bruce Banner devient un Hulk géant face à des Avengers en robots.",
+    "Agatha fait carrière à Hollywood dans les années 1940 pour voler le pouvoir d'un Céleste.",
+    "Le Gardien Rouge empêche le Soldat de l'hiver de tuer les Stark. **Obadiah Stane** meurt.",
+    "Howard le canard et Darcy ont un enfant ; Riri Williams fait tomber le régime de Mysterio.",
+    "En 1872, Kate Bishop et Shang-Chi affrontent le Hood, qui n'est autre que Xialing.",
+    "Le Gardien est jugé par ses pairs ; Captain Carter, Kahhori et Ultron viennent le sauver.",
+    "Captain Carter se sacrifie pour emmener tout le monde dans l'univers de Strange. **Captain Carter** et **Ultron** meurent."],
+    m:["Obadiah Stane","Ultron","Captain Carter"], s:"Le Gardien invite Kahhori, Storm et Byrdie à veiller avec lui sur le multivers." },
+  "Daredevil: Born Again S1":{ p:[
+    "Dans un bar, Bullseye tue Foggy Nelson sous les yeux de Matt. **Foggy Nelson** meurt.",
+    "Un an plus tard, Matt a raccroché le costume ; Wilson Fisk est élu maire de New York.",
+    "Hector Ayala, alias le Tigre blanc, est abattu par un policier. **Hector Ayala** meurt.",
+    "Un tueur en série artiste, Muse, terrorise la ville ; Daredevil reprend du service.",
+    "Fisk crée une brigade anti-justiciers et fait tuer Adam, l'amant de Vanessa.",
+    "Heather Glenn, la psy de Matt, abat Muse pour se défendre. **Muse** meurt.",
+    "Fisk déclare la loi martiale ; Matt rassemble une armée pour le faire tomber."],
+    m:["Foggy Nelson","Hector Ayala","Adam","Muse"], s:"Matt et Karen préparent la résistance : direction la saison 2." },
+  "Ironheart":{ p:[
+    "Renvoyée du MIT, Riri Williams rentre à Chicago, hantée par la mort de son amie Natalie.",
+    "Pour financer son armure, elle rejoint la bande de Parker Robbins, le Hood, et crée une IA qui a les traits de Natalie.",
+    "Le Hood tire ses pouvoirs d'une cape mystique ; un membre de la bande tue Rampage sur ses ordres.",
+    "Le gadgeteux Joe McGillicuddy se révèle être Zeke Stane.",
+    "Riri reconstruit une armure avec l'aide magique de Zelma Stanton et affronte le Hood.",
+    "Méphisto, le démon qui a donné la cape à Parker, apparaît ; Riri arrache la cape au Hood.",
+    "Méphisto propose à Riri de ramener Natalie en échange d'un pacte : elle accepte."],
+    m:["Rampage"], s:"Natalie revient à la vie ; le Hood demande à Zelma de l'aider à trouver « une grosse magie »." },
+  "Eyes of Wakanda":{ p:[
+    "En 1260 avant J.-C., Noni, ex-Dora Milaje, capture Nkati, un agent wakandais devenu traître. **Nkati** meurt.",
+    "Pendant la guerre de Troie, l'agent B'Kai, sous le nom de Memnon, récupère un artefact wakandais.",
+    "Memnon frappe Achille au talon.",
+    "En 1400, Basha vole du vibranium à K'un-Lun et ramène malgré lui une Iron Fist, Jorani, jusqu'au Wakanda.",
+    "En 1896, à Adoua, le prince Tafari récupère une hache en vibranium.",
+    "Une Black Panther venue du futur les arrête : le Wakanda sera détruit si la hache n'est pas laissée là.",
+    "La hache reste dans le monde extérieur."],
+    m:["Nkati"], s:"Des années plus tard, Killmonger repère la hache dans un musée de Londres." },
+  "Wonder Man":{ p:[
+    "Simon Williams, acteur en galère, auditionne pour un remake du film « Wonder Man ».",
+    "Il cache des pouvoirs ionisés : à Hollywood, une règle interdit les surhumains depuis l'affaire Doorman.",
+    "Trevor Slattery, l'ex-faux Mandarin, devient son ami… en espionnant Simon pour une agence fédérale, le DODC.",
+    "Simon et Trevor décrochent tous les deux un rôle dans le film.",
+    "Une journaliste découvre l'arrangement ; Trevor avoue tout à Simon.",
+    "La colère de Simon fait exploser le plateau de tournage.",
+    "Trevor endosse l'explosion en ressortant le Mandarin ; Simon le fait évader de prison."],
+    m:[], s:"Simon et Trevor s'envolent ensemble, fugitifs." },
+  "Daredevil: Born Again S2":{ p:[
+    "Fisk règne sur New York ; sa brigade anti-justiciers arrête tous les héros masqués.",
+    "Matt et Karen se retrouvent ; Angela del Toro devient le Tigre blanc et Jessica Jones rejoint la résistance.",
+    "Bullseye attaque un match de boxe ; Vanessa est blessée à la tête et meurt. **Vanessa Fisk** meurt.",
+    "Le protégé de Fisk, Daniel Blake, est tué par Buck Cashman. **Daniel Blake** meurt.",
+    "Karen est arrêtée après un meurtre maquillé ; Matt la défend au tribunal et se fait tirer dessus.",
+    "Matt révèle publiquement qu'il est Daredevil pour prouver les crimes de Fisk ; Bullseye tue Cashman. **Buck Cashman** meurt.",
+    "Fisk accepte l'exil ; la brigade est dissoute."],
+    m:["Vanessa Fisk","Daniel Blake","Buck Cashman"], s:"Matt Murdock est envoyé en prison : direction la saison 3." },
+  /* ── Multivers ── */
+  "Legion":{ p:[
+    "David Haller, interné pour schizophrénie, est en réalité un mutant surpuissant.",
+    "Une équipe de mutants de Summerland l'aide à démêler ce qui est réel dans sa tête.",
+    "Le « Roi d'ombre », Amahl Farouk, vit comme un parasite dans l'esprit de David depuis l'enfance.",
+    "David chasse Farouk de son corps, puis doit le retrouver avant qu'il ne récupère le sien.",
+    "Les héros finissent par voir David lui-même comme la vraie menace.",
+    "Avec la voyageuse temporelle Switch, David remonte le temps pour corriger son passé.",
+    "Son père, Charles Xavier, et Farouk font la paix : la chronologie repart de zéro."],
+    m:[], s:"Le bébé David grandira dans une nouvelle vie, auprès de ses parents." },
+  "The Gifted":{ p:[
+    "Reed et Caitlin Strucker découvrent que leurs enfants, Lauren et Andy, sont des mutants.",
+    "Traquée par les Sentinel Services, la famille rejoint le Réseau, un groupe de mutants clandestins.",
+    "Reed se découvre lui aussi le gène mutant.",
+    "Plusieurs membres du Réseau, dont Andy, rejoignent le Cercle intérieur, mené par Reeva Payge.",
+    "Les sœurs Frost, télépathes, servent les plans du Cercle intérieur.",
+    "Lauren et Andy se retrouvent dans deux camps opposés.",
+    "La série s'arrête après deux saisons."],
+    m:[], s:"Annulée après la saison 2." },
+  "Agents of S.H.I.E.L.D.":{ p:[
+    "Phil Coulson, revenu de la mort grâce au programme Tahiti, monte une équipe avec May, Fitz, Simmons, Ward et Skye.",
+    "HYDRA a infiltré le S.H.I.E.L.D. : Grant Ward était un traître ; Coulson finira par le tuer. **Grant Ward** meurt.",
+    "Skye découvre qu'elle est une Inhumaine : elle devient Daisy Johnson, alias Quake.",
+    "Lincoln se sacrifie pour arrêter Hive. **Lincoln Campbell** meurt. Puis vient l'IA Aida et la simulation du Framework.",
+    "Projetés dans un futur où la Terre est détruite, ils reviennent l'empêcher.",
+    "Malade, Coulson s'éteint à Tahiti. **Phil Coulson** meurt.",
+    "Une dernière mission dans le temps contre les Chronicoms, puis l'équipe se sépare, avec un Coulson androïde."],
+    m:["Grant Ward","Lincoln Campbell","Phil Coulson"], s:"Un an plus tard, l'équipe se retrouve en réalité virtuelle." },
+  "Agent Carter":{ p:[
+    "New York, 1946 : Peggy Carter est cantonnée aux tâches de secrétariat à la SSR.",
+    "Howard Stark, accusé de trafic d'armes, lui demande d'innocenter son nom en secret.",
+    "Aidée de Jarvis, Peggy affronte Leviathan et l'espionne soviétique Dottie Underwood.",
+    "Le docteur Ivchenko manipule les esprits ; le chef **Roger Dooley** se sacrifie.",
+    "En 1947, à Los Angeles, Peggy enquête sur la Matière zéro et l'actrice Whitney Frost.",
+    "Whitney, déformée par la Matière zéro, veut en prendre le contrôle.",
+    "Peggy et Daniel Sousa s'embrassent enfin."],
+    m:["Roger Dooley"], s:"Annulée après la saison 2." },
+  "Jessica Jones":{ p:[
+    "Jessica Jones, détective à New York, est hantée par Kilgrave, qui contrôle les esprits.",
+    "Kilgrave pousse Hope Shlottman à tuer ses parents ; Jessica tente de prouver son innocence.",
+    "Jessica tue Kilgrave en lui brisant la nuque. **Kilgrave** meurt.",
+    "Elle découvre que sa mère, Alisa, a survécu, transformée par IGH ; Trish tue Alisa. **Alisa Jones** meurt.",
+    "Trish obtient des pouvoirs et devient une justicière de plus en plus dangereuse.",
+    "Trish tue le tueur en série Gregory Sallinger. **Gregory Sallinger** meurt.",
+    "Jessica arrête sa sœur, puis quitte New York."],
+    m:["Kilgrave","Alisa Jones","Gregory Sallinger"], s:"Jessica reprend du service dans Daredevil: Born Again." },
+  "Luke Cage":{ p:[
+    "À Harlem, Luke Cage, à la peau impénétrable, vit discrètement après une évasion de prison.",
+    "Pop, son ami barbier, est tué dans une fusillade des hommes de Cottonmouth. **Pop** meurt.",
+    "Mariah Dillard, élue et cousine de Cottonmouth, le tue. **Cottonmouth** meurt.",
+    "Diamondback, le demi-frère de Luke, revient avec des balles capables de le blesser.",
+    "Luke est arrêté et renvoyé en prison, puis libéré.",
+    "Bushmaster déclare la guerre à Mariah ; sa fille Tilda l'empoisonne. **Mariah Dillard** meurt.",
+    "Luke hérite du Harlem's Paradise et devient le nouveau parrain du quartier."],
+    m:["Pop","Cottonmouth","Mariah Dillard"], s:"Annulée après la saison 2." },
+  "Iron Fist":{ p:[
+    "Danny Rand, disparu depuis quinze ans, revient à New York en Iron Fist, maître du poing de chi.",
+    "Ses amis d'enfance, Ward et Joy Meachum, dirigent Rand Enterprises.",
+    "Danny et Colleen Wing affrontent la Main, Madame Gao et Bakuto.",
+    "Harold Meachum, revenu de la mort, est tué par son fils Ward. **Harold Meachum** meurt.",
+    "Davos, ami de Danny venu de K'un-Lun, lui vole le pouvoir d'Iron Fist.",
+    "Colleen récupère le pouvoir et devient la nouvelle Iron Fist.",
+    "Danny et Ward partent en Asie, où Danny canalise son chi dans des pistolets."],
+    m:["Harold Meachum"], s:"Annulée après la saison 2." },
+  "The Defenders":{ p:[
+    "Daredevil, Jessica Jones, Luke Cage et Iron Fist se retrouvent face à la Main.",
+    "Alexandra, leader de la Main, a ressuscité Elektra en arme absolue : la Black Sky.",
+    "La Main veut ouvrir la porte de K'un-Lun, sous un immeuble de Midland Circle.",
+    "Elektra tue son ancien maître. **Stick** meurt.",
+    "Elektra se retourne contre sa maîtresse et la tue. **Alexandra** meurt.",
+    "Les héros font exploser l'immeuble ; Matt reste à l'intérieur avec Elektra.",
+    "Tout le monde le croit mort."],
+    m:["Stick","Alexandra"], s:"Matt se réveille dans un couvent, soigné par des religieuses." },
+  "Inhumans":{ p:[
+    "La famille royale des Inhumains règne sur Attilan, une cité cachée sur la Lune.",
+    "Maximus prend le pouvoir à son frère Black Bolt par un coup d'État.",
+    "La famille s'enfuit sur Terre et se disperse à Hawaï ; Medusa perd ses cheveux.",
+    "Black Bolt, dont la voix détruit tout, se retrouve en prison.",
+    "Les membres de la famille se retrouvent pour reprendre Attilan.",
+    "La cité est détruite ; les Inhumains s'installent sur Terre.",
+    "Maximus est enfermé dans le coffre-fort d'Attilan."],
+    m:[], s:"Annulée après une seule saison." },
+  "The Punisher|2017":{ p:[
+    "Frank Castle découvre que la mort de sa famille cache un complot militaire.",
+    "Avec le hacker Micro, il remonte jusqu'à l'opération Cerberus et l'agent de la CIA Rawlins.",
+    "Son meilleur ami, Billy Russo, était dans le coup.",
+    "Frank tue Rawlins et défigure Billy. **William Rawlins** meurt.",
+    "Billy, devenu Jigsaw, s'évade ; Frank protège une adolescente, Amy, d'un tueur fanatique, John Pilgrim.",
+    "Frank tue Billy. **Billy Russo** meurt.",
+    "Frank devient pour de bon le Punisher."],
+    m:["William Rawlins","Billy Russo"], s:"Frank réapparaît dans Daredevil: Born Again." },
+  "Runaways":{ p:[
+    "Six adolescents de Los Angeles découvrent que leurs parents, le Pride, sacrifient des gens.",
+    "Accusés d'un meurtre, ils fuient et vivent cachés sous Griffith Park.",
+    "Jonah, un extraterrestre, est le vrai maître du Pride et le père de Karolina ; Nico le tue. **Jonah** meurt.",
+    "La famille de Jonah prend possession de plusieurs parents.",
+    "Morgan le Fay tente d'envahir la Terre depuis la Dimension noire.",
+    "Gert meurt dans les bras de Chase. **Gert Yorkes** meurt.",
+    "Un Alex venu du futur sème le doute ; les Runaways remontent le temps et sauvent Gert."],
+    m:["Jonah"], s:"Alex trouve un mot de son futur lui : sa trahison est peut-être écrite." },
+  "Cloak & Dagger":{ p:[
+    "Tyrone et Tandy, deux ados de La Nouvelle-Orléans, ont reçu leurs pouvoirs lors de l'explosion d'une plateforme Roxxon.",
+    "Tyrone se téléporte dans une cape d'ombre ; Tandy crée des dagues de lumière et voit les espoirs des gens.",
+    "Ils enquêtent sur Roxxon et la mort du frère de Tyrone.",
+    "Leurs pouvoirs sont liés : ils doivent agir ensemble.",
+    "Brigid, l'inspectrice, se dédouble en une justicière violente, Mayhem.",
+    "Ils affrontent D'Spayre, démon qui se nourrit du désespoir.",
+    "Tandy et Tyrone deviennent des héros reconnus de la ville."],
+    m:[], s:"Ils retrouvent les Runaways dans la saison 3 de Runaways." },
+  "Helstrom":{ p:[
+    "Daimon et Ana Helstrom sont les enfants d'un tueur en série lié aux démons.",
+    "Daimon enseigne l'éthique et pratique des exorcismes ; Ana chasse les tueurs.",
+    "Leur mère, Victoria, est possédée par un démon depuis des années.",
+    "Les deux enquêtent sur une relique liée à « Mère », le démon.",
+    "Ils affrontent la puissance de leur père.",
+    "Une confrérie secrète les traque.",
+    "La série s'arrête après une saison."],
+    m:[], s:"Annulée après une seule saison." },
+  "M.O.D.O.K.":{ p:[
+    "M.O.D.O.K. perd le contrôle de l'A.I.M., racheté par la start-up GRUMBL.",
+    "En même temps, sa femme Jodie demande le divorce.",
+    "Ses enfants, Melissa et Lou, mènent leur propre vie.",
+    "Un M.O.D.O.K. adolescent venu du passé débarque.",
+    "M.O.D.O.K. tente de reconquérir sa famille et son entreprise.",
+    "Iron Man et d'autres héros croisent son chemin.",
+    "La série d'animation en pâte à modeler s'arrête après une saison."],
+    m:[], s:"Annulée après une seule saison." },
+  "Hit-Monkey":{ p:[
+    "Au Japon, un macaque voit sa troupe massacrée par des tueurs.",
+    "Il est recueilli par Bryce Fowler, un tueur à gages américain, juste avant sa mort. **Bryce Fowler** meurt.",
+    "Le fantôme de Bryce lui apprend à tuer.",
+    "Le singe venge sa troupe en éliminant les yakuzas et des politiciens corrompus.",
+    "Il devient Hit-Monkey, un tueur à gages redouté.",
+    "Dans la saison 2, il part à New York.",
+    "Bryce reste à ses côtés, sous forme de fantôme."],
+    m:["Bryce Fowler"], s:"" },
+  "X-Men '97":{ p:[
+    "Après la mort du professeur Xavier, Magneto prend la tête des X-Men.",
+    "Jean Grey découvre que celle qui vivait avec Cyclope était un clone : Madelyne Pryor.",
+    "Genosha, l'île refuge des mutants, est rasée par une Sentinelle géante. **Gambit** meurt.",
+    "Bastion lance les Sentinelles contre les mutants.",
+    "Magneto retire tout le magnétisme de la Terre.",
+    "Xavier revient de l'espace pour l'arrêter.",
+    "Les X-Men sont éparpillés dans le temps."],
+    m:["Gambit"], s:"Cyclope et Jean se retrouvent dans le futur, face au jeune Cable." },
+  "Votre fidèle serviteur Spider-Man":{ p:[
+    "Peter Parker, 15 ans, est mordu par une araignée alors que Doctor Strange combat un symbiote.",
+    "Son mentor n'est pas Tony Stark mais Norman Osborn, le patron d'Oscorp.",
+    "Harry Osborn devient son ami et son soutien technique.",
+    "Lonnie Lincoln, de son ancien lycée, rejoint un gang puis devient Tombstone.",
+    "Peter affronte le Scorpion, les Scorpions et croise Daredevil.",
+    "Otto Octavius vend en secret des armes aux criminels.",
+    "Harry fonde le W.E.B. pour aider les jeunes génies ; Richard Parker apparaît à la fin."],
+    m:[], s:"La saison 2 promet Gwen Stacy et Venom." },
+  "Marvel Zombies":{ p:[
+    "Cinq ans après l'épidémie, Kamala Khan, Kate Bishop et Riri Williams survivent à New York.",
+    "En route pour l'Ohio, Kate est tuée par Carol Danvers zombie. **Kate Bishop** meurt.",
+    "Riri se sacrifie pour sauver Kamala. **Riri Williams** meurt.",
+    "Blade Knight conduit les survivants ; Yelena meurt pour leur laisser fuir le Raft. **Yelena Belova** meurt.",
+    "À New Asgard, la reine zombie Wanda contamine les Asgardiens.",
+    "Thor zombie tue Blade ; Hulk tue Thor avant d'être vaincu. **Blade** et **Thor** meurent.",
+    "Wanda absorbe le pouvoir des pierres et convainc Kamala de refaire le monde."],
+    m:["Kate Bishop","Riri Williams","Yelena Belova","Blade","Thor"], s:"Kamala se réveille dans un monde parfait… mais Riri lui révèle que rien n'est réel." },
+  "X-Men '97 S2":{ p:[
+    "Éparpillés dans le temps par Apocalypse, les X-Men tentent de se retrouver.",
+    "Cyclope et Jean restent dans le futur avec leur fils Nathan, qui devient Cable.",
+    "Dans l'Égypte antique, En Sabah Nur devient Apocalypse et tue Magneto. **Magneto** meurt.",
+    "Wolverine revit une mission de l'Arme X qui tourne au désastre.",
+    "Xavier installe l'équipe à Genosha ; Apocalypse ressuscite Gambit comme cavalier.",
+    "Diablo bat Exodus en duel puis est abattu par Graydon Creed. **Diablo** meurt.",
+    "Malicia enferme Apocalypse dans un cristal ; Diablo s'était sacrifié pour sauver Malicia et Gambit."],
+    m:["Magneto","Diablo"], s:"Mystique prend l'apparence de Cooper alors que Graydon Creed est élu président." },
+});
+
 /* ═══════════ NAVIGATION ═══════════ */
 /* Chaque page garde sa position : on revient là où on en était (comme Netflix). Retoucher l'onglet de la page où l'on est ramène en haut. */
 const POS_VUES = {}, oublierPositions = () => Object.keys(POS_VUES).forEach(k => delete POS_VUES[k]);
@@ -9983,11 +10501,12 @@ function allerA(v, versId){
   if(avant && avant !== v && document.getElementById("v-" + avant).classList.contains("on")) POS_VUES[avant] = defileur().scrollTop;
   const memo = versId === undefined && v !== avant ? POS_VUES[v] : undefined;
   if(v === avant || versId !== undefined) delete POS_VUES[v];
+  if(v !== "parcours"){ loupeOuverte = false; recherche = ""; }   // la loupe ne reste pas ouverte d'une visite à l'autre
   vue = v;
   document.body.dataset.vue = v;
   document.querySelectorAll(".vue").forEach(x => x.classList.remove("on"));
   document.getElementById("v-" + v).classList.add("on");
-  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.vue === v || (v === "fonds" && b.dataset.vue === "profil") || (v === "doomsday" && b.dataset.vue === "accueil")));
+  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.vue === v || (v === "fonds" && b.dataset.vue === "profil") ));
   document.getElementById("btn-profil").classList.toggle("on", v === "profil");
   ["v-accueil","v-parcours","v-defis","v-doomsday","v-cartes","v-profil","v-fonds"].forEach(i => { if(i !== "v-" + v) document.getElementById(i).innerHTML = ""; });
   majOnglets();
@@ -10452,6 +10971,7 @@ document.addEventListener("click", e => {
   }
   if(e.target.closest("#btn-tva")){ ouvrirTva(); return; }
   if(e.target.closest("[data-avdoom]")){ ouvrirAvDoom(); return; }
+  const afd = e.target.closest("[data-affdoom]"); if(afd){ ouvrirAffichesDoom(+afd.dataset.affdoom); return; }
   const jeu = e.target.closest("[data-jeu]");
   if(jeu){ try{ localStorage.setItem("mt-dernier-jeu", jeu.dataset.jeu); }catch(x){} ouvrirJeu(jeu.dataset.jeu); return; }
   const tr = e.target.closest("[data-trailer]");
@@ -10630,26 +11150,24 @@ function chiffresAvDoom(){
   return { l, n, reste, pct:l.length ? Math.round(n / l.length * 100) : 0 };
 }
 function ouvrirAvDoom(){
-  const { l, n, reste, pct } = chiffresAvDoom();
+  const { l, n, pct } = chiffresAvDoom(), aff = typeof IMG_AFF_DOOM !== "undefined" && IMG_AFF_DOOM[2] ? img(IMG_AFF_DOOM[2]) : img(IMG_DOOM);
   document.getElementById("avdoom-in").innerHTML = `
-    <div class="ad-tete2">
-      <div class="pc-ligne"><span class="tag-vert">Liste officielle</span><span class="pc-compte" id="ad-n">${n}<i>/${l.length}</i></span></div>
-      <h1 class="titre-l">Avant Doomsday</h1>
-      <p class="ad-info" id="ad-reste">${reste ? "À voir avant le 16 décembre" : "<em>Tu es prêt.</em>"}</p>
-      <span class="filet-prog ad-filet"><i id="ad-filet" style="width:${pct}%"></i></span>
-    </div>
-    <ol class="ad-liste">${l.map((it, k) => `<li class="ad-pas${vusDe(it.id)[it.id] ? " vu" : ""}" data-id="${it.id}" style="--k:${k}">
-      <span class="ad-num">${String(k + 1).padStart(2, "0")}</span>
-      <button class="ad-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy"><span><b>${esc(it.t)}</b>
-        <small>${it.a} · ${typeTitre(it)} · ${fmtDuree(it.d)}${univDe(it.id) === "multi" ? " · Multivers" : ""}</small></span></button>
-      <button class="noeud coche" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button></li>`).join("")}</ol>`;
+    <div class="br6-h"><img src="${aff}" alt=""><div class="br6-t"><p class="k">Avant le 16 décembre</p><h1>Le Briefing</h1></div></div>
+    <div class="br6-p"><span class="br5-bar"><i id="ad-filet" style="width:${pct}%"></i></span><span class="br5-n" id="ad-n">${n}<small>/${l.length}</small></span></div>
+    <div class="v4p br6-l"><ol class="chemin">${l.map((it, k) => `<li class="pas${vusDe(it.id)[it.id] ? " vu" : ""}" data-id="${it.id}" style="animation-delay:${Math.min(k, 10) * 30}ms">
+        <span class="no4">${k + 1}</span>
+        <button class="pas-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy" decoding="async">
+          <span class="pas-txt"><b><span>${esc(it.t)}</span></b><small>${infosTitre(it)}${univDe(it.id) === "multi" ? " · Multivers" : ""}${pastilleNote(it.id)}</small></span></button>
+        <button class="noeud coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button>
+      </li>`).join("")}</ol></div>
+    <div class="fin-page"></div>`;
   ouvrirFeuille("avdoom");
 }
 /* Après une coche : chiffres de la page et du bloc « Ta préparation » à jour, sans tout redessiner. */
 function majAvDoom(){
-  const { l, n, reste, pct } = chiffresAvDoom(), t = reste ? "À voir avant le 16 décembre" : "<em>Tu es prêt.</em>";
+  const { l, n, pct } = chiffresAvDoom();
   const q = id => document.getElementById(id);
-  if(q("ad-n")){ q("ad-n").innerHTML = `${n}<i>/${l.length}</i>`; q("ad-reste").innerHTML = t; q("ad-filet").style.width = pct + "%"; }
+  if(q("ad-n")){ q("ad-n").innerHTML = `${n}<small>/${l.length}</small>`; q("ad-filet").style.width = pct + "%"; }
   if(q("d4-prep")) q("d4-prep").outerHTML = prepDoomHTML();
 }
 
