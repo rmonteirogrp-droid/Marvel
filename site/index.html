@@ -3807,6 +3807,103 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .v4h .ecran-cine{transition:height .35s ease;background:#000}
 .v4h .hero-aff{filter:brightness(.55);transform:none}
 .v4h .ecran-cine:has(video.on) .hero-aff{opacity:0}
+
+/* ══════ V4.6 — Swipe ══════ */
+.sw{display:flex;flex-direction:column;min-height:calc(100 * var(--svh,1vh) - 120px)}
+.sw-mult{font:900 30px/1 var(--rc);color:var(--t4m,#999);transition:color .2s,transform .2s}
+.sw-mult.m2{color:#fff}.sw-mult.m3{color:#ffd23a}.sw-mult.m4{color:var(--a);transform:scale(1.15)}
+.sw-pile{position:relative;flex:1;min-height:360px;display:grid;place-items:center;margin:4px 0 6px}
+.sw-carte{position:relative;width:min(84vw,330px);aspect-ratio:2/3;max-height:58vh;overflow:hidden;background:#111;touch-action:none;user-select:none;-webkit-user-select:none;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%);transition:transform .25s ease,opacity .25s ease;cursor:grab}
+.sw-carte.tenue{transition:none;cursor:grabbing}
+.sw-carte.arrive{animation:swArrive .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes swArrive{from{transform:scale(.88) translateY(14px);opacity:0}}
+.sw-carte img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;pointer-events:none}
+.sw-voile{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.6) 55%,rgba(0,0,0,.95) 100%)}
+.sw-txt{position:absolute;left:18px;right:18px;bottom:22px;margin:0;font:400 21px/1.25 var(--rc);color:#ddd}
+.sw-txt b{font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.01em}
+.sw-tampon{position:absolute;top:22px;padding:4px 12px;font:900 30px/1 var(--rc);text-transform:uppercase;letter-spacing:.06em;border:4px solid;opacity:0;transition:opacity .15s}
+.sw-tampon.v{left:18px;color:#2fd16a;transform:rotate(-12deg)}
+.sw-tampon.f{right:18px;color:var(--a);transform:rotate(12deg)}
+.sw-carte.part-d{transform:translateX(120vw) rotate(24deg) !important;opacity:0}
+.sw-carte.part-g{transform:translateX(-120vw) rotate(-24deg) !important;opacity:0}
+.sw-carte.rate{transition-delay:.45s}
+.sw-aide{min-height:24px;margin:0 0 10px;text-align:center;font:700 17px var(--rc);text-transform:uppercase;letter-spacing:.04em}
+.sw-aide.ok{color:#2fd16a}.sw-aide.non{color:var(--a)}
+.sw-boutons{display:flex;justify-content:center;gap:42px;margin-bottom:12px}
+.sw-b{width:72px;height:72px;border-radius:50%;border:2px solid;background:none;display:grid;place-items:center}
+.sw-b svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.sw-b.faux{color:var(--a)}.sw-b.vrai{color:#2fd16a}
+.sw-b:active{transform:scale(.92)}
+
+/* ══════ V4.6 — Les 6 pierres ══════ */
+.pz-haut{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pz-gant{display:flex;gap:8px}
+.pz-p{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;border:2px solid rgba(255,255,255,.18)}
+.pz-p i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.08)}
+.pz-p.cours{border-color:var(--c)}
+.pz-p.eue{border-color:var(--c);box-shadow:0 0 14px var(--c)}
+.pz-p.eue i{background:var(--c);box-shadow:0 0 10px var(--c)}
+.pz-vies{display:flex;gap:6px}
+.pz-vies i{width:14px;height:14px;background:var(--a);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.pz-vies i.perdue{background:rgba(255,255,255,.15)}
+.pz-vies.secousse{animation:cqSecousse .45s}
+.pz-vers{display:flex;align-items:center;gap:8px;margin:6px 0 14px;font:700 13px var(--rc);text-transform:uppercase;letter-spacing:.1em;color:#fff}
+.pz-vers i{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.pz-vers span{margin-left:auto;color:var(--t4m,#999);letter-spacing:.06em}
+.pz-img{width:120px;aspect-ratio:2/3;margin:0 auto 14px;overflow:hidden;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
+.pz-img img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.pz-question{margin:0 0 8px;font:400 22px/1.25 var(--rc);color:#ddd;text-align:center}
+.pz-question b{color:#fff;font-weight:800;text-transform:uppercase}
+.pz .qz-info{min-height:30px;text-align:center;font-size:22px}
+.qz-info.ok{color:#2fd16a}.qz-info.non{color:var(--a)}
+.pz-choix{display:grid;gap:10px;margin-top:8px}
+.pz-choix button{min-height:54px;padding:10px 16px;background:var(--g4,#1b1b1b);border:0;color:#fff;font:700 16px/1.2 var(--rc);text-transform:uppercase;letter-spacing:.03em;text-align:left;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);transition:background .2s,opacity .2s}
+.pz-choix button.bon{background:#1f9d50}.pz-choix button.faux{background:var(--a)}.pz-choix button.eteint{opacity:.35}
+.pz-intro{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 10px;margin:4px 0 18px}
+.pz-intro span{display:flex;align-items:center;gap:8px;font:700 13px var(--rc);text-transform:uppercase;letter-spacing:.06em;color:#ddd}
+.pz-intro i{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.jeu-records b i{font-style:normal;font-size:.55em;opacity:.6}
+.pz-flash{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--c) 40%,#000),#000 72%);animation:pzFlash .3s ease-out}
+.pz-flash.part{opacity:0;transition:opacity .35s}
+.pz-flash b{font:900 30px/1.05 var(--rc);text-transform:uppercase;text-align:center;color:#fff}
+.pz-flash small{font:700 14px var(--rc);letter-spacing:.14em;color:#ddd}
+.pz-gemme{width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--c) 45%,color-mix(in srgb,var(--c) 60%,#000));box-shadow:0 0 40px var(--c),0 0 90px var(--c);animation:pzGemme 1.5s ease-out}
+@keyframes pzFlash{from{opacity:0}}
+@keyframes pzGemme{0%{transform:scale(.2)}35%{transform:scale(1.18)}60%{transform:scale(1)}}
+.pz-fin .pz-gant{justify-content:center;margin:10px 0 18px}
+.pz-fin .pz-p{width:34px;height:34px}.pz-fin .pz-p i{width:18px;height:18px}
+.pz-blanc{position:fixed;inset:0;z-index:400;background:#fff;pointer-events:none;animation:pzBlanc 1.6s ease-out forwards}
+@keyframes pzBlanc{0%{opacity:0}8%{opacity:1}100%{opacity:0}}
+
+/* ══════ V4.6 — Accueil : titre et bouton posés sur la vidéo, pas de bouton son ══════ */
+.v4h .ecran-cine{height:auto !important;aspect-ratio:16/10;transition:none}
+.v4h .ecran-cine .son{display:none !important}
+.v4h .ecran-cine::after{background:linear-gradient(180deg,rgba(0,0,0,.3) 0%,transparent 20%,transparent 42%,rgba(0,0,0,.7) 72%,#000 100%)}
+.v4h .hero-bas{position:absolute;left:0;right:0;bottom:0;z-index:3;margin:0;padding:0 16px 14px}
+.v4h .h4-titre{margin-top:6px;line-height:.95}
+.h4-titre.t1{font-size:clamp(34px,calc(10.5 * var(--vw)),48px)}
+.h4-titre.t2{font-size:clamp(28px,calc(8.6 * var(--vw)),40px)}
+.h4-titre.t3{font-size:clamp(24px,calc(7.4 * var(--vw)),34px)}
+.h4-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-width:0}
+.h4-lire{width:52px;height:52px}
+.h4-lire svg{width:22px;height:22px}
+#acc-suite{padding-top:10px}
+/* Rails plus fins */
+.rail-aff4 button{flex-basis:92px}
+#v-accueil .h4-sec{font-size:19px}
+#v-accueil .s4{margin-top:20px}
+#v-accueil .s4-tete{margin-bottom:10px}
+
+/* ══════ V4.6 — Doomsday épuré ══════ */
+.d4-tuiles{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.d4-tuiles .cc{display:flex;flex-direction:column;gap:6px;padding:14px 14px 16px;background:var(--g4,#1b1b1b);border-top:3px solid #2bbd62;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%)}
+.d4-tuiles small{font:700 11px var(--rc);letter-spacing:.14em;text-transform:uppercase;color:var(--t4m,#999)}
+.d4-tuiles b{font:900 22px/1 var(--rc);text-transform:uppercase;color:#fff}
+#v-doomsday .rail-ba4 b{font-size:12px;letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -3943,7 +4040,7 @@ const TRAILERS = [
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/13/15/36/20632197_hd_013.mp4", titre:"Teaser · Wakanda et 4 Fantastiques", langue:"VF", vignette:"/m/792959f82eb5ddc5.avif" },
 ];
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/13006dcea8ed2b37.webp", "akinator": "/m/e69e7b85d44000f4.webp", "dossier": "/m/6060eeba44e79f4b.webp", "filmo": "/m/b22ab835778bb3fc.webp", "heros": "/m/07f57a7e4258334d.webp", "ordre": "/m/4d4878bf40541d8d.webp", "qui": "/m/47cc74be789e3325.webp", "quiparle": "/m/0d9ae9143ea5662d.webp", "replique": "/m/7ccb68b27acdc849.webp", "vs": "/m/4adcd19185c2f16a.webp"};
+const IMG_JEUX = {"affiche": "/m/13006dcea8ed2b37.webp", "akinator": "/m/83ec06f5e8c9f996.webp", "dossier": "/m/6060eeba44e79f4b.webp", "filmo": "/m/b22ab835778bb3fc.webp", "heros": "/m/07f57a7e4258334d.webp", "ordre": "/m/4d4878bf40541d8d.webp", "pierres": "/m/4adcd19185c2f16a.webp", "qui": "/m/47cc74be789e3325.webp", "quiparle": "/m/0d9ae9143ea5662d.webp", "replique": "/m/7ccb68b27acdc849.webp", "swipe": "/m/1791ed91a2991927.webp", "uatu": "/m/9a2d41519ad1bcad.webp", "vs": "/m/29660536bbcb4ae7.webp"};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
 const VIDEO_MCU = "/m/2a6ff54e8b058429.mp4";
 /* Son MCU : ouverture puis final de la bande-annonce VF d'Avengers: Infinity War. */
@@ -4722,10 +4819,8 @@ function lancerBA(id, cle){
    (sans les bandes noires incrustées dans la vidéo, en haut/bas comme sur les côtés), puis on agrandit la vidéo
    pour que cette zone remplisse tout l'écran. Plusieurs mesures, gardées pour toute la session. */
 function cadrerBA(v, zone){
-  const box = v.parentNode, W = box.clientWidth, vw = v.videoWidth, vh = v.videoHeight; let H = box.clientHeight; if(!W || !H || !vw) return;
-  const z = zone || { x:0, y:0, w:vw, h:vh }, acc = !!box.closest(".v4h");
-  if(acc){ H = Math.round(Math.min(W * 9 / 16, Math.max(W / 2.4, W * z.h / z.w))); box.style.height = H + "px"; box.style.aspectRatio = "auto"; }   // accueil : le cadre épouse l'image, sans bandes floues
-  const s = acc ? Math.min(W / z.w, H / z.h) : Math.max(W / z.w, H / z.h);   // accueil : l'image entière, jamais agrandie
+  const box = v.parentNode, W = box.clientWidth, H = box.clientHeight, vw = v.videoWidth, vh = v.videoHeight; if(!W || !H || !vw) return;
+  const z = zone || { x:0, y:0, w:vw, h:vh }, s = Math.max(W / z.w, H / z.h);   // l'image remplit le cadre (bandes noires de la vidéo retirées), sans bandes floues
   Object.assign(v.style, { objectFit:"fill", right:"auto", bottom:"auto", width:vw * s + "px", height:vh * s + "px",
     left:(W / 2 - (z.x + z.w / 2) * s) + "px", top:(H / 2 - (z.y + z.h / 2) * s) + "px" });
 }
@@ -5241,9 +5336,10 @@ function majAccueil(complet){
   if(aff && it){ const src = affiche(it); if(aff.getAttribute("src") !== src) aff.src = src; }
   const lire = plexCle(it);
   h.innerHTML = it ? `<div class="h4-ligne"><button class="h4-film" data-fiche="${it.id}"><span class="k">${it.k === "film" ? "Film" : "Série"}</span>
-      <span class="h4-titre${it.t.length > 18 ? " long" : ""}">${esc(it.t)}${lire ? "" : `<i class="chev4"></i>`}</span></button>
+      <span class="h4-titre ${it.t.length > 22 ? "t3" : it.t.length > 12 ? "t2" : "t1"}"><span class="h4-t">${esc(it.t)}</span>${lire ? "" : `<i class="chev4"></i>`}</span></button>
       ${lire ? `<button class="h4-lire" data-film="${it.id}" aria-label="Lancer le film">${SVG.jouer}</button>` : ""}</div>`
     : `<p class="k">${univers === "mcu" ? "MCU" : "Multivers"}</p><h2 class="h4-titre">Tout est vu</h2>`;
+  const tt = h.querySelector(".h4-t"); if(tt) requestAnimationFrame(() => ajusterTitre(tt));
   const e = ici().vus;
   const cartes = [];
   if(univers === "mcu"){
@@ -5261,6 +5357,12 @@ function majAccueil(complet){
       <div class="sorties4">${cartes.map(c => `<button class="sortie4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><img src="${c.aff}" alt=""><span><b>${esc(c.t)}</b><small>${c.d}</small></span>${c.tag ? `<em>J-${c.tag}</em>` : ""}</button>`).join("")}</div></section>` : ""}
     ${groupes}`;
   rendreReprendre();
+}
+/* Titre du bandeau : jamais plus de deux lignes, la police rapetisse si besoin. */
+function ajusterTitre(el){
+  el.style.fontSize = ""; let t = parseFloat(getComputedStyle(el).fontSize);
+  const lignes = () => el.scrollHeight / (parseFloat(getComputedStyle(el).lineHeight) || t);   // la ligne a sa hauteur réelle (lettres qui dépassent comprises)
+  while(lignes() > 2.4 && t > 20){ t -= 2; el.style.fontSize = t + "px"; }
 }
 function lancerVideoAccueil(){ lancerVideo("hero-video", univers === "mcu" ? VIDEO_MCU : VIDEO_MULTI, univers); }
 
@@ -5356,14 +5458,7 @@ function majParcours(){
 
 /* ═══════════ DOOMSDAY ═══════════ */
 /* Doomsday : l'affiche de Fatalis, le compte à rebours, la préparation (une seule entrée vers Avant Doomsday),
-   le film en bref, les bandes-annonces, puis ce qu'on sait. */
-const INFOS_DOOM = [
-  "Robert Downey Jr. revient dans le MCU, cette fois dans la peau de Victor von Doom.",
-  "Les frères Russo, réalisateurs d'Infinity War et d'Endgame, sont aux commandes.",
-  "Steve Rogers (Chris Evans) fait son retour dans les bandes-annonces.",
-  "Les X-Men des films Fox reviennent : Patrick Stewart, Ian McKellen, James Marsden, Alan Cumming, Rebecca Romijn, Kelsey Grammer.",
-  "Les 4 Fantastiques et les Thunderbolts rejoignent les Avengers.",
-  "La suite directe, Avengers: Secret Wars, est prévue pour décembre 2027."];
+   les bandes-annonces, puis le film en quatre cases. */
 function rendreDoomsday(){
   const ba = TRAILERS.map((t, n) => [t, n]).filter(([t]) => t.langue === "VF");
   document.getElementById("v-doomsday").innerHTML = `
@@ -5371,14 +5466,10 @@ function rendreDoomsday(){
       <div class="d4h-in"><p class="k">Au cinéma le 16 décembre 2026</p><h1 class="d4-titre">Avengers :<br><em>Doomsday</em></h1></div></section>
     <div class="cd4">${[["j", "Jours"], ["h", "Heures"], ["m", "Min"], ["s", "Sec"]].map(([k, t]) => `<div class="cc"><b data-cr="${k}">--</b><small>${t}</small></div>`).join("")}</div>
     ${prepDoomHTML()}
-    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Le film</h2></div>
-      <p class="d4-syn">Fatalis menace tout le multivers. Avengers, Wakandais, Thunderbolts, 4 Fantastiques et X-Men vont devoir s'unir face à lui.</p>
-      <div class="d4-fiche"><div><span>Réalisation</span><b>Anthony et Joe Russo</b></div><div><span>Sortie</span><b>16 décembre 2026</b></div>
-        <div><span>Le méchant</span><b>Fatalis</b></div><div><span>La suite</span><b>Secret Wars · 2027</b></div></div></section>
-    ${ba.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Bandes-annonces<i>${ba.length}</i></h2></div>
+    ${ba.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Bandes-annonces</h2></div>
       <div class="rail-h rail-ba4">${ba.map(([t, n]) => `<button class="ba4" data-trailer="${n}"><img src="${img(t.vignette)}" alt=""><span class="ba4-j">${SVG.jouer}</span><b>${esc(t.titre.replace(/^Teaser/i, "Bande-annonce"))}</b></button>`).join("")}</div></section>` : ""}
-    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Ce qu'on sait</h2></div>
-      <ul class="d4-infos">${INFOS_DOOM.map(t => `<li>${esc(t)}</li>`).join("")}</ul></section>
+    <section class="s4"><div class="s4-tete"><h2 class="h4-sec">Le film</h2></div>
+      <div class="d4-tuiles">${[["Réalisation", "Frères Russo"], ["Sortie", "16 déc. 2026"], ["Méchant", "Fatalis"], ["Suite", "Secret Wars"]].map(([k, v]) => `<div class="cc"><small>${k}</small><b>${v}</b></div>`).join("")}</div></section>
     <div class="fin-page"></div>`;
 }
 function prepDoomHTML(){
@@ -6006,14 +6097,16 @@ function listeJeux(){
   return [
     ["heros", "Héros en mémoire", "Cite un max de héros en 3 minutes", "Wolverine", Math.max(r.chrono, r.libre)],
     ["qui", "Qui est-ce ?", "15 visages à reconnaître", "Doctor Strange", q.chrono ? q.chrono + sur("/15") : (q.libre ? fmtChrono(q.libre * 100) : 0)],
-    ["vs", "Qui gagne ?", "Deux légendes, un seul vainqueur", "Thanos", v.record],
+    ["vs", "Qui gagne ?", "Deux légendes, un seul vainqueur", "Hulk", v.record],
     ["affiche", "Devine l'affiche", "L'affiche se dévoile peu à peu", "Spider-Man", recordsDe("affiche").record + sur(" pts")],
     ["ordre", "Dans l'ordre", "Remets les films dans l'ordre", "Captain America", recordsDe("ordre").record + sur("/8")],
     ["replique", "Qui a dit ça ?", "Une réplique culte, quatre suspects", "Loki", recordsDe("replique").record + sur(" pts")],
     typeof QP_CLIPS !== "undefined" && ["quiparle", "Qui parle ?", "Reconnais la voix en VF", "Nick Fury", recordsDe("quiparle").record + sur(" pts")],
     typeof DOSSIER !== "undefined" && ["dossier", "Dossier classifié", "Déclassifie la fiche en une minute", "Black Widow", recordsDe("dossier").record + sur("%")],
     typeof FILMO !== "undefined" && ["filmo", "Filmographie", "Toutes ses apparitions à l'écran", "Iron Man", recordsDe("filmo").record + sur(" pts")],
-    typeof AKI_T !== "undefined" && ["akinator", "Le Gardien", "Uatu lit dans ton esprit", "Vision", recordsAki().record + sur(" q.")],
+    typeof AKI_T !== "undefined" && ["akinator", "Le Gardien", "Uatu lit dans ton esprit", "Uatu", recordsAki().record + sur(" q.")],
+    typeof SW !== "undefined" && ["swipe", "Swipe", "Vrai ou faux en 60 secondes", "Quicksilver", recordsDe("swipe").record + sur(" pts")],
+    typeof PZ !== "undefined" && ["pierres", "Les 6 pierres", "Survie : réunis les pierres d'infinité", "Thanos", recordsDe("pierres").record + sur("/18")],
   ].filter(Boolean).map(([id, nom, accroche, perso, rec]) => { const i = indexDe(perso);
     return { id, nom, accroche, rec, img:typeof IMG_JEUX !== "undefined" && IMG_JEUX[id] ? img(IMG_JEUX[id]) : i !== undefined && aPhoto(i) ? photo(i) : "" }; });
 }
@@ -7751,6 +7844,8 @@ const AKI_REP = [["oui", 1, "Oui"], ["non", 0, "Non"], ["pr", .75, "Probablement
 const etatAki = c => { const a = document.querySelector(".ak"); if(a) ["propose", "qui"].forEach(k => a.classList.toggle(k, k === c)); };
 const sansCoupure = t => esc(t).replace(/\S*-\S+/g, m => `<span class="nw">${m}</span>`);
 const AKI_MAX = 40, AKI_UATU = 206;
+/* Uatu dessiné (même illustration que la tuile du jeu), photo du film en secours. */
+const imgUatu = () => typeof IMG_JEUX !== "undefined" && IMG_JEUX.uatu ? img(IMG_JEUX.uatu) : photo(AKI_UATU);
 const recordsAki = () => { const r = recordsDe("akinator"); r.trouves = r.trouves || 0; r.victoires = r.victoires || 0; r.appris = r.appris || {}; return r; };
 /* Traits d'un personnage : la base, les traits calculés depuis ses apparitions, puis ce que le Gardien a appris des parties perdues. */
 const TRAITS_AKI = {};
@@ -7807,7 +7902,7 @@ function introAki(){
   const r = recordsAki();
   document.getElementById("jeu-in").innerHTML = `
     <div class="jeu-intro ak-intro">
-      <div class="ak-oeil grand"><span class="ak-halo"></span><img src="${photo(AKI_UATU)}" alt=""></div>
+      <div class="ak-oeil grand"><span class="ak-halo"></span><img src="${imgUatu()}" alt=""></div>
       <p class="surtitre vert">${etiquetteDefi(10)}</p><h2 class="fiche-titre">Le Gardien</h2>
       <p class="resume">Pense à un personnage Marvel : héros, méchant, dieu, mutant ou simple humain. Uatu, le Gardien qui observe toutes les réalités, va lire dans ton esprit en te posant des questions. Arriveras-tu à lui échapper ?</p>
       <div class="jeu-records"><div><b>${r.trouves}</b><span>Fois deviné</span></div><div><b>${r.victoires}</b><span>Fois battu</span></div></div>
@@ -7822,7 +7917,7 @@ function lancerAki(){
     <div class="ak">
       <div class="qz-haut"><span class="surtitre" id="ak-num">Question 1</span><span class="ak-jauge"><i id="ak-jauge"></i></span></div>
       <div class="ak-scene">
-        <div class="ak-oeil" id="ak-oeil"><span class="ak-halo"></span><img src="${photo(AKI_UATU)}" alt=""></div>
+        <div class="ak-oeil" id="ak-oeil"><span class="ak-halo"></span><img src="${imgUatu()}" alt=""></div>
         <div class="ak-bulle" id="ak-bulle"></div>
       </div>
       <div class="ak-zone" id="ak-zone"></div>
@@ -7935,7 +8030,7 @@ function finAki(trouve, qui = null){
   document.getElementById("jeu-in").innerHTML = `
     <div class="jeu-fin ak-fin">
       <p class="surtitre">${trouve ? "Le Gardien voit tout" : battu ? "Tu as battu le Gardien" : "Le Gardien n'est pas dupe"}</p>
-      ${i !== null && i !== undefined ? `<span class="ak-carte fin">${carteHTML(i, { etat:"face" })}</span>` : `<div class="ak-oeil"><span class="ak-halo"></span><img src="${photo(AKI_UATU)}" alt=""></div>`}
+      ${i !== null && i !== undefined ? `<span class="ak-carte fin">${carteHTML(i, { etat:"face" })}</span>` : `<div class="ak-oeil"><span class="ak-halo"></span><img src="${imgUatu()}" alt=""></div>`}
       <div class="jeu-final"><b>${n}</b><span>question${n > 1 ? "s" : ""}${trouve ? " pour te démasquer" : battu ? " sans te trouver" : ""}</span></div>
       <p class="meta">${trouve ? (n <= 10 ? "Trop facile pour un être qui voit toutes les réalités." : n <= 20 ? "Tu lui as donné du fil à retordre." : "Il a dû fouiller tout le multivers pour te trouver.")
         : battu ? `${esc(PERSOS[i][0])} t'a caché à ses yeux. Il s'en souviendra la prochaine fois.`
@@ -7962,9 +8057,280 @@ document.getElementById("jeu").addEventListener("click", e => {
 });
 /* Fond de la tuile sur la page Défis : l'œil du Gardien et des points d'interrogation qui flottent. */
 function fondAki(){
-  return `<span class="defi-fond df-ak" aria-hidden="true"><span class="df-ak-oeil"><img src="${photo(AKI_UATU)}" alt=""></span>
+  return `<span class="defi-fond df-ak" aria-hidden="true"><span class="df-ak-oeil"><img src="${imgUatu()}" alt=""></span>
     ${[14, 44, 22, 52, 8].map((y, k) => `<i style="--k:${k};--y:${y}%">?</i>`).join("")}</span>`;
 }
+
+/* ── Défis 11 et 12 : Swipe, Les 6 pierres ── */
+Object.assign(THEME_DEFI, { 11:"Vrai ou faux", 12:"Survie" });
+/* Matière commune : films (MCU + Multivers), personnages connus avec leur interprète et leurs apparitions. */
+const acteurDe = i => { const a = (interpretes(i) || "").split(", ")[0]; return a && !/^Voix/i.test(a) ? a : ""; };
+const PERSOS_JEU = () => (PERSOS_JEU.l = PERSOS_JEU.l || PERSOS.map((p, i) => i).filter(i => aPhoto(i) && acteurDe(i) && apparitions(i).length >= 3));
+const celebres = n => PERSOS_JEU().filter(i => apparitions(i).length >= n);
+const filmsSans = i => { const a = new Set(apparitions(i).map(x => x.t)); return FILMS_JEU().filter(f => !a.has(f.t)); };
+const fmtH = m => Math.floor(m / 60) + " h " + String(m % 60).padStart(2, "0");
+
+/* ════════ SWIPE : vrai ou faux en 60 secondes ════════ */
+/* Une affirmation par carte : glisse à droite si c'est vrai, à gauche si c'est faux.
+   Les bonnes réponses d'affilée font monter le multiplicateur (×2, ×3, ×4) ; une erreur le remet à ×1. */
+const SW = { score:0, serie:0, bons:0, total:0, ecoule:0, t0:0, carte:null, attente:false, faites:new Set() };
+const SW_DUREE = 60000;
+const multSW = s => s >= 10 ? 4 : s >= 6 ? 3 : s >= 3 ? 2 : 1;
+const AFFIRMATIONS = [
+  () => { const i = auHasard(celebres(4)), vrai = Math.random() < .5, f = vrai ? auHasard(apparitions(i).filter(x => !x.court)) : auHasard(filmsSans(i));
+    return f && { cle:"a" + i + f.id, img:photo(i), txt:`<b>${esc(PERSOS[i][0])}</b> apparaît dans <b>${esc(f.t)}</b>`, vrai,
+      aide:vrai ? "" : `${esc(PERSOS[i][0])} n'est pas dans ce film` }; },
+  () => { const l = celebres(3), i = auHasard(l), vrai = Math.random() < .5, j = auHasard(l.filter(k => acteurDe(k) !== acteurDe(i)));
+    return { cle:"j" + i + (vrai ? "" : j), img:photo(i), txt:`<b>${esc(acteurDe(vrai ? i : j))}</b> joue <b>${esc(PERSOS[i][0])}</b>`, vrai,
+      aide:vrai ? "" : `C'est ${esc(acteurDe(i))}` }; },
+  () => { const f = auHasard(FILMS_JEU()), vrai = Math.random() < .5, a = +f.a + (vrai ? 0 : auHasard([-3, -2, -1, 1, 2, 3]));
+    return a <= 2026 && { cle:"y" + f.id + a, img:affiche(f), txt:`<b>${esc(f.t)}</b> est sorti en <b>${a}</b>`, vrai, aide:vrai ? "" : `Sorti en ${+f.a}` }; },
+  () => { const f = auHasard(FILMS_JEU()), g = auHasard(FILMS_JEU().filter(x => +x.a !== +f.a));
+    return g && { cle:"b" + f.id + g.id, img:affiche(f), txt:`<b>${esc(f.t)}</b> est sorti avant <b>${esc(g.t)}</b>`, vrai:+f.a < +g.a, aide:`${f.a} contre ${g.a}` }; },
+  () => { const f = auHasard(FILMS_JEU().filter(x => x.d && Math.abs(x.d - 120) >= 8));
+    return f && { cle:"d" + f.id, img:affiche(f), txt:`<b>${esc(f.t)}</b> dure plus de <b>2 heures</b>`, vrai:f.d > 120, aide:`Il dure ${fmtH(f.d)}` }; },
+];
+function nouvelleAffirmation(){
+  for(let k = 0; k < 40; k++){
+    let a; try{ a = auHasard(AFFIRMATIONS)(); }catch(e){ a = null; }
+    if(a && !SW.faites.has(a.cle)){ SW.faites.add(a.cle); return a; }
+  }
+  return AFFIRMATIONS[3]() || AFFIRMATIONS[1]();
+}
+function introSwipe(){
+  const r = recordsDe("swipe");
+  document.getElementById("jeu-in").innerHTML = `
+    <div class="jeu-intro">
+      <p class="surtitre vert">${etiquetteDefi(11)}</p><h2 class="fiche-titre">Swipe</h2>
+      <p class="resume">60 secondes, une affirmation par carte. Glisse à droite si c'est vrai, à gauche si c'est faux. Enchaîne les bonnes réponses pour faire grimper le multiplicateur jusqu'à ×4.</p>
+      <div class="jeu-records"><div><b>${r.record}</b><span>Record</span></div></div>
+      ${paliersHTML("swipe")}
+      <button class="btn btn-blanc large" data-jouer>Commencer</button>
+    </div>`;
+}
+function lancerSwipe(){
+  Object.assign(SW, { score:0, serie:0, bons:0, total:0, ecoule:0, t0:Date.now(), attente:false, faites:new Set() });
+  JEU.actif = true; JEU.partie++;
+  document.getElementById("jeu-in").innerHTML = `
+    <div class="sw">
+      <div class="qz-haut"><span class="sw-mult" id="sw-mult">×1</span><span class="qz-score"><b id="sw-score">0</b><small>pts</small></span></div>
+      <span class="qz-barre"><i id="sw-barre"></i></span>
+      <div class="sw-pile" id="sw-pile"></div>
+      <p class="sw-aide" id="sw-aide"></p>
+      <div class="sw-boutons"><button class="sw-b faux" data-sw="0" aria-label="Faux"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="sw-b vrai" data-sw="1" aria-label="Vrai"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l5 5L19.5 7"/></svg></button></div>
+      <button class="lien jeu-stop" data-sw-abandon>Abandonner</button>
+    </div>`;
+  carteSwipe();
+  clearInterval(JEU.minuterie); let dernier = Date.now();
+  JEU.minuterie = setInterval(() => {
+    const n = Date.now(), dt = n - dernier; dernier = n;
+    if(!JEU.actif) return clearInterval(JEU.minuterie);
+    if(JEU.pause) return;
+    SW.ecoule += dt;
+    const r = Math.max(0, SW_DUREE - SW.ecoule), b = document.getElementById("sw-barre");
+    if(b){ b.style.transform = `scaleX(${r / SW_DUREE})`; b.classList.toggle("urgent", r < 10000); }
+    if(r <= 0) finSwipe();
+  }, 100);
+}
+function carteSwipe(){
+  const a = SW.carte = nouvelleAffirmation(); SW.attente = false;
+  const pile = document.getElementById("sw-pile"); if(!pile) return;
+  pile.innerHTML = `<div class="sw-carte arrive" id="sw-carte"><img src="${a.img}" alt="" draggable="false"><span class="sw-voile"></span>
+    <p class="sw-txt">${a.txt}</p><span class="sw-tampon v">Vrai</span><span class="sw-tampon f">Faux</span></div>`;
+  glisserCarte(document.getElementById("sw-carte"));
+}
+/* Glisser la carte au doigt : elle penche, le tampon Vrai/Faux apparaît, au-delà de 90 px elle part. */
+function glisserCarte(c){
+  let x0 = null, dx = 0;
+  const bouge = x => { dx = x - x0; c.style.transform = `translateX(${dx}px) rotate(${dx / 18}deg)`;
+    c.querySelector(".v").style.opacity = Math.max(0, Math.min(1, dx / 80)); c.querySelector(".f").style.opacity = Math.max(0, Math.min(1, -dx / 80)); };
+  c.addEventListener("pointerdown", e => { if(SW.attente) return; x0 = e.clientX; dx = 0; c.setPointerCapture(e.pointerId); c.classList.add("tenue"); e.stopPropagation(); });
+  c.addEventListener("pointermove", e => { if(x0 !== null) bouge(e.clientX); });
+  const lache = () => { if(x0 === null) return; x0 = null; c.classList.remove("tenue");
+    if(Math.abs(dx) > 90) repondreSwipe(dx > 0);
+    else { c.style.transform = ""; c.querySelectorAll(".sw-tampon").forEach(t => t.style.opacity = ""); } };
+  c.addEventListener("pointerup", lache); c.addEventListener("pointercancel", lache);
+}
+function repondreSwipe(dit){
+  if(SW.attente || !JEU.actif || JEU.pause) return;
+  SW.attente = true;
+  const a = SW.carte, ok = dit === a.vrai, c = document.getElementById("sw-carte"), partie = JEU.partie;
+  SW.total++;
+  if(ok){ SW.serie++; SW.bons++; SW.score += 100 * multSW(SW.serie); jouerPierre(1 + Math.min(SW.serie, 15) * .02); if(navigator.vibrate) navigator.vibrate(10); }
+  else { SW.serie = 0; jouerErreur(true); if(navigator.vibrate) navigator.vibrate([30, 30, 40]); }
+  const sc = document.getElementById("sw-score"); sc.textContent = SW.score; if(ok){ sc.classList.remove("monte"); void sc.offsetWidth; sc.classList.add("monte"); }
+  const m = document.getElementById("sw-mult"), mu = multSW(SW.serie); m.textContent = "×" + mu; m.className = "sw-mult m" + mu;
+  const aide = document.getElementById("sw-aide");
+  aide.className = "sw-aide " + (ok ? "ok" : "non"); aide.innerHTML = ok ? `+${100 * mu}` : `${a.vrai ? "C'était vrai" : "C'était faux"}${a.aide ? " · " + a.aide : ""}`;
+  c.classList.add(dit ? "part-d" : "part-g", ok ? "juste" : "rate"); c.querySelector(dit ? ".v" : ".f").style.opacity = 1;
+  setTimeout(() => { if(encore(partie)) carteSwipe(); }, ok ? 320 : 900);
+}
+function finSwipe(){
+  if(!JEU.actif) return;
+  JEU.actif = false; clearInterval(JEU.minuterie);
+  const r = recordsDe("swipe"), record = SW.score > r.record;
+  r.record = Math.max(r.record, SW.score); r.parties++; sauver();
+  document.getElementById("jeu-in").innerHTML = `
+    <div class="jeu-fin">
+      <p class="surtitre">Temps écoulé</p>
+      <div class="jeu-final"><b>${SW.score}</b><span>points · ${SW.bons} / ${SW.total} bonnes réponses</span></div>
+      ${record && SW.score ? `<p class="jeu-record">Nouveau record</p>` : `<p class="meta">Record : ${r.record}</p>`}
+      ${recompenser("swipe", SW.score, record && SW.score > 0)}
+      <button class="btn btn-blanc large" data-jouer>Rejouer</button>
+      <button class="lien" data-intro-jeu style="margin-top:10px">Retour</button>
+    </div>`;
+  document.getElementById("jeu").scrollTo({ top:0 });
+  if(record && SW.score){ jouerSon("fete", SON_FETE, .8, 4500); if(navigator.vibrate) navigator.vibrate([30, 60, 40]); }
+  if(vue === "defis") rendreDefis();
+}
+
+/* ════════ LES 6 GEMMES : survie ════════ */
+/* Trois vies, des questions de plus en plus dures. Trois bonnes réponses = une pierre d'infinité.
+   Les six pierres réunies : le claquement. */
+const GEMMES = [["Espace", "de l'Espace", "#3d7dff"], ["Esprit", "de l'Esprit", "#ffd23a"], ["Réalité", "de la Réalité", "#ff3346"], ["Pouvoir", "du Pouvoir", "#a855ff"], ["Temps", "du Temps", "#2fd16a"], ["Âme", "de l'Âme", "#ff8a1f"]];
+const PZ = { vies:3, bons:0, pierres:0, q:null, attente:false, t0:0, ecoule:0, faites:new Set() };
+const PZ_PAR_PIERRE = 3, PZ_TEMPS = 15000;
+const choixDe = (bon, autres) => { const l = melange([bon, ...melange(autres).slice(0, 3)]); return { choix:l, bon:l.indexOf(bon) }; };
+/* Générateurs par difficulté (0 = facile … 2 = difficile). */
+const QUESTIONS_PZ = {
+  visage:d => { const l = celebres(d ? 4 : 8), i = auHasard(l);
+    return { cle:"v" + i, q:"Qui est-ce ?", img:photo(i), ...choixDe(PERSOS[i][0], l.filter(k => k !== i).map(k => PERSOS[k][0])) }; },
+  acteur:d => { const l = celebres(d === 0 ? 8 : d === 1 ? 5 : 3), i = auHasard(l);
+    return { cle:"j" + i, q:`Qui joue <b>${esc(PERSOS[i][0])}</b> ?`, img:photo(i), ...choixDe(acteurDe(i), [...new Set(l.map(acteurDe))].filter(a => a !== acteurDe(i))) }; },
+  annee:d => { const f = auHasard(FILMS_JEU()), y = +f.a, pas = d >= 2 ? 1 : 2, a = new Set();
+    for(const o of melange([-3, -2, -1, 1, 2, 3])){ const v = y + pas * o; if(v <= 2026 && a.size < 3) a.add(v); }
+    return a.size === 3 && { cle:"y" + f.id, q:`En quelle année est sorti <b>${esc(f.t)}</b> ?`, img:affiche(f), ...choixDe(String(y), [...a].map(String)) }; },
+  dansquel:d => { const i = auHasard(celebres(d ? 3 : 6)), vrais = apparitions(i).filter(x => FILMS_JEU().includes(x)), f = auHasard(vrais);
+    return f && { cle:"q" + i, q:`Dans quel film apparaît <b>${esc(PERSOS[i][0])}</b> ?`, img:photo(i), ...choixDe(f.t, filmsSans(i).map(x => x.t)) }; },
+  premier:d => { const ecart = d >= 2 ? 1 : 3, l = melange(FILMS_JEU()), pris = [];
+    for(const f of l){ if(pris.every(g => Math.abs(g.a - f.a) >= ecart)) pris.push(f); if(pris.length === 4) break; }
+    if(pris.length < 4) return null;
+    const p = pris.reduce((m, f) => +f.a < +m.a ? f : m);
+    return { cle:"p" + pris.map(f => f.id).join(), q:"Lequel est sorti <b>en premier</b> ?", ...choixDe(p.t, pris.filter(f => f !== p).map(f => f.t)) }; },
+};
+const TYPES_PZ = [["acteur", "annee", "premier"], ["acteur", "dansquel", "premier", "annee"], ["dansquel", "premier", "annee", "acteur"]];
+function questionPZ(){
+  const d = PZ.pierres < 2 ? 0 : PZ.pierres < 4 ? 1 : 2;
+  for(let k = 0; k < 40; k++){
+    let q; try{ q = QUESTIONS_PZ[auHasard(TYPES_PZ[d])](d); }catch(e){ q = null; }
+    if(q && q.choix.length === 4 && new Set(q.choix).size === 4 && !PZ.faites.has(q.cle)){ PZ.faites.add(q.cle); return q; }
+  }
+  return QUESTIONS_PZ.annee(0) || QUESTIONS_PZ.visage(0);
+}
+const gantHTML = () => `<div class="pz-gant">${GEMMES.map(([n, , c], k) => `<span class="pz-p${k < PZ.pierres ? " eue" : k === PZ.pierres ? " cours" : ""}" style="--c:${c}" title="${n}"><i></i></span>`).join("")}</div>`;
+function introPierres(){
+  const r = recordsDe("pierres");
+  document.getElementById("jeu-in").innerHTML = `
+    <div class="jeu-intro">
+      <p class="surtitre vert">${etiquetteDefi(12)}</p><h2 class="fiche-titre">Les 6 pierres</h2>
+      <p class="resume">Trois vies, des questions de plus en plus dures. Trois bonnes réponses te donnent une pierre d'infinité. Réunis les six pour claquer des doigts.</p>
+      <div class="pz-intro">${GEMMES.map(([n, , c]) => `<span style="--c:${c}"><i></i>${n}</span>`).join("")}</div>
+      <div class="jeu-records"><div><b>${r.record}<i>/18</i></b><span>Record</span></div><div><b>${r.claquements || 0}</b><span>Claquements</span></div></div>
+      ${paliersHTML("pierres")}
+      <button class="btn btn-blanc large" data-jouer>Commencer</button>
+    </div>`;
+}
+function lancerPierres(){
+  Object.assign(PZ, { vies:3, bons:0, pierres:0, attente:false, faites:new Set() });
+  JEU.actif = true; JEU.partie++;
+  document.getElementById("jeu-in").innerHTML = `
+    <div class="pz">
+      <div class="pz-haut"><div id="pz-gant"></div><span class="pz-vies" id="pz-vies"></span></div>
+      <span class="qz-barre"><i id="pz-barre"></i></span>
+      <div id="pz-q"></div>
+      <button class="lien jeu-stop" data-pz-abandon>Abandonner</button>
+    </div>`;
+  ecranPZ();
+  clearInterval(JEU.minuterie); let dernier = Date.now();
+  JEU.minuterie = setInterval(() => {
+    const n = Date.now(), dt = n - dernier; dernier = n;
+    if(!JEU.actif) return clearInterval(JEU.minuterie);
+    if(JEU.pause || PZ.attente) return;
+    PZ.ecoule += dt;
+    const r = Math.max(0, PZ_TEMPS - PZ.ecoule), b = document.getElementById("pz-barre");
+    if(b){ b.style.transform = `scaleX(${r / PZ_TEMPS})`; b.classList.toggle("urgent", r < 4000); }
+    if(r <= 0) repondrePZ(-1);
+  }, 100);
+}
+function majHautPZ(){
+  document.getElementById("pz-gant").innerHTML = gantHTML();
+  document.getElementById("pz-vies").innerHTML = [0, 1, 2].map(k => `<i class="${k < PZ.vies ? "" : "perdue"}"></i>`).join("");
+}
+function ecranPZ(){
+  const q = PZ.q = questionPZ(); PZ.attente = false; PZ.ecoule = 0;
+  majHautPZ();
+  const reste = PZ_PAR_PIERRE - PZ.bons % PZ_PAR_PIERRE, [, nom, c] = GEMMES[PZ.pierres];
+  document.getElementById("pz-q").innerHTML = `
+    <p class="pz-vers" style="--c:${c}"><i></i>Pierre ${nom}<span>encore ${reste}</span></p>
+    ${q.img ? `<div class="pz-img"><img src="${q.img}" alt=""></div>` : ""}
+    <h3 class="pz-question">${q.q}</h3>
+    <p class="qz-info" id="pz-info"></p>
+    <div class="pz-choix">${q.choix.map((t, k) => `<button data-pz="${k}">${esc(t)}</button>`).join("")}</div>`;
+}
+function repondrePZ(k){
+  if(PZ.attente || !JEU.actif || JEU.pause) return;
+  PZ.attente = true;
+  const q = PZ.q, ok = k === q.bon, partie = JEU.partie;
+  document.querySelectorAll("[data-pz]").forEach(b => { const i = +b.dataset.pz; b.classList.add(i === q.bon ? "bon" : i === k ? "faux" : "eteint"); b.disabled = true; });
+  const info = document.getElementById("pz-info");
+  let pierre = false;
+  if(ok){
+    PZ.bons++; jouerPierre(1 + PZ.bons * .015); if(navigator.vibrate) navigator.vibrate(12);
+    if(PZ.bons % PZ_PAR_PIERRE === 0){ PZ.pierres++; pierre = true; }
+    info.className = "qz-info ok"; info.textContent = "Bien vu";
+  } else {
+    PZ.vies--; jouerErreur(false); if(navigator.vibrate) navigator.vibrate([40, 30, 60]);
+    info.className = "qz-info non"; info.textContent = k < 0 ? "Temps écoulé" : "Raté";
+    document.getElementById("pz-vies").classList.add("secousse");
+  }
+  majHautPZ();
+  setTimeout(() => {
+    if(!encore(partie)) return;
+    if(PZ.pierres >= 6) return finPierres(true);
+    if(PZ.vies <= 0) return finPierres(false);
+    if(pierre) return pierreGagnee(PZ.pierres - 1);
+    ecranPZ();
+  }, ok ? 900 : 1700);
+}
+/* Une pierre gagnée : l'écran prend sa couleur, la pierre vient se loger dans le gant. */
+function pierreGagnee(k){
+  const [, nom, c] = GEMMES[k], partie = JEU.partie;
+  const el = document.createElement("div"); el.className = "pz-flash"; el.style.setProperty("--c", c);
+  el.innerHTML = `<span class="pz-gemme"></span><b>Pierre ${nom}</b><small>${k + 1} / 6</small>`;
+  document.getElementById("jeu").appendChild(el);
+  jouerCourt("succes", .8, 1.25); if(navigator.vibrate) navigator.vibrate([20, 40, 30]);
+  setTimeout(() => { el.classList.add("part"); setTimeout(() => el.remove(), 400); if(encore(partie)) ecranPZ(); }, 1500);
+}
+function finPierres(claque){
+  if(!JEU.actif) return;
+  JEU.actif = false; clearInterval(JEU.minuterie);
+  const r = recordsDe("pierres"), record = PZ.bons > r.record;
+  r.record = Math.max(r.record, PZ.bons); r.parties++; if(claque) r.claquements = (r.claquements || 0) + 1; sauver();
+  document.getElementById("jeu-in").innerHTML = `
+    <div class="jeu-fin pz-fin${claque ? " claque" : ""}">
+      <p class="surtitre">${claque ? "Claquement !" : "Plus de vies"}</p>
+      ${gantHTML()}
+      <div class="jeu-final"><b>${PZ.pierres}<i>/6</i></b><span>pierre${PZ.pierres > 1 ? "s" : ""} · ${PZ.bons} bonne${PZ.bons > 1 ? "s" : ""} réponse${PZ.bons > 1 ? "s" : ""}</span></div>
+      ${record && PZ.bons ? `<p class="jeu-record">Nouveau record</p>` : `<p class="meta">Record : ${r.record} / 18</p>`}
+      ${recompenser("pierres", PZ.bons, record && PZ.bons > 0)}
+      <button class="btn btn-blanc large" data-jouer>Rejouer</button>
+      <button class="lien" data-intro-jeu style="margin-top:10px">Retour</button>
+    </div>`;
+  document.getElementById("jeu").scrollTo({ top:0 });
+  if(claque){ const f = document.createElement("div"); f.className = "pz-blanc"; document.getElementById("jeu").appendChild(f); setTimeout(() => f.remove(), 1600); }
+  if(claque || (record && PZ.bons)){ jouerSon("fete", SON_FETE, .8, 4500); if(navigator.vibrate) navigator.vibrate([30, 60, 40]); }
+  if(vue === "defis") rendreDefis();
+}
+
+INTROS.swipe = introSwipe; LANCEURS.swipe = lancerSwipe;
+INTROS.pierres = introPierres; LANCEURS.pierres = lancerPierres;
+document.getElementById("jeu").addEventListener("click", e => {
+  const s = e.target.closest("[data-sw]"); if(s){ repondreSwipe(s.dataset.sw === "1"); return; }
+  const z = e.target.closest("[data-pz]"); if(z){ repondrePZ(+z.dataset.pz); return; }
+  if(e.target.closest("[data-sw-abandon]")) demanderQuitter(() => { JEU.actif = false; clearInterval(JEU.minuterie); introSwipe(); });
+  if(e.target.closest("[data-pz-abandon]")) demanderQuitter(() => { JEU.actif = false; clearInterval(JEU.minuterie); introPierres(); });
+});
 
 /* ── Cartes : sons synthétisés (Web Audio, aucun fichier) et particules ── */
 /* Chaque son est fabriqué à la volée : souffle = bruit filtré qui balaie, cloche = sinus + partiels inharmoniques,
@@ -8204,9 +8570,11 @@ const PALIERS = {
   vs:{ p:[3, 7, 12], u:"duels" }, affiche:{ p:[300, 550, 800], u:"pts" }, ordre:{ p:[3, 5, 7], u:"/8" },
   replique:{ p:[400, 650, 850], u:"pts" }, quiparle:{ p:[300, 550, 800], u:"pts" }, dossier:{ p:[35, 55, 75], u:"%" },
   filmo:{ p:[30, 55, 80], u:"%" }, akinator:{ p:[10, 20, 40], u:"questions", t3:"Battre le Gardien" },
+  swipe:{ p:[1200, 3000, 5500], u:"pts" }, pierres:{ p:[6, 12, 18], u:"réponses", t3:"Les 6 pierres" },
 };
 const NOMS_DEFIS = { heros:"Héros en mémoire", qui:"Qui est-ce ?", vs:"Qui gagne ?", affiche:"Devine l'affiche", ordre:"Dans l'ordre",
-  replique:"Qui a dit ça ?", quiparle:"Qui parle ?", dossier:"Dossier classifié", filmo:"Filmographie", akinator:"Le Gardien" };
+  replique:"Qui a dit ça ?", quiparle:"Qui parle ?", dossier:"Dossier classifié", filmo:"Filmographie", akinator:"Le Gardien",
+  swipe:"Swipe", pierres:"Les 6 pierres" };
 
 const ETOILE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8l3 6.3 6.9.9-5.1 4.8 1.3 6.8L12 17.3l-6.1 3.3 1.3-6.8L2.1 9l6.9-.9z"/></svg>`;
 const ECLAT = `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="g-eclat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6f7ff"/><stop offset=".5" stop-color="#5aa9f7"/><stop offset="1" stop-color="#1c3fa0"/></linearGradient></defs><path fill="url(#g-eclat)" d="M12 1.5 20 8l-8 14.5L4 8z"/><path fill="rgba(255,255,255,.55)" d="M12 1.5 15.4 8H8.6zM8.6 8H4l8 14.5z"/></svg>`;
