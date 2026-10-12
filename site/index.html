@@ -3984,6 +3984,15 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 /* Jeux : tuiles avec les nouveaux visuels */
 .jc4 img{object-position:50% 25%}
 .e4-bientot{font:700 12px var(--rc);letter-spacing:.12em;text-transform:uppercase;color:var(--a)}
+
+/* ══════ V4.8 — titres à venir : la date en couleur (rouge MCU, violet Multivers) ══════ */
+.d-avenir{font-weight:700;color:var(--a)}
+.d-avenir.mcu{color:#ff3b45}
+.d-avenir.multi{color:#a67bff}
+.bt4 small .d-avenir{font-weight:800}
+/* Bienvenue : fond noir dès la première image (l'accueil ne doit pas apparaître pendant le fondu d'entrée) */
+#splash:not(.part){background:#000}
+#splash.part{background:transparent;transition:background .25s ease}
 </style>
 </head>
 <body>
@@ -4120,11 +4129,11 @@ const TRAILERS = [
   { src:"https://fr.vid.web.acsta.net/nmedia/33/26/01/13/15/36/20632197_hd_013.mp4", titre:"Teaser · Wakanda et 4 Fantastiques", langue:"VF", vignette:"/m/792959f82eb5ddc5.avif" },
 ];
 /* Doomsday : les affiches officielles (TMDB), dans l'ordre de parution. */
-const IMG_AFF_DOOM = ["/m/7b49eb5c588b7112.webp", "/m/39dd2b3b69ad14ca.webp", "/m/ab8a2034d8ce2c13.webp", "/m/0d73e8efc3143c37.webp", "/m/5c1513428762668c.webp", "/m/25f8e7d21a2c23e8.webp", "/m/1af2d0043a7f6e86.webp"];
+const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/m/7b49eb5c588b7112.webp", "/m/5c1513428762668c.webp", "/m/ab8a2034d8ce2c13.webp", "/m/39dd2b3b69ad14ca.webp", "/m/0d73e8efc3143c37.webp"];
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
-const IMG_AVENIR = {"bp3": "/m/2dc29acc389e325f.webp", "ghost28": "/m/58172eb926183266.webp", "mzfk": "/m/159d04944125e8f7.webp", "mzws": "/m/42acfec72c8f055d.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/538ea54f418de837.webp", "zodiac": "/m/503eab334d682649.webp"};
+const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/f4d685d8556ad2de.webp", "akinator": "/m/839fa8e8d9709d3d.webp", "dossier": "/m/a3987572dcddff74.webp", "filmo": "/m/8a5c45c27cf192aa.webp", "heros": "/m/5cdf1f6d330e34cb.webp", "ordre": "/m/7555fb33bd17085f.webp", "pierres": "/m/5fcc2b97bcf17f09.webp", "qui": "/m/0d1c5f0b61a43371.webp", "quiparle": "/m/2c6f7f5e2e848889.webp", "replique": "/m/4406b7738ae755a3.webp", "swipe": "/m/41cb2eb7259aea26.webp", "vs": "/m/3312e000b730ee0a.webp"};
+const IMG_JEUX = {"affiche": "/m/aeab32c17ea51e19.webp", "akinator": "/m/4c25eb82ec45bdab.webp", "dossier": "/m/43ea20796da4e4f8.webp", "filmo": "/m/dded2858aae25a93.webp", "heros": "/m/c9f6db9f29d5a868.webp", "ordre": "/m/0437dddf7b55c157.webp", "pierres": "/m/e7d67ac5df6ba391.webp", "qui": "/m/f6e238754b9b2346.webp", "quiparle": "/m/0121ee2dc771c511.webp", "replique": "/m/57483e61bdcf819e.webp", "swipe": "/m/6b37eacbd7c255b4.webp", "vs": "/m/5bacf84186e7f6f2.webp"};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
 const VIDEO_MCU = "/m/2a6ff54e8b058429.mp4";
 /* Son MCU : ouverture puis final de la bande-annonce VF d'Avengers: Infinity War. */
@@ -4358,8 +4367,8 @@ const A_VENIR = [
     s:"La suite directe d'Avengers : Doomsday, réalisée par les frères Russo. Elle referme la Saga du Multivers." }],
   ["mcu", "@Après Secret Wars", { id:"m_xm28", t:"X-Men", a:"2028", k:"film", i:"xmenblue", sortie:"2028-05-05", img:"xmen28",
     s:"Les mutants font leur entrée dans le MCU. Réalisé par Jake Schreier." }],
-  ["mcu", "@Après Secret Wars", { id:"m_gr28", t:"Ghost Rider", a:"2028", k:"film", i:"ghostrider", sortie:"2028-07-28", img:"ghost28", presse:1,
-    s:"Le Ghost Rider dans le MCU. Date annoncée par la presse, pas encore par Marvel." }],
+  ["mcu", "@Après Secret Wars", { id:"m_gr28", t:"Ghost Rider", a:"2028", k:"film", i:"ghostrider", sortie:"2028-07-28", img:"ghost28",
+    s:"Ryan Gosling devient Ghost Rider, sous la direction de Shawn Levy (annoncé au Comic-Con 2026)." }],
   ["mcu", "@Après Secret Wars", { id:"m_bp3", t:"Black Panther 3", a:"2028", k:"film", i:"panther", sortie:"2028-12-15", img:"bp3",
     s:"Le retour du Wakanda au cinéma." }],
   ["mcu", "@Après Secret Wars", { id:"m_zod", t:"Zodiac", a:"2028", k:"serie", i:"shield", quand:"2028", tri:"2028-06-30", img:"zodiac",
@@ -4372,6 +4381,8 @@ const A_VENIR = [
     s:"Un épisode spécial de Marvel Zombies pour Halloween, centré sur le Soldat de l'hiver." }],
   ["multi", "Animation Marvel", { id:"x_mzfk", t:"Marvel Zombies : The Fist of Khonshu", a:"2028", k:"film", i:"zombies", quand:"Halloween 2028", tri:"2028-10-31", img:"mzfk",
     s:"Un épisode spécial de Marvel Zombies pour Halloween, autour du Poing de Khonshu." }],
+  ["multi", "Animation Marvel", { id:"x_mzlg", t:"Marvel Zombies : The Last Guardian", a:"2029", k:"film", i:"zombies", quand:"Halloween 2029", tri:"2029-10-31", img:"mzlg",
+    s:"Le troisième spécial Halloween de Marvel Zombies, annoncé au New York Comic Con 2026." }],
 ];
 A_VENIR.forEach(([u, ou, x]) => {
   const it = { p:"", dd:0, d:0, v:true, avenir:true, ...x }, de = x.de && tous(u).find(i => i.t === x.de);
@@ -4618,7 +4629,8 @@ function affiche(it){
 const avatar = k => img(ICO_PERSO[avNorm(k)]);
 const typeTitre = it => it.court ? "Court métrage" : it.k === "film" ? "Film" : it.saisons ? `Série · ${it.saisons} saisons` : "Série";
 /* Ligne d'infos d'une liste : « Film » est sous-entendu (l'affiche suffit), seuls les autres formats sont précisés. */
-const infosTitre = it => pasSorti(it) ? [it.k === "film" ? "" : typeTitre(it), quandSortie(it)].filter(Boolean).join(" · ")   // à venir : la date de sortie
+const dateAvenir = it => `<span class="d-avenir ${univDe(it.id)}">${quandSortie(it)}</span>`;   // rouge (MCU) ou violet (Multivers) : pas encore sorti
+const infosTitre = it => pasSorti(it) ? [dateAvenir(it), it.k === "film" ? "" : typeTitre(it)].filter(Boolean).join(" · ")   // à venir : la date de sortie, puis le format
   : [it.a, it.k === "film" && !it.court ? "" : typeTitre(it), fmtDuree(it.d)].filter(Boolean).join(" · ");
 
 /* Pas disponible (pas encore sorti, ou absent du serveur Plex) : petite caméra barrée rouge à côté du titre. */
@@ -5470,7 +5482,7 @@ function majAccueil(complet){
   }
   tous(univers).filter(pasSorti).map(i => [i, dateSortie(i) || i.tri || (i.a + "-12-31")]).sort((x, y) => x[1] < y[1] ? -1 : 1).forEach(([i]) => {
     const j = dateSortie(i) && jours(dateSortie(i));
-    cartes.push({aff:affiche(i), t:i.t, d:quandSortie(i), tag:j && j <= 365 ? j : "", id:i.id});
+    cartes.push({aff:affiche(i), t:i.t, d:dateAvenir(i), tag:j && j <= 365 ? j : "", id:i.id});
   });
   // Puis : « Reprendre » (Plex), les sorties, chaque phase ou franchise en affiches (même construction pour le MCU et le Multivers)
   const groupes = BIB[univers].map((g, gi) =>
@@ -5914,7 +5926,7 @@ function ouvrirFiche(id, opt = {}){
     <div class="fiche-texte">
       <p class="surtitre">${esc(g ? g.groupe.split(" · ")[0] : tousBonus().includes(it) ? "Bonus · MCU" : "")}</p>
       <h2 class="fiche-titre">${esc(it.t)}</h2>
-      <p class="meta">${[pasSorti(it) ? "" : it.a, typeTitre(it), fmtDuree(it.d), pasSorti(it) ? "Sortie : " + quandSortie(it) + (it.presse ? " (selon la presse)" : "") : ""].filter(Boolean).join(" · ")}</p>
+      <p class="meta">${[pasSorti(it) ? dateAvenir(it) : it.a, typeTitre(it), fmtDuree(it.d)].filter(Boolean).join(" · ")}</p>
       <div class="fiche-actions">
         <div class="duo">
           ${plexCle(it) ? `<button class="b4 b4-rouge" id="btn-film">${SVG.jouer}Regarder</button>`
@@ -11150,7 +11162,7 @@ function chiffresAvDoom(){
   return { l, n, reste, pct:l.length ? Math.round(n / l.length * 100) : 0 };
 }
 function ouvrirAvDoom(){
-  const { l, n, pct } = chiffresAvDoom(), aff = typeof IMG_AFF_DOOM !== "undefined" && IMG_AFF_DOOM[2] ? img(IMG_AFF_DOOM[2]) : img(IMG_DOOM);
+  const { l, n, pct } = chiffresAvDoom(), aff = typeof IMG_AFF_DOOM !== "undefined" && IMG_AFF_DOOM[4] ? img(IMG_AFF_DOOM[4]) : img(IMG_DOOM);
   document.getElementById("avdoom-in").innerHTML = `
     <div class="br6-h"><img src="${aff}" alt=""><div class="br6-t"><p class="k">Avant le 16 décembre</p><h1>Le Briefing</h1></div></div>
     <div class="br6-p"><span class="br5-bar"><i id="ad-filet" style="width:${pct}%"></i></span><span class="br5-n" id="ad-n">${n}<small>/${l.length}</small></span></div>
