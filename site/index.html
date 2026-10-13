@@ -3973,7 +3973,7 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 
 /* ══════ V4.7 — Défi du jour : la photo bien visible, le texte en bas ══════ */
 .duj4{height:250px}
-.duj4>img{object-position:50% 30% !important}
+/* (cadrage du défi du jour : voir V5.0, point de visée par jeu) */
 .duj4::after{background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 34%,transparent 62%) !important}
 .duj4-t{top:auto !important;right:16px !important;bottom:16px}
 .duj4-t b{font-size:30px}
@@ -3986,13 +3986,21 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .e4-bientot{font:700 12px var(--rc);letter-spacing:.12em;text-transform:uppercase;color:var(--a)}
 
 /* ══════ V4.8 — titres à venir : la date en couleur (rouge MCU, violet Multivers) ══════ */
-.d-avenir{font-weight:700;color:var(--a)}
-.d-avenir.mcu{color:#ff3b45}
+.d-avenir{font-weight:inherit;color:var(--a)}
+.d-avenir.mcu{color:#ec1d24}
 .d-avenir.multi{color:#a67bff}
-.bt4 small .d-avenir{font-weight:800}
 /* Bienvenue : fond noir dès la première image (l'accueil ne doit pas apparaître pendant le fondu d'entrée) */
 #splash:not(.part){background:#000}
 #splash.part{background:transparent;transition:background .25s ease}
+
+/* ═══ V5.0 ═══ */
+/* Affiches noires (logos des sorties à venir) : un liseré discret dessine le bord, pour qu'elles ne paraissent pas plus petites. */
+.bt4-v::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);pointer-events:none}
+/* Défi du jour : le texte occupe la gauche, le visuel la droite, cadré sur le visage du personnage. */
+.duj4>img{left:auto;right:0;width:68%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 38%);mask-image:linear-gradient(90deg,transparent,#000 38%)}
+.duj4::after{background:linear-gradient(90deg,rgba(0,0,0,.9) 22%,rgba(0,0,0,.25) 55%,rgba(0,0,0,0) 80%)}
+/* Fiche personnage (loupe et cartes) : le nom, l'espèce juste dessous. */
+.pf-txt .pf-espece{margin:8px 0 0;font:700 14px/1.2 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.88)}
 </style>
 </head>
 <body>
@@ -4133,7 +4141,9 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/6e24b0c2da195f61.webp", "akinator": "/m/88a8ada67dfb0156.webp", "dossier": "/m/f7f86513924b0bd7.webp", "filmo": "/m/8381a0cef75c33c1.webp", "heros": "/m/f5267b052d6b3b40.webp", "ordre": "/m/2f9a1179d8800aa6.webp", "pierres": "/m/9fba086e04a81018.webp", "qui": "/m/9c3cc8b76f10252c.webp", "quiparle": "/m/6291ee22620dbc13.webp", "replique": "/m/fb886be21f435a23.webp", "swipe": "/m/ad5e3968b07b2498.webp", "vs": "/m/6b71ec61cac80d0f.webp"};
+const IMG_JEUX = {"affiche": "/m/6e24b0c2da195f61.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/f7f86513924b0bd7.webp", "filmo": "/m/8381a0cef75c33c1.webp", "heros": "/m/f5267b052d6b3b40.webp", "ordre": "/m/2f9a1179d8800aa6.webp", "pierres": "/m/2a4c69e553c37d40.webp", "qui": "/m/9c3cc8b76f10252c.webp", "quiparle": "/m/13fece1b2a1cb235.webp", "replique": "/m/1ff674060300900e.webp", "swipe": "/m/5465b0e940919d71.webp", "vs": "/m/6b71ec61cac80d0f.webp"};
+/* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
+const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [50, 30], "pierres": [47, 42], "qui": [49, 35], "quiparle": [30, 39], "replique": [50, 38], "swipe": [52, 35], "vs": [67, 58]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
 const VIDEO_MCU = "/m/2a6ff54e8b058429.mp4";
 /* Son MCU : ouverture puis final de la bande-annonce VF d'Avengers: Infinity War. */
@@ -4187,7 +4197,7 @@ function rectApp(el){
 }
 function pointApp(x, y){ if(!PIVOT.on) return { x, y }; return PIVOT.sens === -90 ? { x:innerHeight - y, y:x } : { x:y, y:innerWidth - x }; }
 const SORTIE_DOOM = "2026-12-16";
-const SORTIES = { "Vision Quest":"2026-10-14", "Avengers: Doomsday":"2026-12-16" };
+const SORTIES = { "Vision Quest":"2026-10-14T09:00:00", "Avengers: Doomsday":"2026-12-16" };
 const MAX_PROFILS = 4;
 const CLE_SESSION = "mt-session";
 const CLE_COMPTE = c => "mt-compte-" + c;
@@ -4394,7 +4404,9 @@ A_VENIR.forEach(([u, ou, x]) => {
 });
 /* Date de sortie d'un titre à venir (ISO) et son libellé (« 17 déc. 2027 », « Mars 2027 »…). */
 const dateSortie = it => it && (it.sortie || SORTIES[it.t]) || "";
-const quandSortie = it => dateSortie(it) ? new Date(dateSortie(it) + "T00:00:00").toLocaleDateString("fr-FR", { day:"numeric", month:"short", year:"numeric" }) : it.quand || it.a;
+/* « 2026-10-14 » = minuit ; « 2026-10-14T09:00:00 » = l'heure de mise en ligne (Disney+ en France : 9 h). */
+const enDate = d => new Date(/T/.test(d) ? d : d + "T00:00:00");
+const quandSortie = it => dateSortie(it) ? enDate(dateSortie(it)).toLocaleDateString("fr-FR", { day:"numeric", month:"short", year:"numeric" }) : it.quand || it.a;
 /* Reprise des coches et des notes (une fois par profil). */
 function migrerIds(e){
   if(!e.v3){
@@ -4430,7 +4442,7 @@ function migrerIds(e){
   ["mcu", "multi"].forEach(u => tous(u).concat(BONUS[u]).forEach(it => { if(pasSorti(it) && e[u] && e[u].vus[it.id]) delete e[u].vus[it.id]; }));
 }
 /* Pas encore sorti : date de sortie à venir (SORTIES) ou titre marqué « à venir ». */
-const pasSorti = it => it && ((it.sortie || SORTIES[it.t]) ? new Date((it.sortie || SORTIES[it.t]) + "T00:00:00") > new Date() : !!it.v);
+const pasSorti = it => it && ((it.sortie || SORTIES[it.t]) ? enDate(it.sortie || SORTIES[it.t]) > new Date() : !!it.v);
 
 /* Lecture YouTube dans le lecteur plein écran de l'app. */
 function lireYT(id){
@@ -4610,7 +4622,7 @@ function prochain(){ const e = ici().vus; return tous(univers).find(i=>!e[i.id] 
 function parId(id){ id = RENOMME[id] || id; return tous(univers).find(i=>i.id===id) || tous("mcu").concat(tous("multi"), tousBonus()).find(i=>i.id===id); }
 function groupeDe(it){ return BIB.mcu.concat(BIB.multi).find(g => g.items.includes(it)); }
 function jours(iso){
-  const d = Math.ceil((new Date(iso+"T00:00:00") - new Date())/86400000);
+  const d = Math.ceil((new Date(iso.slice(0, 10)+"T00:00:00") - new Date())/86400000);
   return d > 0 ? d : null;
 }
 const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -4638,10 +4650,10 @@ function affiche(it){
 /* Icône de profil telle qu'elle a été dessinée : carré arrondi. */
 const avatar = k => img(ICO_PERSO[avNorm(k)]);
 const typeTitre = it => it.court ? "Court métrage" : it.k === "film" ? "Film" : it.saisons ? `Série · ${it.saisons} saisons` : "Série";
-/* Ligne d'infos d'une liste : « Film » est sous-entendu (l'affiche suffit), seuls les autres formats sont précisés. */
+/* Ligne d'infos d'une liste : l'année (ou la date de sortie à venir), puis le format (Film, Série…), puis la durée. */
 const dateAvenir = it => `<span class="d-avenir ${univDe(it.id)}">${quandSortie(it)}</span>`;   // rouge (MCU) ou violet (Multivers) : pas encore sorti
-const infosTitre = it => pasSorti(it) ? [dateAvenir(it), it.k === "film" ? "" : typeTitre(it)].filter(Boolean).join(" · ")   // à venir : la date de sortie, puis le format
-  : [it.a, it.k === "film" && !it.court ? "" : typeTitre(it), fmtDuree(it.d)].filter(Boolean).join(" · ");
+const infosTitre = it => pasSorti(it) ? [dateAvenir(it), typeTitre(it)].join(" · ")
+  : [it.a, typeTitre(it), fmtDuree(it.d)].filter(Boolean).join(" · ");
 
 /* Pas disponible (pas encore sorti, ou absent du serveur Plex) : petite caméra barrée rouge à côté du titre. */
 const SVG_INDISPO = `<svg class="indispo-ico" viewBox="0 0 24 24" role="img" aria-label="Non disponible"><path d="M10.6 6.5H14a2 2 0 0 1 2 2v3.2l5-3.4v8.4"/><path d="M16 16.2a2 2 0 0 1-2 1.8H5a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2h.6"/><path d="M3 3l18 18"/></svg>`;
@@ -4891,7 +4903,9 @@ function lancerVideo(id, donnees, cle = id){
    Tirée au hasard à l'ouverture de l'appli puis gardée tant que l'appli reste ouverte (on retrouve la même, là où on l'avait laissée) ;
    à la prochaine ouverture, une autre (pioche sans remise mémorisée sur l'appareil : on les voit toutes avant de revoir la même).
    Lue en continu depuis Allociné comme dans la fiche ; le fond flouté est dessiné à partir de la vidéo elle-même (pas de second téléchargement). */
-const baVF = i => i.ba && i.ba.src && i.ba.langue === "VF" && /_(hd|h)_\d+\.mp4$/.test(i.ba.src);   // HD seulement (les versions 320p d'Allociné sont floues)
+/* Bandes-annonces trop molles pour l'en-tête (720p très agrandi) : elles restent dans leur fiche, mais ne tournent pas à l'accueil. */
+const BA_PAS_EN_TETE = new Set(["Les Gardiens de la Galaxie"]);
+const baVF = i => i.ba && i.ba.src && i.ba.langue === "VF" && /_hd_\d+\.mp4$/.test(i.ba.src) && !BA_PAS_EN_TETE.has(i.t);   // HD seulement (les versions 272p / 320p d'Allociné sont floues)
 const baAccueil = u => { const vus = profil && etat[profil] ? etat[profil][u].vus : {}, l = tous(u).filter(i => baVF(i) && !pasSorti(i)), nv = l.filter(i => !vus[i.id]);
   return (nv.length ? nv : l).map(i => ({ src:i.ba.src, id:i.id, t:i.t })); };
 const BA_TETE = {
@@ -6289,7 +6303,10 @@ function defiDuJour(){
   if(!profil || !etat[profil]) return null;
   const l = listeJeux(), d = new Date(), n = Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5), j = l[n % l.length];
   const h = Math.max(1, Math.ceil((new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1) - d) / 36e5));
-  return { ...j, heures:h, image:j.img ? `<img src="${j.img}" alt="">` : "" };
+  const fo = typeof FOCALE_JEUX !== "undefined" && FOCALE_JEUX[j.id];   // le visage reste visible dans la partie droite de la tuile
+  // l'image (16:10) occupe ~68 % de la tuile : on la décale pour que le visage tombe aux deux tiers de cette zone (au-delà du dégradé)
+  const px = fo ? Math.max(-60, Math.min(100, Math.round((fo[0] / 100 * 1.41 - .62) / .41 * 100))) : 50;
+  return { ...j, heures:h, image:j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${px}% ${fo[1]}%"` : ""}>` : "" };
 }
 function rendreDefis(){
   if(typeof packDuJour === "function") packDuJour();
@@ -9260,7 +9277,7 @@ document.addEventListener("click", e => {
   const vu = t.closest("[data-cl-vue]");
   if(vu){ CL.vue = vu.dataset.clVue; CL.serie = null; document.querySelectorAll("[data-cl-vue]").forEach(b => b.classList.toggle("on", b === vu)); rendreGrille(); return; }
   const ca = t.closest("[data-carte]");
-  if(ca){ ouvrirCarte(+ca.dataset.carte); return; }
+  if(ca){ vueCarte(+ca.dataset.carte); ouvrirPerso(+ca.dataset.carte); return; }   // même fiche que la loupe ; la carte en grand s'ouvre en touchant la carte de la fiche
   const fo = t.closest("[data-forger]");
   if(fo){ forger(+fo.dataset.forger); return; }
   if(t.closest("[data-cd-retourne]")){ retournerFiche(); return; }
@@ -9356,42 +9373,37 @@ function resultatsCartes(brut, q, z){
 }
 /* Corps de la fiche personnage (bio, chiffres, pouvoirs, identité, affiliations, suivi, apparitions, équipe) :
    utilisé par la fiche personnage et directement sous la carte dans la collection. */
-function corpsPerso(i, { equipe = true } = {}){
+function corpsPerso(i){
   const f = ficheDe(i), noms = PERSOS[i], r = RARETE[i], inf = infoDe(i);
   const items = f.l.map(([id, acteur, role, ver]) => ({ it:parId(id), acteur, role, ver })).filter(x => x.it);
   let vrai = items.filter(x => x.ver === "v"), anim = items.filter(x => x.ver === "a");
   const autres = items.filter(x => x.ver === "o");
   if(!vrai.length && anim.length){ vrai = anim; anim = []; }   // personnage qui n'existe qu'en animation (Uatu…)
-  const sortis = vrai.filter(x => !pasSorti(x.it)), vus = sortis.filter(x => vusDe(x.it.id)[x.it.id]), suite = sortis.find(x => !vusDe(x.it.id)[x.it.id]);
   const mcu = vrai.some(x => univDe(x.it.id) === "mcu"), civil = nomCivil(i), prenom = (civil || noms[0]).split(" ")[0];
   const premiere = (vrai.length ? vrai : items).filter(x => +x.it.a).sort((a, b) => +a.it.a - +b.it.a)[0];
   const ROLES = { p:["Principal", "p"], s:["Secondaire", "s"], c:["Caméo", "c"] };
-  const ligne = (x, badge) => { const vu = vusDe(x.it.id)[x.it.id], b = pasSorti(x.it) ? ["À venir", "f"] : badge || ROLES[x.role] || ROLES.s;
+  const ligne = (x, badge) => { const b = pasSorti(x.it) ? ["À venir", "f"] : badge || ROLES[x.role] || ROLES.s;
     const sous = [x.it.a, typeTitre(x.it), x.ver !== "v" || x.acteur !== f.a ? (x.ver === "a" ? "voix " : "") + x.acteur : ""].filter(Boolean).join(" · ");
-    return `<button class="pf-ap${vu ? "" : " nv"}" data-fiche="${x.it.id}"><img src="${affiche(x.it)}" alt="" loading="lazy"><span><b>${esc(x.it.t)}</b><small>${esc(sous)}</small></span>
-      <em class="pf-role ${b[1]}">${b[0]}</em><i class="pf-ok${vu ? " on" : ""}">${vu ? SVG_OK : ""}</i></button>`; };
+    return `<button class="pf-ap" data-fiche="${x.it.id}"><img src="${affiche(x.it)}" alt="" loading="lazy"><span><b>${esc(x.it.t)}</b><small>${esc(sous)}</small></span>
+      <em class="pf-role ${b[1]}">${b[0]}</em></button>`; };
   const groupe = (cls, sur, titre, l, badge) => l.length ? `<section class="pf-grp ${cls}"><header><span><small>${sur}</small><b>${esc(titre)}</b></span><i>${l.length}</i></header>${l.map(x => ligne(x, badge)).join("")}</section>` : "";
   const rel = RELAIS[noms[0]], ri = rel && indexDe(rel[0]);
   const fy = typeof FY_PERSO !== "undefined" && FY_PERSO[i] ? Math.round(FY_PERSO[i] * 100) : 30, u = photoHD(i);
-  const id = [["Identité", civil], ["Espèce", inf.s], ["Origine", inf.o], ["Interprète", f.a ? f.a + (mcu ? " (MCU)" : "") : ""],
-    ["À l'écran depuis", premiere ? premiere.it.a + " · " + premiere.it.t : ""], ["Dans les comics", inf.fa ? inf.fa + (inf.an ? " · " + inf.an : "") : inf.an || ""],
-    ["Créé par", inf.cr], ["Carte", "★".repeat(r) + (possede(i) ? " · obtenue" : " · à trouver")]].filter(x => x[1]);
-  const eq = equipiers(i);
+  const films = items.filter(x => x.it.k === "film" && !x.it.court).length;
+  const id = [["Identité", civil], ["Interprète", f.a], ["Première apparition", premiere ? premiere.it.t : ""], ["Films", films ? films + " film" + (films > 1 ? "s" : "") : ""],
+    ["À l'écran depuis", premiere ? premiere.it.a : ""], ["Espèce", inf.s], ["Origine", inf.o]].filter(x => x[1]);
+  // grille de 2 colonnes sans trou : une case seule en fin de ligne prend toute la largeur
+  let col = 0; const larges = new Set(); id.forEach(([k], n) => { if(k === "Première apparition"){ if(col === 1) larges.add(id[n - 1][0]); larges.add(k); col = 0; } else col = 1 - col; });
+  if(col === 1) larges.add(id[id.length - 1][0]);
   return `${inf.b ? `<p class="pf-bio">${esc(inf.b)}</p>` : ""}
-    <div class="pf-stats"><span><b>${items.length}</b><small>apparition${items.length > 1 ? "s" : ""}</small></span><span><b>${premiere ? premiere.it.a : "—"}</b><small>à l'écran</small></span><span><b>${vus.length}<i>/${sortis.length}</i></b><small>vu${vus.length > 1 ? "s" : ""}</small></span></div>
-    ${inf.p && inf.p.length ? `<section class="pf-bloc"><h3>Pouvoirs et capacités</h3><div class="pf-pouv">${inf.p.map((x, k) => `<span style="--k:${k}"><i>${String(k + 1).padStart(2, "0")}</i>${esc(x)}</span>`).join("")}</div></section>` : ""}
-    <section class="pf-bloc"><h3>Fiche d'identité</h3><dl class="pf-id">${id.map(([k, v]) => `<div${["Créé par", "À l'écran depuis", "Dans les comics", "Carte"].includes(k) ? ` class="l"` : ""}><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></section>
+    ${inf.p && inf.p.length ? `<section class="pf-bloc"><h3>Pouvoirs et capacités</h3><div class="pf-pouv">${inf.p.slice(0, 4).map((x, k) => `<span style="--k:${k}"><i>${String(k + 1).padStart(2, "0")}</i>${esc(x)}</span>`).join("")}</div></section>` : ""}
+    <section class="pf-bloc"><h3>Fiche d'identité</h3><dl class="pf-id">${id.map(([k, v]) => `<div${larges.has(k) ? ` class="l"` : ""}><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></section>
     ${inf.e && inf.e.length ? `<section class="pf-bloc"><h3>Affiliations</h3><div class="pf-aff">${inf.e.map(x => `<span>${esc(x)}</span>`).join("")}</div></section>` : ""}
-    ${sortis.length ? `<div class="pf-suivi"><div class="h"><b>${vus.length}<small>/${sortis.length}</small></b><span>titres où tu l'as vu${mcu ? " (le vrai, dans le MCU)" : ""}</span></div>
-      <div class="f"><i style="width:${Math.round(vus.length / sortis.length * 100)}%"></i></div>
-      ${suite ? `<button class="pf-suite" data-fiche="${suite.it.id}"><img src="${affiche(suite.it)}" alt=""><span><em>Prochain à voir</em><b>${esc(suite.it.t)}</b><small>${suite.it.a} · ${typeTitre(suite.it)} · ${fmtDuree(suite.it.d)}</small></span></button>`
-        : `<p class="pf-tout">Tu as vu toutes ses apparitions.</p>`}</div>` : ""}
     ${groupe("vrai", `Le vrai${mcu ? " · MCU" : ""}${f.a ? " · " + esc(f.a) : ""}`, civil || noms[0], vrai)}
     ${rel && ri !== undefined ? `<button class="pf-relais" data-perso="${ri}"><img src="${vignette(ri)}" alt=""><span>${rel[1]} <i>· voir sa fiche ›</i></span></button>` : ""}
     ${groupe("anim", "Variantes · autres réalités", "Pas notre " + prenom, anim, ["Variante", "v"])}
     ${groupe("autres", "Autres versions · autres interprètes", "Autres acteurs", autres, ["Autre acteur", "f"])}
     ${!items.length ? `<p class="pf-vide">Pas encore apparu dans un film ou une série du catalogue. Peut-être bientôt…</p>` : ""}
-    ${equipe && eq.length ? `<section class="pf-bloc"><h3>Dans la même équipe</h3><div class="pf-eq">${eq.map(j => `<button data-perso="${j}"><img src="${vignette(j)}" alt="" loading="lazy"><b>${esc(PERSOS[j][0])}</b></button>`).join("")}</div></section>` : ""}
 `;
 }
 function ouvrirPerso(i){
@@ -9400,8 +9412,7 @@ function ouvrirPerso(i){
   document.getElementById("perso-in").innerHTML = `<div class="pf r${r}">
     <div class="pf-hero"><img src="${photo(i)}"${u ? ` data-hd="${u}"` : ""} alt="" style="object-position:50% ${fy}%"><span class="pf-trame"></span>
       <span class="pf-carte" data-carte-perso="${i}">${carteHTML(i, { etat:possede(i) ? "face" : "verrou" })}</span>
-      <div class="pf-txt"><p class="pf-tags"><span>${esc(equipeDe(i))}</span>${inf.s ? `<span>${esc(inf.s)}</span>` : ""}</p><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>
-        <p>${civil ? `<b>${esc(civil)}</b>` : ""}${f.a ? `${civil ? " · " : ""}joué par <b>${esc(f.a)}</b>` : ""}</p></div></div>
+      <div class="pf-txt"><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>${inf.s ? `<p class="pf-espece">${esc(inf.s)}</p>` : ""}</div></div>
     ${corpsPerso(i)}
     <div class="fin-page"></div></div>`;
   ouvrirFeuille("perso");
@@ -9410,7 +9421,7 @@ function ouvrirPerso(i){
 document.addEventListener("click", e => {
   if(e.target.closest("#btn-recherche, [data-recherche]")){ ouvrirRecherche(vue === "cartes"); return; }
   if(e.target.closest("[data-recherche-cartes]")){ ouvrirRecherche(true); return; }
-  const rc = e.target.closest("[data-carte-rc]"); if(rc){ ouvrirCarte(+rc.dataset.carteRc); return; }
+  const rc = e.target.closest("[data-carte-rc]"); if(rc){ ouvrirPerso(+rc.dataset.carteRc); return; }
   const p = e.target.closest("[data-perso]"); if(p){ ouvrirPerso(+p.dataset.perso); return; }
   const c = e.target.closest("[data-carte-perso]"); if(c && possede(+c.dataset.cartePerso) && typeof ouvrirCarte === "function") ouvrirCarte(+c.dataset.cartePerso);
 });
