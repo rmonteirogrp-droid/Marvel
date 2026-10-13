@@ -162,6 +162,10 @@ input[type="text"]:focus-visible { outline: none; border-color: var(--accent); }
 .allin { font-size: 13px; font-weight: 600; color: var(--yes); }
 .yesline { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
 
+.admin-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0 8px; }
+.admin-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.admin-row span { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.btn-danger { background: transparent; color: var(--no); border-color: var(--no); }
 .empty { text-align: center; color: var(--muted); padding: 28px 12px; }
 .banner { border-radius: 12px; padding: 12px 14px; background: var(--no-soft); color: var(--ink); font-size: 14px; }
 .toast { font-size: 14px; color: var(--yes); font-weight: 600; margin: 0; }
@@ -218,6 +222,14 @@ input[type="text"]:focus-visible { outline: none; border-color: var(--accent); }
         </div>
         <button class="btn btn-ghost btn-small" type="button" id="editBtn">Modifier mes réponses</button>
       </div>
+    </section>
+    <section class="card" id="adminBox" hidden>
+      <h2 class="section-h">Admin : supprimer des réponses</h2>
+      <div class="row">
+        <input id="adminCode" type="text" autocomplete="off" placeholder="Code admin" style="flex:1 1 160px">
+      </div>
+      <div id="adminList" class="admin-list"></div>
+      <p class="hint" id="adminMsg"></p>
     </section>
     <section>
       <h2 class="section-h">Classement des soirs</h2>
@@ -410,7 +422,48 @@ input[type="text"]:focus-visible { outline: none; border-color: var(--accent); }
     return row;
   }
 
+  // Mode admin : ouvrir la page avec #admin à la fin de l'adresse.
+  let armed = null;
+  function renderAdmin() {
+    const box = $("adminBox");
+    box.hidden = location.hash !== "#admin";
+    if (box.hidden) return;
+    const list = $("adminList");
+    list.replaceChildren();
+    for (const [slug, p] of docs) {
+      const row = document.createElement("div"); row.className = "admin-row";
+      const n = document.createElement("span"); n.textContent = p.name;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn btn-danger btn-small";
+      b.textContent = armed === slug ? "Sûr ? Appuie encore" : "Supprimer";
+      b.addEventListener("click", () => removePerson(slug, p.name));
+      row.append(n, b);
+      list.append(row);
+    }
+    if (!docs.size) { const h = document.createElement("p"); h.className = "hint"; h.textContent = "Aucune réponse."; list.append(h); }
+  }
+
+  async function removePerson(slug, name) {
+    const code = $("adminCode").value.trim();
+    if (!code) { $("adminMsg").textContent = "Entre le code admin d'abord."; return; }
+    if (armed !== slug) { armed = slug; renderAdmin(); return; }
+    armed = null;
+    try {
+      const res = await fetch(API + "?name=" + encodeURIComponent(name), { method: "DELETE", headers: { "x-admin-code": code } });
+      if (res.status === 403) { $("adminMsg").textContent = "Code admin incorrect (ou pas encore réglé sur Netlify)."; renderAdmin(); return; }
+      if (!res.ok) throw new Error(String(res.status));
+      $("adminMsg").textContent = `Réponses de « ${name} » supprimées.`;
+      docs.delete(slug);
+      render();
+    } catch (e) {
+      $("adminMsg").textContent = "La suppression n'a pas marché, réessaie.";
+      renderAdmin();
+    }
+  }
+  window.addEventListener("hashchange", () => { if (location.hash === "#admin") setView("recap"); else render(); });
+
   function renderRecap() {
+    renderAdmin();
     const people = [...docs.values()];
     const total = people.length;
     $("countLine").textContent = total
@@ -510,6 +563,7 @@ input[type="text"]:focus-visible { outline: none; border-color: var(--accent); }
     render();
   }
 
+  if (location.hash === "#admin") setView("recap");
   refresh();
   // Le classement se rafraîchit tout seul quand la page est ouverte.
   setInterval(() => { if (!document.hidden && view === "recap") refresh(); }, 8000);

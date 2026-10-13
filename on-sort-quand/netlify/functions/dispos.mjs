@@ -1,6 +1,7 @@
 // Dispos du groupe pour « On sort quand ? », une entrée par prénom (pas de compte).
 // GET /api/dispos                          → [{ name, answers, updatedAt }]
 // PUT /api/dispos  { name, answers }       → enregistre (remplace) les réponses de ce prénom
+// DELETE /api/dispos?name=<prénom>  (en-tête x-admin-code = variable ADMIN_CODE de Netlify) → supprime ce prénom
 import { getStore } from "@netlify/blobs";
 
 const MAX_PERSONNES = 200;
@@ -42,6 +43,15 @@ export default async (req) => {
     const entree = { name, answers, updatedAt:new Date().toISOString() };
     await store.setJSON(cle, entree);
     return json(entree);
+  }
+
+  if(req.method === "DELETE"){
+    const code = process.env.ADMIN_CODE || "";
+    if(!code || req.headers.get("x-admin-code") !== code) return json({ erreur:"code admin" }, 403);
+    const cle = slugify(new URL(req.url).searchParams.get("name") || "");
+    if(!cle) return json({ erreur:"prénom invalide" }, 400);
+    await store.delete(cle);
+    return json({ ok:true });
   }
 
   return json({ erreur:"méthode" }, 405);
