@@ -4000,7 +4000,13 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .duj4>img{left:auto;right:0;width:68%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 38%);mask-image:linear-gradient(90deg,transparent,#000 38%)}
 .duj4::after{background:linear-gradient(90deg,rgba(0,0,0,.9) 22%,rgba(0,0,0,.25) 55%,rgba(0,0,0,0) 80%)}
 /* Fiche personnage (loupe et cartes) : le nom, l'espèce juste dessous. */
-.pf-txt .pf-espece{margin:8px 0 0;font:700 14px/1.2 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.88)}
+/* espèce : la cartouche de la DA, juste sous le nom */
+.pf-txt .pf-espece{margin:10px 0 0}
+
+/* ═══ V5.1 ═══ */
+/* Prochainement : toutes les affiches alignées en haut, quel que soit le nombre de lignes du titre. */
+.rail-bt4{align-items:flex-start}
+.d-dispo{color:#fff}
 </style>
 </head>
 <body>
@@ -4141,9 +4147,9 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/6e24b0c2da195f61.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/f7f86513924b0bd7.webp", "filmo": "/m/8381a0cef75c33c1.webp", "heros": "/m/f5267b052d6b3b40.webp", "ordre": "/m/2f9a1179d8800aa6.webp", "pierres": "/m/2a4c69e553c37d40.webp", "qui": "/m/9c3cc8b76f10252c.webp", "quiparle": "/m/13fece1b2a1cb235.webp", "replique": "/m/1ff674060300900e.webp", "swipe": "/m/5465b0e940919d71.webp", "vs": "/m/6b71ec61cac80d0f.webp"};
+const IMG_JEUX = {"affiche": "/m/6e24b0c2da195f61.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/f7f86513924b0bd7.webp", "filmo": "/m/8381a0cef75c33c1.webp", "heros": "/m/f5267b052d6b3b40.webp", "ordre": "/m/2f9a1179d8800aa6.webp", "pierres": "/m/2a4c69e553c37d40.webp", "qui": "/m/9c3cc8b76f10252c.webp", "quiparle": "/m/be37176cc170a4c1.webp", "replique": "/m/1ff674060300900e.webp", "swipe": "/m/f07d010e202aea25.webp", "vs": "/m/00398001cfe99b13.webp"};
 /* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
-const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [50, 30], "pierres": [47, 42], "qui": [49, 35], "quiparle": [30, 39], "replique": [50, 38], "swipe": [52, 35], "vs": [67, 58]};
+const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [50, 30], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 32], "vs": [67, 69]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
 const VIDEO_MCU = "/m/2a6ff54e8b058429.mp4";
 /* Son MCU : ouverture puis final de la bande-annonce VF d'Avengers: Infinity War. */
@@ -5500,7 +5506,11 @@ function majAccueil(complet){
   const e = ici().vus;
   // Prochainement : les titres à venir de l'univers, du plus proche au plus lointain (Endgame Extended en tête côté MCU)
   const cartes = [];
-  if(univers === "mcu"){
+  // Endgame Extended jusqu'à la sortie de VisionQuest ; ensuite VisionQuest prend sa place en tête, le temps de sa diffusion (finale le 11 nov.)
+  const vq = tous("mcu").find(i => i.t === "Vision Quest");
+  if(univers === "mcu" && vq && !pasSorti(vq) && new Date() < new Date("2026-11-12T00:00:00")){
+    cartes.push({aff:affiche(vq), t:"VisionQuest", d:`<span class="d-dispo">Disponible · Disney+</span>`, badge:"Nouveau", id:vq.id});
+  } else if(univers === "mcu" && (!vq || pasSorti(vq))){
     const endgame = tous("mcu").find(i => i.t === "Avengers: Endgame");
     cartes.push({aff:img(IMG_EXTENDED), t:"Endgame Extended", d:"De retour au cinéma", tag:"", id:endgame ? endgame.id : null, encore:true});
   }
@@ -5514,7 +5524,7 @@ function majAccueil(complet){
   document.getElementById("acc-suite").innerHTML = `
     <div id="reprendre"></div>
     ${cartes.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Prochainement</h2></div>
-      <div class="rail-h rail-bt4">${cartes.map(c => `<button class="bt4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><span class="bt4-v"><img src="${c.aff}" alt="" loading="lazy">${c.tag ? `<em>J-${c.tag}</em>` : ""}</span><b>${esc(c.t)}</b><small>${c.d}</small></button>`).join("")}</div></section>` : ""}
+      <div class="rail-h rail-bt4">${cartes.map(c => `<button class="bt4"${c.id ? ` data-fiche="${c.id}"` : ""}${c.encore ? " data-extended" : ""}><span class="bt4-v"><img src="${c.aff}" alt="" loading="lazy">${c.tag ? `<em>J-${c.tag}</em>` : c.badge ? `<em>${c.badge}</em>` : ""}</span><b>${esc(c.t)}</b><small>${c.d}</small></button>`).join("")}</div></section>` : ""}
     ${groupes}`;
   rendreReprendre();
 }
@@ -6305,7 +6315,7 @@ function defiDuJour(){
   const h = Math.max(1, Math.ceil((new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1) - d) / 36e5));
   const fo = typeof FOCALE_JEUX !== "undefined" && FOCALE_JEUX[j.id];   // le visage reste visible dans la partie droite de la tuile
   // l'image (16:10) occupe ~68 % de la tuile : on la décale pour que le visage tombe aux deux tiers de cette zone (au-delà du dégradé)
-  const px = fo ? Math.max(-60, Math.min(100, Math.round((fo[0] / 100 * 1.41 - .62) / .41 * 100))) : 50;
+  const px = fo ? Math.max(-60, Math.min(100, Math.round((fo[0] / 100 * 1.65 - .62) / .65 * 100))) : 50;
   return { ...j, heures:h, image:j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${px}% ${fo[1]}%"` : ""}>` : "" };
 }
 function rendreDefis(){
@@ -9390,15 +9400,15 @@ function corpsPerso(i){
   const rel = RELAIS[noms[0]], ri = rel && indexDe(rel[0]);
   const fy = typeof FY_PERSO !== "undefined" && FY_PERSO[i] ? Math.round(FY_PERSO[i] * 100) : 30, u = photoHD(i);
   const films = items.filter(x => x.it.k === "film" && !x.it.court).length;
-  const id = [["Identité", civil], ["Interprète", f.a], ["Première apparition", premiere ? premiere.it.t : ""], ["Films", films ? films + " film" + (films > 1 ? "s" : "") : ""],
-    ["À l'écran depuis", premiere ? premiere.it.a : ""], ["Espèce", inf.s], ["Origine", inf.o]].filter(x => x[1]);
+  // 5 cases : la première apparition sur toute la largeur, puis 2 + 2 (l'espèce est déjà sous le nom)
+  const id = [["Première apparition", premiere ? premiere.it.t + " · " + premiere.it.a : ""], ["Identité", civil], ["Interprète", f.a],
+    ["Films", films ? films + " film" + (films > 1 ? "s" : "") : ""], ["Origine", inf.o]].filter(x => x[1]);
   // grille de 2 colonnes sans trou : une case seule en fin de ligne prend toute la largeur
   let col = 0; const larges = new Set(); id.forEach(([k], n) => { if(k === "Première apparition"){ if(col === 1) larges.add(id[n - 1][0]); larges.add(k); col = 0; } else col = 1 - col; });
   if(col === 1) larges.add(id[id.length - 1][0]);
   return `${inf.b ? `<p class="pf-bio">${esc(inf.b)}</p>` : ""}
     ${inf.p && inf.p.length ? `<section class="pf-bloc"><h3>Pouvoirs et capacités</h3><div class="pf-pouv">${inf.p.slice(0, 4).map((x, k) => `<span style="--k:${k}"><i>${String(k + 1).padStart(2, "0")}</i>${esc(x)}</span>`).join("")}</div></section>` : ""}
     <section class="pf-bloc"><h3>Fiche d'identité</h3><dl class="pf-id">${id.map(([k, v]) => `<div${larges.has(k) ? ` class="l"` : ""}><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></section>
-    ${inf.e && inf.e.length ? `<section class="pf-bloc"><h3>Affiliations</h3><div class="pf-aff">${inf.e.map(x => `<span>${esc(x)}</span>`).join("")}</div></section>` : ""}
     ${groupe("vrai", `Le vrai${mcu ? " · MCU" : ""}${f.a ? " · " + esc(f.a) : ""}`, civil || noms[0], vrai)}
     ${rel && ri !== undefined ? `<button class="pf-relais" data-perso="${ri}"><img src="${vignette(ri)}" alt=""><span>${rel[1]} <i>· voir sa fiche ›</i></span></button>` : ""}
     ${groupe("anim", "Variantes · autres réalités", "Pas notre " + prenom, anim, ["Variante", "v"])}
@@ -9412,7 +9422,7 @@ function ouvrirPerso(i){
   document.getElementById("perso-in").innerHTML = `<div class="pf r${r}">
     <div class="pf-hero"><img src="${photo(i)}"${u ? ` data-hd="${u}"` : ""} alt="" style="object-position:50% ${fy}%"><span class="pf-trame"></span>
       <span class="pf-carte" data-carte-perso="${i}">${carteHTML(i, { etat:possede(i) ? "face" : "verrou" })}</span>
-      <div class="pf-txt"><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>${inf.s ? `<p class="pf-espece">${esc(inf.s)}</p>` : ""}</div></div>
+      <div class="pf-txt"><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>${inf.s ? `<p class="pf-tags pf-espece"><span>${esc(inf.s)}</span></p>` : ""}</div></div>
     ${corpsPerso(i)}
     <div class="fin-page"></div></div>`;
   ouvrirFeuille("perso");
