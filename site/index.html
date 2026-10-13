@@ -4502,6 +4502,15 @@ const syncPossible = () => /^https?:$/.test(location.protocol) && !!SYNC.cle && 
 const cleSyncDe = brut => sha256("marvel-sauvegarde:" + brut);
 async function lireClesSync(){ try{ return JSON.parse(await memo.lire(CLE_SYNC) || "{}") || {}; }catch(e){ return {}; } }
 async function retenirCleSync(c, cle){ const m = await lireClesSync(); m[c] = cle; memo.ecrire(CLE_SYNC, JSON.stringify(m)); }
+/* Garde-fou : une sauvegarde presque vide (nouveau site, compte recréé…) ne remplace jamais une vraie progression.
+   Richesse = titres cochés + cartes obtenues, tous profils confondus. */
+function richesse(d){
+  let n = 0; const e = (d && d.etat) || {};
+  for(const k in e){ const x = e[k] || {}; n += Object.keys((x.mcu || {}).vus || {}).length + Object.keys((x.multi || {}).vus || {}).length + Object.keys((x.cartes || {}).col || {}).length; }
+  return n;
+}
+const plusPauvre = v => { const ici = richesse({ etat }); return ici >= 3 && richesse(v && v.donnees) < ici / 2; };
+function garderLocal(v){ SYNC.t = Math.max(Date.now(), (v && v.t || 0) + 1); memo.ecrire(CLE_COMPTE(compte), JSON.stringify({ profils, etat, t:SYNC.t })); envoyerSync(); }
 function attendre(p, ms){ return Promise.race([p, new Promise((_, ko) => setTimeout(() => ko(new Error("délai")), ms))]); }
 async function tirerSync(){
   if(!syncPossible()) return false;
@@ -4514,6 +4523,7 @@ async function tirerSync(){
     }
     if(!r.ok) throw new Error(r.status);
     const v = await r.json(); SYNC.etat = "ok"; SYNC.dernier = Date.now();
+    if(v && v.donnees && v.t > SYNC.t && profils.length && plusPauvre(v)){ garderLocal(v); return false; }
     if(v && v.donnees && (v.t > SYNC.t || !profils.length)){   // plus récent, ou appareil encore vide
       appliquerDonnees(v.donnees); SYNC.t = v.t;
       memo.ecrire(CLE_COMPTE(compte), JSON.stringify({ profils, etat, t:v.t }));
@@ -4529,7 +4539,7 @@ async function envoyerSync(garder){
   clearTimeout(SYNC.minuterie); SYNC.minuterie = null; SYNC.etat = "envoi";
   try{
     const r = await fetch(API_SYNC + "?k=" + SYNC.cle, { method:"PUT", keepalive:!!garder, headers:{ "content-type":"application/json" }, body:JSON.stringify({ t:SYNC.t, donnees:{ profils, etat } }) });
-    if(r.status === 409){ const v = await r.json(); if(v && v.donnees){ adopterDistant(v); } }
+    if(r.status === 409){ const v = await r.json(); if(v && v.donnees){ if(plusPauvre(v)) return garderLocal(v); adopterDistant(v); } }
     else if(!r.ok) throw new Error(r.status);
     SYNC.etat = "ok"; SYNC.dernier = Date.now();
   }catch(e){ SYNC.etat = "hors-ligne"; }
@@ -4547,7 +4557,7 @@ document.addEventListener("visibilitychange", async () => {
   if(SYNC.minuterie) return;   // un envoi est en attente : notre version est la plus récente
   try{
     const r = await attendre(fetch(API_SYNC + "?k=" + SYNC.cle, { cache:"no-store" }), 6000);
-    if(r.ok){ const v = await r.json(); if(v && v.t > SYNC.t && v.donnees) adopterDistant(v); SYNC.etat = "ok"; SYNC.dernier = Date.now(); }
+    if(r.ok){ const v = await r.json(); if(v && v.t > SYNC.t && v.donnees){ if(plusPauvre(v)) garderLocal(v); else adopterDistant(v); } SYNC.etat = "ok"; SYNC.dernier = Date.now(); }
   }catch(e){}
 });
 function texteSync(){
