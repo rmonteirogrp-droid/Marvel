@@ -8,15 +8,15 @@
         <link rel="Shortcut icon" type="image/x-icon" href="assets/favicon.ico">
         <!-- Primary meta tags -->
         <meta name="description" content="VARMAX 2 — Maximiser les performances pour optimiser les coûts énergétiques. Découvrez les nouveautés, évolutions et outils logiciels.">
-        <meta name="author" content="Atlantic Systèmes">
+        <meta name="author" content="atlantic systems">
         <meta name="robots" content="index, follow">
-        <meta name="theme-color" content="#0D5A70">
+        <meta name="theme-color" content="#19296A">
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="product">
         <meta property="og:title" content="Découvrir VARMAX 2">
         <meta property="og:description" content="VARMAX 2 — Maximiser les performances pour optimiser les coûts énergétiques.">
-        <meta property="og:site_name" content="Atlantic Systèmes">
+        <meta property="og:site_name" content="atlantic systems">
         <meta property="og:locale" content="fr_FR">
         <meta property="og:url" content="https://decouvrir-varmax2.atlantic-pros.fr/">
         <meta property="og:image" content="https://decouvrir-varmax2.atlantic-pros.fr/assets/varmax2.png">
@@ -32,8 +32,7 @@
         <!-- Quick-win LCP: preload WebP hero if available, fallback PNG already present -->
         <link rel="preload" as="image" href="assets/optimized/varmax-2-product-excellence-2x.webp" type="image/webp" fetchpriority="high">
 
-        <!-- Styles  https://cdn.jsdelivr.net/npm/@picocss/pico@1.5.10/css/pico.min.css -->
-        <link rel="stylesheet" href="assets/pico.min.css">
+        <!-- Styles -->
         <link rel="stylesheet" href="assets/varmax2.css">
 
         <!-- JSON-LD Organisation -->
@@ -41,9 +40,9 @@
         {
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "Atlantic Systèmes",
+            "name": "atlantic systems",
             "url": "https://decouvrir-varmax2.atlantic-pros.fr/",
-            "logo": "https://decouvrir-varmax2.atlantic-pros.fr/assets/LogoATLSystemes.svg",
+            "logo": "https://decouvrir-varmax2.atlantic-pros.fr/assets/logo-atlantic-systems.svg",
             "sameAs": [
                 "https://www.linkedin.com/company/atlanticfrance/",
                 "https://www.youtube.com/@AtlanticProsfrance",
@@ -63,7 +62,7 @@
                 "description": "VARMAX 2 — Maximiser les performances pour optimiser les coûts énergétiques.",
                 "brand": {
                     "@type": "Brand",
-                    "name": "Atlantic Systèmes"
+                    "name": "atlantic systems"
                 },
                 "offers": {
                     "@type": "Offer",
@@ -74,25 +73,26 @@
             </script>
 </head>
 <body>
+    <div class="bar" id="bar"></div>
     <a class="skip-link" href="#contenu-principal">Aller au contenu principal</a>
     <header class="navbar">
         <nav id="menu" class="menu" aria-label="Navigation principale">
-            <div class="brand" style="min-width:230px;">
-                <img src="assets/LogoATLSystemes.svg" alt="Logo ATLANTIC Systemes">
+            <div class="brand">
+                <img src="assets/logo-atlantic-systems-blanc.svg" alt="atlantic systems" width="895" height="220">
             </div>
 
 
 
             <ul id="menu-list" class="menu-list">
-                <li><a href="#plusproduits">LES + <br>PRODUITS</a></li>
-                <li><a href="#pourquoi">NOUVELLE <br>VERSION</a></li>
-                <li><a href="#evolutions">ÉVOLUTIONS <br>MAJEURES</a></li>
-                <li><a href="#confiance">ILS NOUS FONT <br>CONFIANCE</a></li>
-                <li><a href="#outils">OUTILS <br>LOGICIELS</a></li>
-                <li><a href="#contact">CONTACT</a></li>
+                <li><a href="#plusproduits">Les + produits</a></li>
+                <li><a href="#pourquoi">Nouvelle version</a></li>
+                <li><a href="#evolutions">Évolutions majeures</a></li>
+                <li><a href="#confiance">Ils nous font&nbsp;confiance</a></li>
+                <li><a href="#outils">Outils logiciels</a></li>
+                <li><a href="#contact">Contact</a></li>
             </ul>
             <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="menu-list"
-                aria-label="Ouvrir le menu">☰</button>
+                aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
         </nav>
     </header>
     <main id="contenu-principal">
@@ -100,7 +100,7 @@
             <div class="container-wrapper hero-flex">
                 <div class="hero-content">
                     <h1 class="hero-title">VARMAX&nbsp;2</h1>
-                    <p class="hero-desc">Maximiser les performances<br>pour optimiser les coûts énergétiques</p>
+                    <p class="hero-desc">Maximiser les performances<br>pour optimiser les coûts&nbsp;énergétiques</p>
                     <a class="hero-btn" target="_blank" href="https://www.youtube.com/watch?v=KxETGB1TC0s">Découvrir&nbsp;en&nbsp;vidéo</a>
                 </div>
                 <div class="hero-img-block">
@@ -118,20 +118,20 @@
                 <h2 class="section-title">Les <span class="plus">+</span> produit</h2>
                 <div class="wrapper">
                     <div class="tab">
-                        <button class="tablinks" onclick="openPlusProduit(event, 'ergonomique')"><span
+                        <button class="tablinks active" onclick="openPlusProduit(event, 'ergonomique')"><span
                                 class="plus">+</span>
-                            ERGONOMIQUE</button>
+                            Ergonomique</button>
                         <button class="tablinks" onclick="openPlusProduit(event, 'intuitive')"><span
                                 class="plus">+</span>
-                            INTUITIVE</button>
+                            Intuitive</button>
                         <button class="tablinks" onclick="openPlusProduit(event, 'pratique')"><span
                                 class="plus">+</span>
-                            PRATIQUE</button>
+                            Pratique</button>
                     </div>
 
                     <div id="ergonomique" class="tabcontent" style="display: flex;">
                         <div class="produit-wrapper">
-                            <h3><span class="plus">+</span>ERGONOMIQUE</h3>
+                            <h3><span class="plus">+</span> Ergonomique</h3>
                             <p>Un design repensé avec un habillage modernisé et une accessibilité améliorée.</p>
                         </div>
                         <picture>
@@ -142,7 +142,7 @@
 
                     <div id="intuitive" class="tabcontent" style="display: none;">
                         <div class="produit-wrapper">
-                            <h3><span class="plus">+</span> INTUITIVE</h3>
+                            <h3><span class="plus">+</span> Intuitive</h3>
                             <p>Equipée d’un écran tactile Navistem B4000 intégré, pilotez jusqu’à 15 chaudières depuis une seule interface.</p>
                         </div>
                         <picture>
@@ -154,7 +154,7 @@
 
                     <div id="pratique" class="tabcontent" style="display: none;">
                         <div class="produit-wrapper">
-                            <h3><span class="plus">+</span> PRATIQUE</h3>
+                            <h3><span class="plus">+</span> Pratique</h3>
                             <p>Maintenance simplifiée grâce aux&nbsp;doubles portes latérales amovibles permettant une&nbsp;meilleure accessibilité aux&nbsp;composants.</p>
                         </div>
                         <picture>
@@ -192,11 +192,11 @@
         <section id="pourquoi" class="section pourquoi">
             <div class="container">
                 <div class="flex-container">
-                    <h2 class="section-title"><span style="color:#0d5a70;">Pourquoi</span></br>
+                    <h2 class="section-title"><span>Pourquoi</span>
                         <span>une nouvelle version&nbsp;?</span>
                     </h2>
                     <details name="succes" open>
-                        <summary>UN SUCCÈS HISTORIQUE</summary>
+                        <summary>Un succès historique</summary>
                         <p>Depuis son lancement, la gamme Varmax s’est imposée comme une référence incontournable dans
                             son domaine. Pensée dès le départ pour répondre aux besoins concrets des utilisateurs sur le
                             terrain, elle a su convaincre par sa fiabilité, sa robustesse et sa performance
@@ -206,7 +206,7 @@
                             d’utilisation, adaptabilité et durabilité.</p>
                     </details>
                     <details name="succes">
-                        <summary>36&nbsp;000 INSTALLATIONS EN&nbsp;FRANCE</summary>
+                        <summary>36&nbsp;000 installations en&nbsp;France</summary>
                         <p>Ce succès se traduit concrètement par une présence massive sur le&nbsp;territoire européen,
                             avec plus de 36&nbsp;000 Varmax installées à ce jour. Ce&nbsp;chiffre témoigne de
                             la&nbsp;confiance
@@ -214,16 +214,16 @@
                             variés, parfois exigeants.</p>
                     </details>
                     <details name="succes">
-                        <summary>UNE NOUVELLE ÉTAPE DANS LA GAMME</summary>
+                        <summary>Une nouvelle étape dans la&nbsp;gamme</summary>
                         <p>
                             Elle a été conçue en s’appuyant directement sur les retours d’expérience des utilisateurs,
                             afin de répondre encore mieux à leurs attentes. Les&nbsp;objectifs de cette nouvelle
                             version&nbsp;:
                         </p>
                         <ul>
-                            <li>améliorer l’ergonomie pour un confort d’utilisation accru,</li>
-                            <li>optimiser les performances techniques pour gagner en efficacité,</li>
-                            <li>faciliter la maintenance et l’entretien, pour limiter les temps d’arrêt.</li>
+                            <li>améliorer l’ergonomie pour un confort d’utilisation&nbsp;accru,</li>
+                            <li>optimiser les performances techniques pour gagner en&nbsp;efficacité,</li>
+                            <li>faciliter la maintenance et l’entretien, pour limiter les temps&nbsp;d’arrêt.</li>
                         </ul>
                         <p>Plus qu’une simple mise à jour, la Varmax&nbsp;2 est une réponse concrète à&nbsp;des besoins
                             réels –
@@ -245,7 +245,7 @@
         <section id="evolutions" class="section evolutions">
             <div class="container">
                 <div class="flex-container">
-                    <h2 class="section-title">LES</br>ÉVOLUTIONS</br><span class="bleutxt">MAJEURES</span></h2>
+                    <h2 class="section-title">Les évolutions&nbsp;<span class="bleutxt">majeures</span></h2>
 
                 </div>
                 <div class="flex-container">
@@ -271,7 +271,7 @@
                         Une solution fiable <br><span class="text-white">et performante</span>
                     </div>
                     <div class="varmax2-fiable-desc">
-                        Grâce à sa conception éprouvée et ses composants de haute qualité, la&nbsp;Varmax&nbsp;2 offre une&nbsp;fiabilité sans compromis, avec des coûts d’exploitation maîtrisés.
+                        Grâce à sa conception éprouvée et ses composants de haute qualité, la&nbsp;Varmax&nbsp;2 offre une&nbsp;fiabilité sans compromis, avec des coûts d’exploitation&nbsp;maîtrisés.
                     </div>
                     <a class="varmax2-fiable-btn" target="_blank" href="https://www.notices-produits.fr/permalink/variant_documents_1527401e-c691-4ec4-af18-4c92f763729e/NGwtVSq9mWlJkQt_6226NlWLlL0-Z2q7">
                         Télécharger la&nbsp;documentation
@@ -279,9 +279,9 @@
                 </div>
             </div>
             <div id="hybridation" class="container hybridation">
-                <h2 class="section-title">Et SI VOUS PASSIEZ</br>À L’HYBRIDATION&nbsp;?</h2>
+                <h2 class="section-title">Et si vous passiez<br>à l’hybridation&nbsp;?</h2>
                 <p>Associer Varmax&nbsp;2 à une PAC air/eau APTAE pour maximiser la performance et répondre aux enjeux
-                    de&nbsp;transition énergétique.</p>
+                    de&nbsp;transition&nbsp;énergétique.</p>
                 <img class="tags-hybrid" src="assets/tags-for-varmax-hybrid.svg" alt="Varmax 2 hybride" width="204" height="96" />
             </div>
         </section>
@@ -290,7 +290,7 @@
         <section id="confiance" class="varmax2-confiance">
             <div class="container">
                 <div class="varmax2-confiance-title">
-                    <span class="text-black">Ils nous font</span><span class="text-white"> confiance</span>
+                    <span class="text-black">Ils nous font&nbsp;</span><span class="text-white">confiance</span>
                 </div>
                 <div class="varmax2-confiance-cards">
                     <article class="varmax2-confiance-card">
@@ -301,7 +301,7 @@
                                 </picture>
                         </div>
                         <div class="varmax2-confiance-card-quote">
-                            <span class="author">RÉSIDENCE JEAN-SICARD<br>Paris (75)</span>
+                            <span class="author">Résidence Jean-Sicard<br>Paris (75)</span>
                             <a class="varmax2-btn" target="_blank" href="https://www.atlantic-pros.fr/Nos-references-chantiers/References-chantiers/RESIDENCE-JEAN-SICARD">
                                 En savoir plus
                             </a>
@@ -315,7 +315,7 @@
                             </picture>
                         </div>
                         <div class="varmax2-confiance-card-quote">
-                            <span class="author">RÉSIDENCE ROSIÈRE<br>Brétigny-sur-Orge (91)</span>
+                            <span class="author">Résidence Rosière<br>Brétigny-sur-Orge (91)</span>
                             <a class="varmax2-btn" target="_blank" href="https://www.atlantic-pros.fr/Nos-references-chantiers/References-chantiers/RESIDENCE-ROSIERE">
                                 En savoir plus
                             </a>
@@ -330,7 +330,7 @@
                         </div>
                         <div class="varmax2-confiance-card-quote">
 
-                            <span class="author">GENDARMERIE<br>Briançon (05)</span>
+                            <span class="author">Gendarmerie<br>Briançon (05)</span>
                             <a class="varmax2-btn" target="_blank" href="https://www.atlantic-pros.fr/Nos-references-chantiers/References-chantiers/GENDARMERIE-BRIANCON">
                                 En savoir plus
                             </a>
@@ -345,7 +345,7 @@
                 <div class="container">
                     <div class="flex-container col1">
                         <div class="varmax2-outils-header">
-                            <h2>Des outils logiciels </br><span class="accent">pour aller plus loin</span></h2>
+                            <h2>Des outils logiciels <span class="accent">pour aller plus loin</span></h2>
                             <p>Parce que nous savons que la performance peut toujours être améliorée, nous offrons à&nbsp;nos clients deux logiciels puissants et&nbsp;complémentaires, alliant autonomie maximale et&nbsp;accompagnement technique expert.</p>
                         </div>
                         <div class="varmax2-outils-card row-wrapper">
@@ -371,11 +371,9 @@
                                             <img src="assets/logo-customheat.svg" alt="CustomHeat" />
                                         </div>
                                         <div class="varmax2-outils-card-content">
-                                            <h3>CUSTOMHEAT <span class="nouveaute"><img src="assets/badge-nouveaute.svg"
-                                                        alt="Nouveauté" /></span></h3>
-                                            <p>L’assistant numérique d’Atlantic Systèmes qui accompagne votre
-                                                installation en chaufferie, s’enrichit de&nbsp;nouvelles
-                                                fonctionnalités.</p>
+                                            <h3>CUSTOMHEAT <span class="nouveaute">Nouveauté</span></h3>
+                                            <p>L’assistant numérique d’atlantic&nbsp;systems qui accompagne votre
+                                                installation en chaufferie, s’enrichit de&nbsp;nouvelles&nbsp;fonctionnalités.</p>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -390,14 +388,14 @@
                                                 <div class="row-wrapper">
                                                     <img src="assets/icon-varmax2.svg" alt="Compatibilité étendue" />
                                                     <h4>Une compatibilité étendue aux gammes <br>
-                                                        de&nbsp;chaudières Atlantic Systèmes</h4>
+                                                        de&nbsp;chaudières atlantic&nbsp;systems</h4>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="varmax2-outils-feature">
                                             <div class="row-wrapper">
                                                 <img src="assets/icon-modbus.svg" alt="Communication Modbus" />
-                                                <h4>Une Communication Modbus</h4>
+                                                <h4>Une Communication&nbsp;Modbus</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -424,7 +422,7 @@
         <section id="onenparle" class="varmax2-onenparle">
             <div class="container">
                 <div class="varmax2-onenparle-title">
-                    <span class="text-black">ON</span> EN PARLE
+                    <span class="text-black">On</span> en parle
                 </div>
                 <div class="varmax2-onenparle-cards">
                     <div class="varmax2-onenparle-card">
@@ -451,9 +449,9 @@
                             </picture>
                         </div>
                         <div class="varmax2-onenparle-card-content">
-                            <h3>Le Site de Fontaine - YouTube</h3>
+                            <h3>Le Site de Fontaine&nbsp;-&nbsp;YouTube</h3>
                             <p>Côté vidéo, plongez au cœur du site logistique de Fontaine, vitrine de notre savoir-faire
-                                industriel et des solutions phares Atlantic Systèmes dont la&nbsp;Varmax&nbsp;2.
+                                industriel et des solutions phares atlantic&nbsp;systems dont la&nbsp;Varmax&nbsp;2.
                             </p>
                             <a class="varmax2-onenparle-btn" href="https://www.youtube.com/watch?v=QjFw893qYxA" target="_blank">Voir la vidéo</a>
                         </div>
@@ -471,36 +469,56 @@
                         <img src="assets/optimized/image-contact_187333002-1024-1x.jpg" srcset="assets/optimized/image-contact_187333002-1024-1x.jpg 1x, assets/optimized/image-contact_187333002-1024-2x.jpg 2x" alt="Contact Varmax" width="555" height="370" />
                     </picture>
                 </div>
+                <p class="closing-sign">Derrière les performances,<br>il y a toujours un&nbsp;système</p>
                 <div class="varmax2-contact-content">
-                    <h2>Contactez <span class="text-black">nous</span></h2>
+                    <h2>Contactez-<span class="text-black">nous</span></h2>
                     <div class="varmax2-contact-desc">
-                        <p class="slogan">votre projet, notre priorité</p>
+                        <p class="slogan">Votre projet, notre priorité</p>
                         <p>Vous avez des questions, un projet en tête ou besoin de conseils personnalisés ? Nous sommes
-                            là pour vous accompagner.</p>
+                            là pour vous&nbsp;accompagner.</p>
                         <p>
                             Pour mieux comprendre vos besoins et vous orienter vers les solutions les plus adaptées,
                             nous vous invitons à&nbsp;remplir notre questionnaire en ligne. Nos experts reviendront
                             rapidement vers&nbsp;vous.
                         </p>
-                        <a class="varmax2-contact-btn" href="https://www.atlantic-pros.fr/Contactez-nous" target="_blank">Accéder au questionnaire</a>
+                        <a class="varmax2-contact-btn" href="https://www.atlantic-pros.fr/Contactez-nous" target="_blank">Accéder au&nbsp;questionnaire</a>
                     </div>
                 </div>
             </div>
         </section>
         <!-- Fin section Figma : Contactez-nous -->
     </main>
-    <footer class="section" style="text-align:center; font-size:1rem;">
-        <div class="container">
-            <div><a target="_blank" href="https://www.atlantic-pros.fr/"><img src="assets/LogoATLSystemes-blanc.svg" alt="Atlantic Systemes" style="border-radius: 0;" /></a> </div>
-            <div class="social-logos"
-                style="display: flex; justify-content: center; gap: 1rem; align-items: center; margin: 1rem 0;">
-                <a target="_blank" href="https://www.linkedin.com/company/atlanticfrance/posts/?feedView=all"><img src="assets/icon-linkedin.svg" alt="Linkedin Atlantic" style="border-radius: 0;" /></a>
-                <a target="_blank" href="https://www.youtube.com/@AtlanticProsfrance"><img src="assets/icon-youtube.svg" alt="Youtube Atlantic" style="border-radius: 0;" /></a>
-                <a target="_blank" href="https://www.atlantic-pros.fr/"><img src="assets/icon-atlantic.svg" alt="Atlantic Pro"
-                        style="border-radius: 0;" /></a>
+    <footer class="ft">
+        <div class="shell">
+            <div class="ft-top">
+                <div><a target="_blank" href="https://www.atlantic-pros.fr/"><img src="assets/logo-atlantic-systems-blanc.svg" alt="atlantic systems" class="ft-logo" width="895" height="220"></a></div>
+                <div class="ft-cols">
+                    <div class="ft-col">
+                        <h4>Varmax 2</h4>
+                        <a href="#plusproduits">Les + produits</a><a href="#pourquoi">Nouvelle version</a>
+                        <a href="#evolutions">Évolutions majeures</a><a href="#confiance">Ils nous font&nbsp;confiance</a>
+                        <a href="#outils">Outils logiciels</a>
+                    </div>
+                    <div class="ft-col">
+                        <h4>Outils</h4>
+                        <a target="_blank" href="https://customheat.atlantic-pros.fr/atlfr">CustomHeat</a>
+                        <a target="_blank" href="https://www.notices-produits.fr/permalink/variant_documents_1527401e-c691-4ec4-af18-4c92f763729e/NGwtVSq9mWlJkQt_6226NlWLlL0-Z2q7">Documentation</a>
+                    </div>
+                    <div class="ft-col">
+                        <h4>Contact</h4>
+                        <a target="_blank" href="https://www.atlantic-pros.fr/Contactez-nous">Nous écrire</a>
+                        <a target="_blank" href="https://www.atlantic-pros.fr/">atlantic-pros.fr</a>
+                        <a target="_blank" href="https://www.linkedin.com/company/atlanticfrance/posts/?feedView=all">LinkedIn</a>
+                        <a target="_blank" href="https://www.youtube.com/@AtlanticProsfrance">YouTube</a>
+                    </div>
+                </div>
             </div>
-            <div>
-                <p>&copy; 2025 Atlantic Systèmes - Varmax 2</p>
+            <div class="ft-bot">
+                <nav class="ft-legal-links" aria-label="Informations légales">
+                    <a href="#" data-target="modal" onclick="toggleModal(event)">Mentions légales et confidentialité</a>
+                    <a href="#" class="cc-manage" id="ccManage">Gérer les cookies</a>
+                    <span>&copy; 2025 atlantic&nbsp;systems – Varmax&nbsp;2</span>
+                </nav>
             </div>
         </div>
     </footer>
@@ -585,7 +603,7 @@
 <div class="cc-backdrop" id="ccBackdrop" aria-hidden="true"></div>
 <div class="cc" id="cc" role="dialog" aria-modal="true" aria-labelledby="ccTitle">
     <h2 id="ccTitle">Consentement aux cookies</h2>
-    <p>Nous utilisons des cookies pour le bon fonctionnement de cette page et&nbsp;receuillir des statistiques
+    <p>Nous utilisons des cookies pour le bon fonctionnement de cette page et&nbsp;recueillir des statistiques
         anonymisées.
         <a href="#" target="_blank" rel="noopener" data-target="modal" onclick="toggleModal(event)">En savoir plus</a>.
     </p>
@@ -602,11 +620,11 @@
     </div>
 </div>
 
-<a href="#" class="cc-manage" id="ccManage" aria-label="Gérer les cookies">Cookies</a>
 <script src="assets/menu.js" defer></script>
 <script src="assets/modal.js" defer></script>
 <!-- Cookie Banner: minimal, vanilla, accessible -->
 <script src="assets/cookies.js" defer></script>
+<script src="assets/varmax2.js" defer></script>
 
 
 </body>
