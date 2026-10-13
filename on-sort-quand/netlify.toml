@@ -1,0 +1,10 @@
+# Site Netlify séparé : sur Netlify, « Base directory » = on-sort-quand
+[build]
+  publish = "public"
+  command = ""
+  functions = "netlify/functions"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "no-cache"

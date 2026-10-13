@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>On sort quand ?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">
+<style>
+/* Layout: one narrow column, two views. Answer view = name card + one row per Friday/Saturday + sticky "Valider". Recap view = ranked list of nights, with a red pastille for each person who can't come. */
+:root {
+  --bg: #f3f2f8;
+  --surface: #ffffff;
+  --ink: #1b1a2e;
+  --muted: #6a6880;
+  --line: #e1dfec;
+  --accent: #5b3df5;
+  --accent-ink: #ffffff;
+  --accent-soft: #ebe7ff;
+  --yes: #1f9d63;
+  --yes-soft: #dcf3e8;
+  --no: #c23d55;
+  --no-soft: #f9e0e5;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "DM Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121120; --surface: #1c1b2e; --ink: #ecebf6; --muted: #9c9ab3; --line: #2e2c45;
+    --accent: #9a87ff; --accent-ink: #120f2a; --accent-soft: #2a2550;
+    --yes: #4fd096; --yes-soft: #173a2b; --no: #f27f94; --no-soft: #3d1d25;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121120; --surface: #1c1b2e; --ink: #ecebf6; --muted: #9c9ab3; --line: #2e2c45;
+  --accent: #9a87ff; --accent-ink: #120f2a; --accent-soft: #2a2550;
+  --yes: #4fd096; --yes-soft: #173a2b; --no: #f27f94; --no-soft: #3d1d25;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-inline: 16px;
+  margin: 0;
+  padding-block: calc(28px + env(safe-area-inset-top, 0px)) 64px;
+}
+.wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+
+header h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2rem, 7vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+header h1 em { font-style: normal; color: var(--accent); }
+header p { margin: 8px 0 0; color: var(--muted); max-width: 60ch; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.lbl { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.err { color: var(--no); font-size: 13px; margin: 0; }
+.hint { color: var(--muted); font-size: 13px; margin: 0; }
+.section-h {
+  font-family: var(--display); font-weight: 700; font-size: 13px;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 0 0 10px;
+}
+
+/* Name */
+#nameForm { display: flex; flex-direction: column; gap: 10px; }
+input[type="text"] {
+  flex: 1 1 220px; min-width: 0;
+  font: inherit; font-size: 17px;
+  padding: 11px 14px; border-radius: 10px;
+  border: 1.5px solid var(--line); background: var(--bg); color: var(--ink);
+}
+input[type="text"]:focus-visible { outline: none; border-color: var(--accent); }
+.btn { font: inherit; font-weight: 600; padding: 11px 18px; border-radius: 10px; border: 1.5px solid transparent; cursor: pointer; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-small { padding: 7px 12px; font-size: 13px; }
+.btn:focus-visible, .pick button:focus-visible, .linkbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.linkbtn { font: inherit; background: none; border: 0; padding: 0; color: var(--accent); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.me-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.me-line strong { font-family: var(--display); font-size: 20px; font-weight: 700; overflow-wrap: anywhere; }
+
+/* Answer rows */
+.month { display: flex; flex-direction: column; gap: 8px; }
+.month + .month { margin-top: 18px; }
+.date {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.date.past { opacity: 0.45; }
+.dlabel { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.dlabel .wd { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.dlabel .dd { font-family: var(--display); font-weight: 700; font-size: 20px; }
+.sat .wd { color: var(--accent); }
+.pick { display: inline-flex; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; }
+.pick button {
+  font: inherit; font-size: 14px; font-weight: 600;
+  border: 0; background: transparent; color: var(--muted);
+  padding: 9px 18px; cursor: pointer;
+}
+.pick button + button { border-left: 1.5px solid var(--line); }
+.pick button[aria-pressed="true"][data-v="oui"] { background: var(--yes-soft); color: var(--yes); }
+.pick button[aria-pressed="true"][data-v="non"] { background: var(--no-soft); color: var(--no); }
+.pick button:disabled { cursor: not-allowed; }
+
+.submitbar {
+  position: sticky; bottom: 0;
+  margin-inline: -16px; padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, var(--bg) 70%, transparent);
+  display: flex; flex-direction: column; gap: 6px; align-items: stretch;
+}
+.submitbar .btn { font-size: 17px; padding: 14px 18px; }
+.submitbar .hint { text-align: center; }
+
+/* Recap */
+.rank { display: flex; flex-direction: column; gap: 10px; }
+.rk {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 14px 16px;
+  display: grid; grid-template-columns: 44px 1fr; gap: 4px 12px; align-items: start;
+}
+.rk.first { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.rk .pos {
+  grid-row: span 3;
+  font-family: var(--display); font-weight: 800; font-size: 28px; line-height: 1;
+  color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 4px;
+}
+.rk.first .pos { color: var(--accent); }
+.rk .head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; min-width: 0; }
+.rk .when { font-family: var(--display); font-weight: 700; font-size: 20px; }
+.rk .when small { display: inline-block; white-space: nowrap; font-family: var(--body); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-left: 8px; }
+.rk .score { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rk .score b { color: var(--yes); font-size: 16px; }
+.bar { display: flex; height: 8px; border-radius: 99px; background: var(--no-soft); overflow: hidden; margin: 4px 0 2px; }
+.bar span { display: block; height: 100%; background: var(--yes); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  padding: 3px 10px 3px 8px; border-radius: 99px;
+  background: var(--no-soft); color: var(--no);
+  max-width: 100%; overflow-wrap: anywhere;
+}
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--no); flex: none; }
+.allin { font-size: 13px; font-weight: 600; color: var(--yes); }
+.yesline { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+
+.empty { text-align: center; color: var(--muted); padding: 28px 12px; }
+.banner { border-radius: 12px; padding: 12px 14px; background: var(--no-soft); color: var(--ink); font-size: 14px; }
+.toast { font-size: 14px; color: var(--yes); font-weight: 600; margin: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .bar span { transition: width 0.3s ease; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>On sort <em>quand</em>&nbsp;?</h1>
+    <p id="subtitle">Tous les vendredis et samedis jusqu'à fin novembre. Mets ton prénom, dis oui ou non pour chaque soir, puis valide.</p>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <!-- ANSWER VIEW -->
+  <div id="answerView" class="wrap" style="padding:0">
+    <section class="card">
+      <form id="nameForm" novalidate>
+        <label class="lbl" for="nameInput">Ton prénom (obligatoire)</label>
+        <div class="row">
+          <input id="nameInput" type="text" autocomplete="given-name" maxlength="40" placeholder="ex. Inès" required>
+          <button class="btn btn-primary" type="submit">C'est moi</button>
+        </div>
+        <p class="err" id="nameErr" hidden></p>
+        <p class="hint">Déjà répondu ? Remets le même prénom pour modifier tes réponses. Ou <button type="button" class="linkbtn" id="peekBtn">voir le classement</button>.</p>
+      </form>
+      <div id="meBox" hidden>
+        <div class="me-line">
+          <div><span class="lbl">Tu réponds en tant que</span><br><strong id="meName"></strong></div>
+          <button class="btn btn-ghost btn-small" type="button" id="changeBtn">Changer de nom</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="dates"></section>
+
+    <div class="submitbar">
+      <button class="btn btn-primary" type="button" id="submitBtn" disabled>Valider mes dispos</button>
+      <p class="hint" id="submitHint">Mets ton prénom pour pouvoir répondre.</p>
+    </div>
+  </div>
+
+  <!-- RECAP VIEW -->
+  <div id="recapView" class="wrap" style="padding:0" hidden>
+    <section class="card">
+      <div class="me-line">
+        <div>
+          <p class="toast" id="savedMsg" hidden></p>
+          <p class="hint" id="countLine"></p>
+        </div>
+        <button class="btn btn-ghost btn-small" type="button" id="editBtn">Modifier mes réponses</button>
+      </div>
+    </section>
+    <section>
+      <h2 class="section-h">Classement des soirs</h2>
+      <div id="rank" class="rank"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const START = new Date(2026, 9, 13);   // 13 oct. 2026
+  const END = new Date(2026, 10, 30);    // 30 nov. 2026
+  const LS_KEY = "onsortquand.name";
+  const API = "/api/dispos";
+
+  const pad = n => String(n).padStart(2, "0");
+  const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayKey = keyOf(today);
+
+  const fmtWd = new Intl.DateTimeFormat("fr-FR", { weekday: "long" });
+  const fmtDay = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" });
+  const fmtShort = new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  const fmtMonth = new Intl.DateTimeFormat("fr-FR", { month: "long" });
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+  const DATES = [];
+  for (let d = new Date(START); d <= END; d.setDate(d.getDate() + 1)) {
+    const wd = d.getDay();
+    if (wd === 5 || wd === 6) {
+      const c = new Date(d);
+      DATES.push({ key: keyOf(c), date: c, sat: wd === 6, past: keyOf(c) < todayKey });
+    }
+  }
+  const OPEN = DATES.filter(d => !d.past);
+
+  // ---- state ----
+  let docs = new Map();     // slug -> {name, answers}
+  let loaded = false;
+  let me = null;            // {slug, name}
+  let mine = {};            // key -> "oui" | "non"
+  let view = "answer";
+  let saving = false;
+
+  const $ = id => document.getElementById(id);
+
+  function slugify(name) {
+    return name.normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  }
+  function showBanner(text) { const b = $("banner"); b.textContent = text; b.hidden = !text; }
+
+  function setView(v) {
+    view = v;
+    $("answerView").hidden = v !== "answer";
+    $("recapView").hidden = v !== "recap";
+    $("subtitle").textContent = v === "recap"
+      ? "Le classement se met à jour tout seul dès que quelqu'un valide ses dispos."
+      : "Tous les vendredis et samedis jusqu'à fin novembre. Mets ton prénom, dis oui ou non pour chaque soir, puis valide.";
+    $("editBtn").textContent = me ? "Modifier mes réponses" : "Répondre";
+    render();
+    window.scrollTo({ top: 0 });
+  }
+
+  // ---- identity ----
+  function join(rawName, silent) {
+    const name = rawName.trim().replace(/\s+/g, " ");
+    const slug = slugify(name);
+    if (name.length < 2 || !slug) {
+      if (!silent) {
+        $("nameErr").textContent = "Écris ton prénom (au moins 2 lettres) pour pouvoir répondre.";
+        $("nameErr").hidden = false;
+        $("nameInput").focus();
+      }
+      return false;
+    }
+    $("nameErr").hidden = true;
+    me = { slug, name };
+    const existing = docs.get(slug);
+    mine = existing ? { ...existing.answers } : {};
+    try { localStorage.setItem(LS_KEY, name); } catch (e) {}
+    $("nameForm").hidden = true;
+    $("meBox").hidden = false;
+    $("meName").textContent = name;
+    render();
+    return true;
+  }
+
+  function leave() {
+    me = null; mine = {};
+    $("nameForm").hidden = false;
+    $("meBox").hidden = true;
+    $("nameInput").value = "";
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    setView("answer");
+    $("nameInput").focus();
+  }
+
+  $("nameForm").addEventListener("submit", e => { e.preventDefault(); join($("nameInput").value, false); });
+  $("changeBtn").addEventListener("click", leave);
+  $("peekBtn").addEventListener("click", () => { $("savedMsg").hidden = true; setView("recap"); });
+  $("editBtn").addEventListener("click", () => {
+    if (me) { const ex = docs.get(me.slug); if (ex) mine = { ...ex.answers }; }
+    setView("answer");
+  });
+
+  // ---- answering ----
+  function choose(key, v) {
+    if (!me) return;
+    mine[key] = v;
+    render();
+  }
+
+  $("submitBtn").addEventListener("click", async () => {
+    if (!me || saving) return;
+    const answers = { ...mine };
+    for (const d of OPEN) answers[d.key] = mine[d.key] === "oui" ? "oui" : "non";
+    saving = true; render();
+    try {
+      const res = await fetch(API, { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: me.name, answers }) });
+      if (!res.ok) throw new Error(String(res.status));
+      const saved = await res.json();
+      mine = { ...saved.answers };
+      docs.set(me.slug, { name: saved.name, answers: saved.answers });
+      showBanner("");
+      $("savedMsg").textContent = `C'est validé, ${me.name}. Voilà où en est le groupe.`;
+      $("savedMsg").hidden = false;
+      saving = false;
+      setView("recap");
+    } catch (e) {
+      saving = false;
+      render();
+      $("submitHint").textContent = "Pas enregistré (connexion ?). Réessaie dans un moment.";
+    }
+  });
+
+  // ---- rendering ----
+  function render() {
+    if (view === "answer") renderAnswer(); else renderRecap();
+  }
+
+  function renderAnswer() {
+    const box = $("dates");
+    box.replaceChildren();
+    const byMonth = new Map();
+    for (const d of DATES) {
+      const m = d.date.getMonth();
+      if (!byMonth.has(m)) byMonth.set(m, []);
+      byMonth.get(m).push(d);
+    }
+    for (const list of byMonth.values()) {
+      const sec = document.createElement("div"); sec.className = "month";
+      const h = document.createElement("h2"); h.className = "section-h";
+      h.textContent = fmtMonth.format(list[0].date) + " 2026";
+      sec.append(h);
+      for (const d of list) sec.append(answerRow(d));
+      box.append(sec);
+    }
+
+    const btn = $("submitBtn"), hint = $("submitHint");
+    const answered = OPEN.filter(d => mine[d.key]).length;
+    const yes = OPEN.filter(d => mine[d.key] === "oui").length;
+    btn.disabled = !me || saving;
+    btn.textContent = saving ? "Envoi…" : "Valider mes dispos";
+    if (!me) hint.textContent = "Mets ton prénom pour pouvoir répondre.";
+    else if (answered < OPEN.length) hint.textContent = `${yes} oui · les soirs sans réponse compteront comme « Non ».`;
+    else hint.textContent = `${yes} oui sur ${OPEN.length} soirs.`;
+  }
+
+  function answerRow(d) {
+    const row = document.createElement("div");
+    row.className = "date" + (d.sat ? " sat" : "") + (d.past ? " past" : "");
+    const lab = document.createElement("div"); lab.className = "dlabel";
+    const wd = document.createElement("span"); wd.className = "wd"; wd.textContent = fmtWd.format(d.date) + (d.past ? " · passé" : "");
+    const dd = document.createElement("span"); dd.className = "dd"; dd.textContent = fmtDay.format(d.date);
+    lab.append(wd, dd);
+
+    const pick = document.createElement("div"); pick.className = "pick"; pick.setAttribute("role", "group");
+    pick.setAttribute("aria-label", "Ma réponse pour " + fmtShort.format(d.date));
+    for (const [v, txt] of [["oui", "Oui"], ["non", "Non"]]) {
+      const b = document.createElement("button");
+      b.type = "button"; b.dataset.v = v; b.textContent = txt;
+      b.setAttribute("aria-pressed", me && mine[d.key] === v ? "true" : "false");
+      b.disabled = !me || d.past;
+      if (!me) b.title = "Mets ton prénom en haut d'abord";
+      b.addEventListener("click", () => choose(d.key, v));
+      pick.append(b);
+    }
+    row.append(lab, pick);
+    return row;
+  }
+
+  function renderRecap() {
+    const people = [...docs.values()];
+    const total = people.length;
+    $("countLine").textContent = total
+      ? `${total} ${total > 1 ? "personnes ont" : "personne a"} répondu : ${people.map(p => p.name).join(", ")}.`
+      : "";
+
+    const box = $("rank");
+    box.replaceChildren();
+    if (!loaded) {
+      const p = document.createElement("p"); p.className = "empty"; p.textContent = "Chargement du classement…"; box.append(p); return;
+    }
+    if (!total) {
+      const p = document.createElement("p"); p.className = "empty";
+      p.textContent = "Personne n'a encore validé. Le classement apparaîtra ici dès la première réponse.";
+      box.append(p); return;
+    }
+
+    const rows = OPEN.map(d => {
+      const yes = [], no = [];
+      for (const p of people) (p.answers[d.key] === "oui" ? yes : no).push(p.name);
+      return { d, yes, no };
+    }).sort((a, b) => b.yes.length - a.yes.length || a.d.key.localeCompare(b.d.key));
+
+    let rank = 0, prev = -1;
+    rows.forEach((r, i) => {
+      if (r.yes.length !== prev) { rank = i + 1; prev = r.yes.length; }
+      const isFirst = rank === 1 && r.yes.length > 0;
+      const el = document.createElement("article");
+      el.className = "rk" + (isFirst ? " first" : "");
+
+      const pos = document.createElement("div"); pos.className = "pos"; pos.textContent = rank;
+
+      const head = document.createElement("div"); head.className = "head";
+      const when = document.createElement("div"); when.className = "when";
+      when.textContent = cap(fmtShort.format(r.d.date));
+      if (isFirst) { const s = document.createElement("small"); s.textContent = "Meilleur soir"; when.append(s); }
+      const score = document.createElement("div"); score.className = "score";
+      const b = document.createElement("b"); b.textContent = r.yes.length;
+      score.append(b, ` / ${total} dispo${r.yes.length > 1 ? "s" : ""}`);
+      head.append(when, score);
+
+      const bar = document.createElement("div"); bar.className = "bar";
+      const fill = document.createElement("span"); fill.style.width = (r.yes.length / total * 100) + "%";
+      bar.append(fill);
+
+      const chips = document.createElement("div"); chips.className = "chips";
+      if (!r.no.length) {
+        const a = document.createElement("span"); a.className = "allin"; a.textContent = "Tout le monde peut venir";
+        chips.append(a);
+      } else {
+        for (const n of r.no) {
+          const c = document.createElement("span"); c.className = "chip"; c.textContent = n;
+          c.title = `${n} ne peut pas venir`;
+          chips.append(c);
+        }
+      }
+      const right = document.createElement("div");
+      right.style.minWidth = "0";
+      right.style.display = "flex"; right.style.flexDirection = "column"; right.style.gap = "6px";
+      right.append(head, bar, chips);
+      if (r.yes.length && r.no.length) {
+        const y = document.createElement("div"); y.className = "yesline"; y.textContent = "Dispo : " + r.yes.join(", ");
+        right.append(y);
+      }
+      el.append(pos, right);
+      box.append(el);
+    });
+  }
+
+  // ---- boot ----
+  render();
+  let remembered = "";
+  try { remembered = localStorage.getItem(LS_KEY) || ""; } catch (e) {}
+
+  async function refresh() {
+    try {
+      const res = await fetch(API, { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      const list = await res.json();
+      const next = new Map();
+      for (const e of Array.isArray(list) ? list : []) {
+        if (!e || typeof e.name !== "string") continue;
+        const slug = slugify(e.name);
+        if (slug) next.set(slug, { name: e.name.slice(0, 40), answers: e.answers && typeof e.answers === "object" ? e.answers : {} });
+      }
+      docs = next;
+      showBanner("");
+    } catch (e) {
+      showBanner("Impossible de charger les réponses pour l'instant. Vérifie ta connexion, ça se recharge tout seul.");
+    }
+    const first = !loaded;
+    loaded = true;
+    if (first && remembered && !me) {
+      join(remembered, true);
+      if (me && docs.has(me.slug)) { setView("recap"); return; }
+    }
+    render();
+  }
+
+  refresh();
+  // Le classement se rafraîchit tout seul quand la page est ouverte.
+  setInterval(() => { if (!document.hidden && view === "recap") refresh(); }, 8000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "on-sort-quand",
+  "private": true,
+  "description": "Sondage des dispos du groupe (Netlify Functions + Blobs)",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.3"
+  }
+}
