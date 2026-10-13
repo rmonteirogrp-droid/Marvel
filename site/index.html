@@ -4007,6 +4007,28 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 /* Prochainement : toutes les affiches alignées en haut, quel que soit le nombre de lignes du titre. */
 .rail-bt4{align-items:flex-start}
 .d-dispo{color:#fff}
+
+/* ═══ V5.2 ═══ */
+/* Le Briefing : la tête de Fatalis visible en haut, et la liste s'arrête au dernier film (la feuille couvre déjà la barre du bas). */
+#avdoom-in .br6-h img{object-position:50% 2%}
+#avdoom-in{padding:0 0 calc(env(safe-area-inset-bottom) + 28px) !important}
+/* Jeux : « À la une », un carrousel de 4 jeux en grand. */
+.une4{display:flex;gap:10px;margin:14px -16px 0;padding:0 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.une4::-webkit-scrollbar{display:none}
+.une4-c{position:relative;flex:0 0 100%;aspect-ratio:16/10;overflow:hidden;scroll-snap-align:center;border:0;padding:0;background:#000;color:#fff;text-align:left}
+.une4-c img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.une4-c::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 38%,transparent 66%)}
+.une4-t{position:absolute;z-index:2;left:16px;right:16px;bottom:14px;display:flex;flex-direction:column}
+.une4-t .k{display:flex;align-items:center;gap:8px;font:700 12px var(--rc);letter-spacing:.18em;text-transform:uppercase;color:#fff}
+.une4-t .k::before{content:"";width:22px;height:3px;background:var(--a)}
+.une4-t b{margin-top:6px;font:900 30px/.95 var(--rc);text-transform:uppercase}
+.une4-t small{margin-top:4px;font:400 14px/1.3 var(--rc);color:#ddd}
+.une4-bas{display:flex;align-items:center;gap:14px;margin-top:12px}
+.une4-bas .b4{height:40px}
+.une4-rec{font:700 12px var(--rc);letter-spacing:.12em;text-transform:uppercase;color:#bbb}.une4-rec em{font-style:normal;color:#fff}
+.une4-pts{display:flex;justify-content:center;gap:6px;margin:10px 0 18px}
+.une4-pts i{width:18px;height:3px;background:rgba(255,255,255,.25);transition:background .3s,width .3s}
+.une4-pts i.on{width:34px;background:var(--a)}
 </style>
 </head>
 <body>
@@ -4147,9 +4169,9 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/6e24b0c2da195f61.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/f7f86513924b0bd7.webp", "filmo": "/m/8381a0cef75c33c1.webp", "heros": "/m/f5267b052d6b3b40.webp", "ordre": "/m/2f9a1179d8800aa6.webp", "pierres": "/m/2a4c69e553c37d40.webp", "qui": "/m/9c3cc8b76f10252c.webp", "quiparle": "/m/be37176cc170a4c1.webp", "replique": "/m/1ff674060300900e.webp", "swipe": "/m/f07d010e202aea25.webp", "vs": "/m/00398001cfe99b13.webp"};
+const IMG_JEUX = {"affiche": "/m/6e24b0c2da195f61.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/f7f86513924b0bd7.webp", "filmo": "/m/8381a0cef75c33c1.webp", "heros": "/m/f5267b052d6b3b40.webp", "ordre": "/m/e78a3c5eaeca724e.webp", "pierres": "/m/2a4c69e553c37d40.webp", "qui": "/m/9c3cc8b76f10252c.webp", "quiparle": "/m/be37176cc170a4c1.webp", "replique": "/m/1ff674060300900e.webp", "swipe": "/m/bcafb7f01d7800e1.webp", "vs": "/m/cc7ef708a65258cf.webp"};
 /* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
-const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [50, 30], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 32], "vs": [67, 69]};
+const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [33, 64], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 45], "vs": [51, 44]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
 const VIDEO_MCU = "/m/2a6ff54e8b058429.mp4";
 /* Son MCU : ouverture puis final de la bande-annonce VF d'Avengers: Infinity War. */
@@ -4393,11 +4415,11 @@ const A_VENIR = [
     s:"La deuxième saison des débuts de Peter Parker en animation." }],
   ["multi", "Animation Marvel", { id:"x_x97s3", t:"X-Men '97 S3", a:"2027", k:"serie", i:"xmenblue", quand:"2027", tri:"2027-06-30", de:"X-Men '97 S2",
     s:"La troisième saison, présentée au New York Comic Con 2026." }],
-  ["multi", "Animation Marvel", { id:"x_mzws", t:"Marvel Zombies : The Winter Soldier", a:"2027", k:"film", i:"zombies", quand:"Halloween 2027", tri:"2027-10-31", img:"mzws",
+  ["multi", "Animation Marvel", { id:"x_mzws", sortie:"2027-10-31", t:"Marvel Zombies : The Winter Soldier", a:"2027", k:"film", i:"zombies", quand:"Halloween 2027", tri:"2027-10-31", img:"mzws",
     s:"Un épisode spécial de Marvel Zombies pour Halloween, centré sur le Soldat de l'hiver." }],
-  ["multi", "Animation Marvel", { id:"x_mzfk", t:"Marvel Zombies : The Fist of Khonshu", a:"2028", k:"film", i:"zombies", quand:"Halloween 2028", tri:"2028-10-31", img:"mzfk",
+  ["multi", "Animation Marvel", { id:"x_mzfk", sortie:"2028-10-31", t:"Marvel Zombies : The Fist of Khonshu", a:"2028", k:"film", i:"zombies", quand:"Halloween 2028", tri:"2028-10-31", img:"mzfk",
     s:"Un épisode spécial de Marvel Zombies pour Halloween, autour du Poing de Khonshu." }],
-  ["multi", "Animation Marvel", { id:"x_mzlg", t:"Marvel Zombies : The Last Guardian", a:"2029", k:"film", i:"zombies", quand:"Halloween 2029", tri:"2029-10-31", img:"mzlg",
+  ["multi", "Animation Marvel", { id:"x_mzlg", sortie:"2029-10-31", t:"Marvel Zombies : The Last Guardian", a:"2029", k:"film", i:"zombies", quand:"Halloween 2029", tri:"2029-10-31", img:"mzlg",
     s:"Le troisième spécial Halloween de Marvel Zombies, annoncé au New York Comic Con 2026." }],
 ];
 A_VENIR.forEach(([u, ou, x]) => {
@@ -5519,8 +5541,8 @@ function majAccueil(complet){
     cartes.push({aff:affiche(i), t:i.t, d:dateAvenir(i), tag:j && j <= 365 ? j : "", id:i.id});
   });
   // Puis : « Reprendre » (Plex), les sorties, chaque phase ou franchise en affiches (même construction pour le MCU et le Multivers)
-  const groupes = BIB[univers].map((g, gi) =>
-    `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">${esc(g.groupe.split(" · ")[0].split(" / ")[0])}</h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>${railAff(g.items)}</section>`).join("");
+  const groupes = BIB[univers].map((g, gi) => [g, gi, g.items.filter(i => !pasSorti(i))]).filter(([, , l]) => l.length).map(([g, gi, l]) =>
+    `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">${esc(g.groupe.split(" · ")[0].split(" / ")[0])}</h2><button class="s4-lien" data-chap="${gi}">Tout voir ›</button></div>${railAff(l)}</section>`).join("");
   document.getElementById("acc-suite").innerHTML = `
     <div id="reprendre"></div>
     ${cartes.length ? `<section class="s4"><div class="s4-tete"><h2 class="h4-sec">Prochainement</h2></div>
@@ -6318,19 +6340,39 @@ function defiDuJour(){
   const px = fo ? Math.max(-60, Math.min(100, Math.round((fo[0] / 100 * 1.65 - .62) / .65 * 100))) : 50;
   return { ...j, heures:h, image:j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${px}% ${fo[1]}%"` : ""}>` : "" };
 }
+/* Page Jeux : « À la une » (4 jeux en grand, qui changent chaque jour et défilent tout seuls), puis tous les jeux. */
 function rendreDefis(){
   if(typeof packDuJour === "function") packDuJour();
-  const d = defiDuJour(), autres = listeJeux().filter(j => j.id !== d.id);
+  const l = listeJeux(), d = new Date(), n = Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+  const une = [0, 1, 2, 3].map(k => l[(n + k * 3) % l.length]).filter((j, k, t) => t.indexOf(j) === k);
   document.getElementById("v-defis").innerHTML = `
     <div class="colonne j4">
       <h1 class="h4-page">Jeux</h1>
-      <button class="duj4 cc2" data-jeu="${d.id}">${d.image}<span class="duj4-t"><span class="k">Défi du jour</span><b>${d.nom}</b><small>${d.accroche}</small>
-        <span class="duj4-bas"><span class="b4 b4-rouge">${SVG.jouer}Jouer</span><span class="duj4-bonus">${typeof collec === "function" && collec().defiJour === jourLocal() ? "Bonus du jour récupéré" : "Bonus : un pack Héroïque"}</span></span></span><span class="duj4-h">Nouveau dans ${d.heures} h</span></button>
+      <div class="une4" id="une4">${une.map(j => { const fo = typeof FOCALE_JEUX !== "undefined" && FOCALE_JEUX[j.id];
+        return `<button class="une4-c" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${fo[0]}% ${fo[1]}%"` : ""}>` : ""}
+        <span class="une4-t"><span class="k">À la une</span><b>${j.nom}</b><small>${j.accroche}</small>
+          <span class="une4-bas"><span class="b4 b4-rouge">${SVG.jouer}Jouer</span><span class="une4-rec">Record <em>${j.rec}</em></span></span></span></button>`; }).join("")}</div>
+      <div class="une4-pts" id="une4-pts">${une.map((j, k) => `<i${k ? "" : ` class="on"`}></i>`).join("")}</div>
       <div class="s4-tete"><h2 class="h4-sec">Tous les jeux</h2></div>
-      <div class="g4">${autres.map(j => `<button class="jc4 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : "<span class='jc4-vide'></span>"}
+      <div class="g4">${l.map(j => `<button class="jc4 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : "<span class='jc4-vide'></span>"}
         <span class="jc4-t"><b>${j.nom}</b><small>Record <em>${j.rec}</em></small></span></button>`).join("")}</div>
     </div>
     <div class="fin-page"></div>`;
+  activerUne();
+}
+/* Carrousel : les points suivent le glissement ; défilement automatique toutes les 5 s, en pause dès qu'on le touche. */
+function activerUne(){
+  const r = document.getElementById("une4"), pts = document.getElementById("une4-pts"); if(!r || !pts) return;
+  const n = r.children.length, pas = () => r.children.length > 1 ? r.children[1].offsetLeft - r.children[0].offsetLeft : r.clientWidth;
+  const idx = () => Math.round(r.scrollLeft / Math.max(1, pas()));
+  let pause = 0;
+  r.addEventListener("scroll", () => { const k = idx(); [...pts.children].forEach((p, j) => p.classList.toggle("on", j === k)); }, { passive:true });
+  r.addEventListener("touchstart", () => { pause = Date.now(); }, { passive:true });
+  const t = setInterval(() => {
+    if(!r.isConnected){ clearInterval(t); return; }
+    if(document.hidden || vue !== "defis" || Date.now() - pause < 8000) return;
+    r.scrollTo({ left:((idx() + 1) % n) * pas(), behavior:"smooth" });
+  }, 5000);
 }
 const INTROS = { heros:() => ecranIntro(), qui:() => ecranQuiIntro(), vs:() => ecranVsIntro() };
 function ouvrirJeu(type){ JEU.type = type || "heros"; INTROS[JEU.type](); ouvrirFeuille("jeu"); }
@@ -8866,8 +8908,6 @@ function recompenser(cle, v, record, plafond = 3){
   if(jour && t === 3) gains.push({ t:"std", o:"Bonus du jour", e:"Bonus du jour" });
   if(record) gains.push({ t:"std", o:"Nouveau record", e:"Nouveau record" });
   // Défi du jour : un pack Héroïque en plus, une fois par jour, dès le premier palier atteint sur le jeu du jour
-  const dj = typeof defiDuJour === "function" ? defiDuJour() : null;
-  if(dj && dj.id === cle.split("_")[0] && c.defiJour !== jourLocal()){ c.defiJour = jourLocal(); gains.push({ t:"hero", o:"Défi du jour", e:"Défi du jour" }); }
   c.packs.push(...gains.map(g => ({ t:g.t, o:g.o })));
   sauver();
   const suite = t < 3 ? `<p class="recomp-suite">Pack ${PACKS[ORDRE_PACKS[t]].nom} dès ${fmtPalier(cle, t)}</p>` : "";
@@ -9422,7 +9462,7 @@ function ouvrirPerso(i){
   document.getElementById("perso-in").innerHTML = `<div class="pf r${r}">
     <div class="pf-hero"><img src="${photo(i)}"${u ? ` data-hd="${u}"` : ""} alt="" style="object-position:50% ${fy}%"><span class="pf-trame"></span>
       <span class="pf-carte" data-carte-perso="${i}">${carteHTML(i, { etat:possede(i) ? "face" : "verrou" })}</span>
-      <div class="pf-txt"><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>${inf.s ? `<p class="pf-tags pf-espece"><span>${esc(inf.s)}</span></p>` : ""}</div></div>
+      <div class="pf-txt"><h1 class="${noms[0].length > 13 ? "long" : ""}">${esc(noms[0])}</h1>${inf.s ? `<p class="pf-tags pf-espece"><span>Espèce</span><span>${esc(inf.s)}</span></p>` : ""}</div></div>
     ${corpsPerso(i)}
     <div class="fin-page"></div></div>`;
   ouvrirFeuille("perso");
@@ -11202,8 +11242,7 @@ function ouvrirAvDoom(){
         <button class="pas-corps" data-fiche="${it.id}"><img src="${affiche(it)}" alt="" loading="lazy" decoding="async">
           <span class="pas-txt"><b><span>${esc(it.t)}</span></b><small>${infosTitre(it)}${univDe(it.id) === "multi" ? " · Multivers" : ""}${pastilleNote(it.id)}</small></span></button>
         <button class="noeud coche${pasSorti(it) ? " bloque" : ""}" data-coche="${it.id}" aria-label="Marquer ${esc(it.t)} comme vu">${SVG.coche}</button>
-      </li>`).join("")}</ol></div>
-    <div class="fin-page"></div>`;
+      </li>`).join("")}</ol></div>`;
   ouvrirFeuille("avdoom");
 }
 /* Après une coche : chiffres de la page et du bloc « Ta préparation » à jour, sans tout redessiner. */
