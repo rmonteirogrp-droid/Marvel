@@ -4113,6 +4113,126 @@ body.bv-en-cours #barre,body.bv-en-cours #nav,body.bv-en-cours #app{visibility:h
 .inf5-jeux li span{width:17px;height:17px;font-size:10px}
 .inf5-go{height:40px;font-size:13px}
 .inf-gants{margin-top:8px}
+/* ── Défi Infinity, propositions de design (A affiche, B gant, C bandeau) ── */
+.ig{display:block;width:16px;height:16px;transform:rotate(45deg);border-radius:3px;background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.ig.on{background:radial-gradient(circle at 35% 30%,#fff 0,var(--g) 40%,color-mix(in srgb,var(--g) 50%,#000));box-shadow:0 0 10px var(--g)}
+.ig.cur{background:color-mix(in srgb,var(--g) 30%,transparent);box-shadow:inset 0 0 0 2px var(--g),0 0 14px var(--g);animation:infPulse 1.6s ease-in-out infinite}
+/* A : l'affiche du jeu en cours, le texte sur un voile, le Gant en bas */
+.infA{position:relative;display:block;height:220px;margin:4px 0 18px;overflow:hidden;background:#0b0710;cursor:pointer}
+.infA img{position:absolute;right:0;top:0;width:62%;height:100%;object-fit:cover;object-position:50% 18%}
+.infA-voile{position:absolute;inset:0;background:linear-gradient(90deg,#0b0710 38%,rgba(11,7,16,.85) 52%,rgba(11,7,16,0) 78%),linear-gradient(0deg,rgba(0,0,0,.55),transparent 45%),radial-gradient(70% 90% at 0% 100%,color-mix(in srgb,var(--g) 30%,transparent),transparent 70%)}
+.infA::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--g) 55%,transparent);pointer-events:none}
+.infA-t{position:absolute;left:16px;top:16px;bottom:14px;right:40%;display:flex;flex-direction:column;gap:6px;z-index:1}
+.infA .k{font:700 10px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:var(--g)}
+.infA b{font:900 30px/.95 var(--rc);text-transform:uppercase;color:#fff;margin-top:2px}
+.infA small{font:600 12px/1.3 var(--rc);color:#bbb}
+.infA-bas{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.infA-gant{display:flex;gap:9px;padding-left:2px}
+.infA-go{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;height:36px;padding:0 16px;font:800 13px/1 var(--rc);letter-spacing:.08em;text-transform:uppercase;color:#000;background:#fff}
+.infA-go svg{width:12px;height:12px;fill:#000}
+.infA-fin{position:absolute;z-index:1;right:12px;top:12px;padding:5px 8px;font:700 10px/1 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.6)}
+/* B : le Gant au centre, la pierre à gagner en titre, le visuel du jeu flouté derrière */
+.infB{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;margin:4px 0 18px;padding:22px 18px 16px;overflow:hidden;background:#0b0710;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--g) 45%,transparent)}
+.infB-fond{position:absolute;inset:0;z-index:0}
+.infB-fond img{width:100%;height:100%;object-fit:cover;filter:blur(18px) saturate(1.3) brightness(.45);transform:scale(1.2)}
+.infB-fond::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 70% at 50% 20%,color-mix(in srgb,var(--g) 35%,transparent),transparent 70%),linear-gradient(transparent 40%,#0b0710)}
+.infB > *:not(.infB-fond){position:relative;z-index:1}
+.infB-gant{display:flex;gap:14px;margin-bottom:8px}
+.infB-gant .ig{width:20px;height:20px}
+.infB .k{font:700 10px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:#ddd}
+.infB b{font:900 28px/1 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 0 22px var(--g)}
+.infB small{font:600 12px/1.3 var(--rc);color:#bbb}
+.infB-go{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;height:42px;margin-top:10px;font:800 13px/1 var(--rc);letter-spacing:.08em;text-transform:uppercase;color:#000;background:#fff}
+.infB-go svg{width:12px;height:12px;fill:#000}
+.infB-fin{font:700 10px/1 var(--rc);letter-spacing:.12em;text-transform:uppercase;color:#888;margin-top:4px}
+/* C : bandeau compact, vignette du jeu, gros bouton rond, 6 segments de couleur en bas */
+.infC{position:relative;display:flex;align-items:center;gap:12px;margin:4px 0 18px;padding:10px 12px 16px;background:linear-gradient(100deg,#120c19,#1a1222);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);cursor:pointer}
+.infC-img{position:relative;flex:0 0 auto;width:64px;height:84px;overflow:hidden;box-shadow:0 0 0 2px var(--g),0 0 16px color-mix(in srgb,var(--g) 60%,transparent)}
+.infC-img img{width:100%;height:100%;object-fit:cover;object-position:50% 15%}
+.infC-img i{position:absolute;left:0;bottom:0;padding:3px 6px;font:900 13px/1 var(--rc);font-style:normal;color:#000;background:var(--g)}
+.infC-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.infC .k{font:700 10px/1 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:var(--g)}
+.infC b{font:900 21px/1 var(--rc);text-transform:uppercase;color:#fff}
+.infC small{font:600 12px/1.25 var(--rc);color:#aaa}
+.infC-go{flex:0 0 auto;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#fff}
+.infC-go svg{width:16px;height:16px;fill:#000;margin-left:3px}
+.infC-barre{position:absolute;left:12px;right:12px;bottom:6px;display:flex;gap:4px}
+.infC-barre i{flex:1;height:3px;background:rgba(255,255,255,.12)}
+.infC-barre i.on{background:var(--g)}
+.infC-barre i.cur{background:color-mix(in srgb,var(--g) 55%,transparent);animation:infPulse 1.6s ease-in-out infinite}
+/* D (B retravaillé) : fond cosmique à la couleur de la pierre, Thanos qui lève le Gant, pierres serties, jeu et bouton séparés */
+.infD{position:relative;display:block;min-height:250px;margin:4px 0 18px;overflow:hidden;background:#09060f;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--g) 40%,transparent)}
+.infD-fond{position:absolute;inset:0;background:radial-gradient(70% 90% at 78% 30%,color-mix(in srgb,var(--g) 45%,transparent),transparent 65%),radial-gradient(60% 80% at 0% 100%,rgba(140,60,220,.35),transparent 70%),
+  radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 30% 70%,#fff,transparent),radial-gradient(1.4px 1.4px at 48% 30%,#ffe9b0,transparent),radial-gradient(1px 1px at 62% 82%,#fff,transparent),radial-gradient(1.2px 1.2px at 88% 12%,#fff,transparent),radial-gradient(1px 1px at 22% 46%,#cfe0ff,transparent),#09060f}
+.infD-thanos{position:absolute;right:-28px;bottom:0;height:98%;max-width:none;filter:drop-shadow(0 0 24px color-mix(in srgb,var(--g) 45%,transparent))}
+.infD::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,6,15,.92) 30%,rgba(9,6,15,.55) 52%,transparent 72%);pointer-events:none}
+.infD-t{position:relative;z-index:1;display:flex;flex-direction:column;gap:6px;width:62%;padding:16px 0 14px 16px}
+.infD-gant{display:flex;gap:5px;margin-bottom:6px}
+.ip{display:block;width:22px;height:28px;overflow:visible}
+.ip.on{filter:drop-shadow(0 0 5px var(--g)) drop-shadow(0 0 10px var(--g))}
+.ip .ip-halo{animation:ipPulse 1.6s ease-in-out infinite}
+@keyframes ipPulse{50%{stroke-width:2.6;filter:drop-shadow(0 0 4px var(--g))}}
+.ip.cur{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--g) 70%,transparent))}
+.infD .k{font:700 10px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:#d8c9ff}
+.infD b{font:900 29px/.95 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 0 18px color-mix(in srgb,var(--g) 80%,transparent)}
+.infD-jeu{display:flex;flex-direction:column;gap:2px;margin-top:6px;padding:7px 10px 8px;border-left:3px solid var(--g);background:rgba(255,255,255,.06)}
+.infD-jeu small{font:700 9px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:#aaa}
+.infD-jeu em{font:800 15px/1.1 var(--rc);font-style:normal;text-transform:uppercase;color:#fff}
+.infD-jeu i{font:600 11px/1.2 var(--rc);font-style:normal;color:#bbb}
+.infD-bas{display:flex;align-items:center;gap:12px;margin-top:10px}
+.infD-go{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 20px;font:900 14px/1 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#000;background:var(--g);box-shadow:0 0 18px color-mix(in srgb,var(--g) 60%,transparent)}
+.infD-go svg{width:12px;height:12px;fill:#000}
+.infD-fin{font:700 9px/1.35 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#999}
+/* D épuré : fond rouge, Thanos bien visible, juste les pierres, le jeu et « Jouer » */
+.infD{min-height:210px;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,80,80,.45)}
+.infD-fond{background:radial-gradient(75% 95% at 80% 35%,rgba(255,40,40,.75),transparent 70%),radial-gradient(60% 80% at 0% 100%,rgba(120,0,20,.6),transparent 70%),
+  radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 30% 70%,#fff,transparent),radial-gradient(1.4px 1.4px at 44% 30%,#ffd9b0,transparent),radial-gradient(1px 1px at 22% 46%,#ffe0e0,transparent),#1a0306}
+.infD-thanos{right:-10px;height:112%;bottom:-6%;filter:drop-shadow(0 0 22px rgba(255,60,60,.55))}
+.infD::after{background:linear-gradient(90deg,rgba(26,3,6,.85) 18%,rgba(26,3,6,.35) 42%,transparent 58%)}
+.infD-t{width:55%;gap:5px;padding:16px 0 16px 16px;height:210px;box-sizing:border-box}
+.infD-gant{gap:4px;margin-bottom:auto}
+.infD-gant .ip{width:19px;height:24px}
+.infD .k{color:#ffc9c9}
+.infD b{font-size:27px;line-height:.98;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.infD-go{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;height:38px;margin-top:8px;padding:0 20px;font:900 14px/1 var(--rc);letter-spacing:.12em;text-transform:uppercase;color:#000;background:#fff;box-shadow:none}
+.infD-go svg{width:12px;height:12px;fill:#000}
+/* Encart : titre « Défi Infinity », bouton « Commencer » */
+.infD .k{text-transform:none;letter-spacing:.08em;font-size:12px}
+.infD b{font-size:32px;line-height:.92}
+/* Page intermédiaire du Défi Infinity */
+.infI{padding-bottom:30px}
+.infI-haut{position:relative;height:210px;margin:0 -20px 16px;overflow:hidden}
+.infI-haut img{position:absolute;right:-10px;bottom:-8%;height:115%;filter:drop-shadow(0 0 22px rgba(255,60,60,.55))}
+.infI-haut::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(26,3,6,.85) 15%,transparent 60%),linear-gradient(transparent 60%,var(--n4,#141414))}
+.infI-titre{position:absolute;z-index:1;left:20px;bottom:22px;display:flex;flex-direction:column;gap:6px}
+.infI-titre .k{font:700 11px/1 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:#ffc9c9}
+.infI-titre b{font:900 40px/.92 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.6)}
+.infI-acc{font:600 16px/1.35 var(--rc);color:#ddd;margin:0 0 14px}
+.infI-regles{list-style:none;margin:0 0 20px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.infI-regles li{display:flex;flex-direction:column;gap:4px;padding:11px 12px;background:#1f1f1f;border-top:2px solid #ec1d24}
+.infI-regles b{font:900 14px/1 var(--rc);text-transform:uppercase;color:#fff}
+.infI-regles span{font:500 12px/1.3 var(--rc);color:#aaa}
+.infI-sec{font:800 13px/1 var(--rc);letter-spacing:.12em;text-transform:uppercase;color:#fff;margin:0 0 10px}
+.infI-jeux{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+.infI-jeux li{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#1a1a1a}
+.infI-jeux li.cur{background:#2a1416;box-shadow:inset 3px 0 0 #ec1d24}
+.infI-jeux li .ip{flex:0 0 auto;width:19px;height:24px}
+.infI-jeux li span{display:flex;flex-direction:column;gap:2px}
+.infI-jeux li b{font:800 14px/1.1 var(--rc);text-transform:uppercase;color:#fff}
+.infI-jeux li.ok b{color:#9a9a9a;text-decoration:line-through}
+.infI-jeux li small{font:600 11px/1.2 var(--rc);color:#999}
+.infI-go{width:100%}
+.infI-fin{margin:10px 0 0;text-align:center;font:700 11px/1 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#888}
+.inf-jeu .inf-gant .ip{width:15px;height:19px}
+.inf-jeu{background:linear-gradient(90deg,#2a0508,#140306);box-shadow:inset 0 0 0 1px rgba(255,80,80,.4)}
+.inf-jeu b{color:#fff}
+.infI-regles li.large{grid-column:1/-1}
+.infD-sous{display:block;margin-top:6px;font:600 12px/1.3 var(--rc);color:#ffd6d6;max-width:190px}
+.infD.ferme .infD-fond{filter:saturate(.35) brightness(.7)}
+.infD.ferme .infD-thanos{filter:grayscale(.6) brightness(.7)}
+.infD.brise .infD-thanos{filter:grayscale(.3) brightness(.8) drop-shadow(0 0 18px rgba(255,40,40,.5))}
+.infD.fini{box-shadow:inset 0 0 0 1.5px #ffd23a,0 0 26px rgba(255,210,58,.3)}
+.infD.fini .k{color:#ffd23a}
 </style>
 </head>
 <body>
@@ -4253,7 +4373,7 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/4f546b7e55d85675.webp", "akinator": "/m/8719345bd3061689.webp", "dossier": "/m/db3d15d3fe14c412.webp", "filmo": "/m/f1dc2e724cd2d1b9.webp", "heros": "/m/6017ccaff98dbf79.webp", "ordre": "/m/7083df33cfcb6a2c.webp", "pierres": "/m/129603cad2382191.webp", "qui": "/m/c81d984f92278235.webp", "quiparle": "/m/e9e23243e0ee8f83.webp", "replique": "/m/d47e05f12fc50827.webp", "swipe": "/m/2f6fc8320848e97b.webp", "vs": "/m/703acd4a82da8317.webp"};
+const IMG_JEUX = {"affiche": "/m/4f546b7e55d85675.webp", "akinator": "/m/8719345bd3061689.webp", "dossier": "/m/db3d15d3fe14c412.webp", "filmo": "/m/f1dc2e724cd2d1b9.webp", "heros": "/m/6017ccaff98dbf79.webp", "inf_thanos": "/m/1755826421d84aad.webp", "ordre": "/m/7083df33cfcb6a2c.webp", "pierres": "/m/129603cad2382191.webp", "qui": "/m/c81d984f92278235.webp", "quiparle": "/m/e9e23243e0ee8f83.webp", "replique": "/m/d47e05f12fc50827.webp", "swipe": "/m/2f6fc8320848e97b.webp", "vs": "/m/703acd4a82da8317.webp"};
 /* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
 const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [33, 64], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 45], "vs": [51, 44]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
@@ -9482,23 +9602,87 @@ const infGemme = (k, etat) => `<i class="inf-g ${etat}" style="--g:${INF_PIERRES
 function infGant(n, cur){ return `<span class="inf-gant">${INF_PIERRES.map((p, k) => infGemme(k, k < n ? "on" : k === cur ? "cur" : "")).join("")}</span>`; }
 
 /* Bande en haut de la page Jeux : défi ouvert, en cours, brisé, complet, ou fermé (compte à rebours). */
+/* Pierre d'infinité dessinée : gemme ovale sertie d'or (allumée), sertissage vide qui pulse (à gagner), ou vide (à venir). */
+const mixHex = (h, m, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(h.substr(i, 2), 16) * (1 - t) + m * t).toString(16).padStart(2, "0")).join("");
+function pierreSVG(k, etat){
+  const c = INF_PIERRES[k][1], id = "ip" + k;
+  const pierre = etat === "on" ? `<ellipse cx="12" cy="15" rx="7.6" ry="10.4" fill="url(#${id}g)"/><ellipse cx="12" cy="15" rx="5.2" ry="7.6" fill="none" stroke="${mixHex(c, 255, .55)}" stroke-width=".5" opacity=".55"/>
+      <path d="M12 4.8 15.6 10 12 25.2 8.4 10Z" fill="#fff" opacity=".1"/><ellipse cx="9.4" cy="9.6" rx="2.3" ry="3.4" fill="#fff" opacity=".75" transform="rotate(-24 9.4 9.6)"/><circle cx="14.6" cy="20.5" r=".9" fill="#fff" opacity=".5"/>`
+    : `<ellipse cx="12" cy="15" rx="7.6" ry="10.4" fill="url(#${id}v)"/>` + (etat === "cur" ? `<ellipse class="ip-halo" cx="12" cy="15" rx="7.6" ry="10.4" fill="none" stroke="${c}" stroke-width="1.6"/>` : "");
+  return `<svg class="ip ${etat}" style="--g:${c}" viewBox="0 0 24 30" aria-hidden="true"><defs>
+    <radialGradient id="${id}g" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="${mixHex(c, 255, .75)}"/><stop offset=".35" stop-color="${mixHex(c, 255, .15)}"/><stop offset=".75" stop-color="${c}"/><stop offset="1" stop-color="${mixHex(c, 0, .6)}"/></radialGradient>
+    <radialGradient id="${id}v" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#2a1f30"/><stop offset="1" stop-color="#07040a"/></radialGradient>
+    <linearGradient id="${id}o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset=".45" stop-color="#d9a640"/><stop offset="1" stop-color="#6e430c"/></linearGradient></defs>
+    <ellipse cx="12" cy="15" rx="10.6" ry="13.6" fill="url(#${id}o)"/><ellipse cx="12" cy="15" rx="8.6" ry="11.4" fill="#3a2406"/>${pierre}</svg>`;
+}
+/* Défi ouvert : le jeu en cours en grand (son visuel), la pierre à gagner, le Gant en 6 pierres. */
+let INF_DESIGN = "B2";
+function infOuvertDesign(s, l, minuit){
+  const id = l[s.etape], j = listeJeux().find(x => x.id === id) || {}, P = INF_PIERRES[s.etape];
+  const gant = INF_PIERRES.map((p, k) => `<i class="ig ${k < s.etape ? "on" : k === s.etape ? "cur" : ""}" style="--g:${p[1]}"></i>`).join("");
+  const kick = `Défi Infinity · pierre ${s.etape + 1}/6`, obj = `Objectif ${infObjectif(id)} · un seul essai`;
+  if(INF_DESIGN === "A") return `<section class="infA" style="--g:${P[1]}" data-inf-go>
+      ${j.img ? `<img src="${j.img}" alt="">` : ""}<span class="infA-voile"></span>
+      <span class="infA-t"><span class="k">${kick}</span><b>${nomJeu(id)}</b><small>${obj}</small>
+        <span class="infA-bas"><span class="infA-gant">${gant}</span><span class="infA-go">${SVG.jouer}Jouer</span></span></span>
+      <span class="infA-fin">Fin dans ${infDelai(minuit)}</span></section>`;
+  if(INF_DESIGN === "B2") return `<section class="infD" data-inf-intro>
+      <span class="infD-fond"></span>${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_thanos ? `<img class="infD-thanos" src="${img(IMG_JEUX.inf_thanos)}" alt="">` : ""}
+      <span class="infD-t"><span class="infD-gant">${INF_PIERRES.map((p, k) => pierreSVG(k, k < s.etape ? "on" : k === s.etape ? "cur" : "")).join("")}</span>
+        <span class="k">${JOURS_FR[new Date().getDay()].replace(/^./, c => c.toUpperCase())} · ${s.etape ? "pierre " + (s.etape + 1) + "/6" : "6 jeux, zéro faute"}</span><b>Défi<br>Infinity</b>
+        <span class="infD-go">${SVG.jouer}${s.etape ? "Continuer" : "Commencer"}</span></span></section>`;
+  if(INF_DESIGN === "B") return `<section class="infB" style="--g:${P[1]}">
+      <span class="infB-fond">${j.img ? `<img src="${j.img}" alt="">` : ""}</span>
+      <span class="infB-gant">${gant}</span>
+      <span class="k">${kick}</span><b>Pierre de l'${P[0]}</b><small>${nomJeu(id)} · ${obj}</small>
+      <button class="infB-go" data-inf-go>${SVG.jouer}Jouer · ${nomJeu(id)}</button><span class="infB-fin">Fin dans ${infDelai(minuit)}</span></section>`;
+  return `<section class="infC" style="--g:${P[1]}" data-inf-go>
+      <span class="infC-img">${j.img ? `<img src="${j.img}" alt="">` : ""}<i>${s.etape + 1}</i></span>
+      <span class="infC-t"><span class="k">${kick}</span><b>${nomJeu(id)}</b><small>${obj}</small></span>
+      <span class="infC-go">${SVG.jouer}</span>
+      <span class="infC-barre">${INF_PIERRES.map((p, k) => `<i class="${k < s.etape ? "on" : k === s.etape ? "cur" : ""}" style="--g:${p[1]}"></i>`).join("")}</span></section>`;
+}
+/* Encart (même style que le défi ouvert) pour les autres états : Gant brisé, complet, ou jour sans défi. */
+function infCarte(cls, n, k, titre, sous, intro){
+  return `<section class="infD ${cls}"${intro ? " data-inf-intro" : ""}><span class="infD-fond"></span>${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_thanos ? `<img class="infD-thanos" src="${img(IMG_JEUX.inf_thanos)}" alt="">` : ""}
+    <span class="infD-t"><span class="infD-gant">${INF_PIERRES.map((p, k) => pierreSVG(k, k < n ? "on" : "")).join("")}</span><span class="k">${k}</span><b>${titre}</b><small class="infD-sous">${sous}</small></span></section>`;
+}
 function bandeInfinity(){
   const s = infEtat(); if(!s) return "";
   const minuit = new Date(); minuit.setHours(24, 0, 0, 0);
   const pro = infProchain(), proTxt = JOURS_FR[pro.getDay()], gants = s.gants ? `<span class="inf-gants">${s.gants} Gant${s.gants > 1 ? "s" : ""} complété${s.gants > 1 ? "s" : ""}</span>` : "";
   if(infAujourdhui(s)){
     const l = infTirage(s.jour);
-    if(s.fini) return `<section class="inf5 fini">${infGant(6)}<div class="inf5-t"><span class="k">Défi Infinity</span><b>Gant complet !</b><small>Pack Infinity gagné · prochain défi ${proTxt}</small></div>${gants}</section>`;
-    if(s.brise) return `<section class="inf5 brise">${infGant(s.etape)}<div class="inf5-t"><span class="k">Défi Infinity</span><b>Gant brisé à la pierre ${s.etape + 1}</b><small>${nomJeu(s.cassePar || l[s.etape])} · prochain défi ${proTxt}</small></div>${gants}</section>`;
+    if(s.fini) return infCarte("fini", 6, "Gant complet · " + (s.gants || 1) + " au total", "Défi<br>réussi", "Pack Infinity gagné · prochain défi " + proTxt, true);
+    if(s.brise) return infCarte("brise", s.etape, "Gant brisé à la pierre " + (s.etape + 1), "Défi<br>Infinity", "Prochain essai " + proTxt, true);
+    if(INF_DESIGN) return infOuvertDesign(s, l, minuit);
     return `<section class="inf5 ouvert">${infGant(s.etape, s.etape)}
       <div class="inf5-t"><span class="k">Défi Infinity · aujourd'hui</span><b>${s.etape ? "Pierre " + (s.etape + 1) + " sur 6" : "6 jeux · zéro faute"}</b>
         <small>Un seul essai · fin dans ${infDelai(minuit)}</small></div>
       <ol class="inf5-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape ? "cur" : ""}" style="--g:${INF_PIERRES[k][1]}"><span>${k + 1}</span>${nomJeu(id)}</li>`).join("")}</ol>
       <button class="b4 b4-rouge inf5-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer · " + nomJeu(l[s.etape]) : "Lancer le défi"}</button>${gants}</section>`;
   }
-  const dernier = s.jour ? (s.fini ? "Dernier défi : Gant complet" : s.brise ? `Dernier défi : brisé à la pierre ${s.etape + 1}` : s.etape ? `Dernier défi : ${s.etape}/6 pierres` : "") : "";
-  return `<section class="inf5 ferme">${infGant(0)}<div class="inf5-t"><span class="k">Défi Infinity</span><b>Prochain défi ${proTxt}</b>
-    <small>Dans ${infDelai(pro)} · 6 jeux, zéro faute, un seul essai${dernier ? " · " + dernier : ""}</small></div>${gants}</section>`;
+  return infCarte("ferme", 0, "Prochain défi " + proTxt + " · dans " + infDelai(pro), "Défi<br>Infinity", "Le mercredi et le samedi · 6 jeux, zéro faute" + (s.gants ? " · " + s.gants + " Gant" + (s.gants > 1 ? "s" : "") + " complété" + (s.gants > 1 ? "s" : "") : ""), false);
+}
+/* Page intermédiaire : ce qu'est le défi, les règles, les 6 jeux du jour, puis on lance le jeu en cours. */
+function infIntro(){
+  const s = infEtat(); if(!infAujourdhui(s)) return;
+  const l = infTirage(s.jour), minuit = new Date(); minuit.setHours(24, 0, 0, 0), fini = s.fini || s.brise;
+  document.getElementById("jeu-in").innerHTML = `<div class="infI">
+    <div class="infI-haut"><span class="infD-fond"></span>${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_thanos ? `<img src="${img(IMG_JEUX.inf_thanos)}" alt="">` : ""}
+      <span class="infI-titre"><span class="k">Le mercredi et le samedi</span><b>Défi Infinity</b></span></div>
+    <p class="infI-acc">Réunis les 6 pierres d'infinité. Chaque jeu réussi parfaitement en allume une.</p>
+    <ul class="infI-regles">
+      <li><b>6 jeux</b><span>Tirés au sort, dans un ordre imposé, les mêmes pour tous.</span></li>
+      <li><b>Zéro faute</b><span>Il faut atteindre le palier Légendaire de chaque jeu.</span></li>
+      <li><b>Un seul essai</b><span>Un jeu raté ou abandonné brise le Gant jusqu'au prochain défi.</span></li>
+      <li><b>Pauses permises</b><span>Arrête-toi entre deux jeux quand tu veux, mais à minuit, Gant incomplet = aucune récompense.</span></li>
+      <li class="large"><b>La récompense</b><span>Les 6 pierres avant minuit : le Pack Infinity, une carte Cosmique garantie et 1 000 points.</span></li></ul>
+    <p class="infI-sec">Les jeux du jour</p>
+    <ol class="infI-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape && !fini ? "cur" : ""}">${pierreSVG(k, k < s.etape ? "on" : k === s.etape && !fini ? "cur" : "")}<span><b>${nomJeu(id)}</b><small>Objectif : ${infObjectif(id)}</small></span></li>`).join("")}</ol>
+    ${fini ? "" : `<button class="b4 b4-rouge infI-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer" : "Commencer"} · ${nomJeu(l[s.etape])}</button><p class="infI-fin">Fin du défi dans ${infDelai(minuit)}</p>`}
+  </div>`;
+  ouvrirFeuille("jeu");
 }
 function infLancer(){
   const s = infEtat(); if(!infAujourdhui(s) || s.brise || s.fini) return;
@@ -9534,7 +9718,7 @@ function infResultat(cle, v){
 function infBandeauJeu(id){
   if(INF_EN_JEU !== id) return;
   const s = infEtat(), c = document.getElementById("jeu-in"); if(!s || !c) return;
-  c.insertAdjacentHTML("afterbegin", `<div class="inf-jeu" style="--g:${INF_PIERRES[s.etape][1]}">${infGant(s.etape, s.etape)}<span class="inf-jeu-t"><b>Défi Infinity · pierre ${s.etape + 1}/6</b><small>Objectif : ${infObjectif(id)} · une seule chance</small></span></div>`);
+  c.insertAdjacentHTML("afterbegin", `<div class="inf-jeu" style="--g:${INF_PIERRES[s.etape][1]}"><span class="inf-gant">${INF_PIERRES.map((p, k) => pierreSVG(k, k < s.etape ? "on" : k === s.etape ? "cur" : "")).join("")}</span><span class="inf-jeu-t"><b>Défi Infinity · pierre ${s.etape + 1}/6</b><small>Objectif : ${infObjectif(id)} · une seule chance</small></span></div>`);
 }
 recompenser = (r => function(cle, v, ...a){ const inf = infResultat(cle, v); return inf + r(cle, v, ...a); })(recompenser);
 ouvrirJeu = (o => function(id){ o(id); infBandeauJeu(id); })(ouvrirJeu);
@@ -9547,7 +9731,7 @@ fermerFeuille = (f => function(id){
   }
   return f(id);
 })(fermerFeuille);
-document.addEventListener("click", e => { if(e.target.closest("[data-inf-go]")){ e.stopPropagation(); infLancer(); } }, true);
+document.addEventListener("click", e => { if(e.target.closest("[data-inf-go]")){ e.stopPropagation(); infLancer(); } else if(e.target.closest("[data-inf-intro]")){ e.stopPropagation(); infIntro(); } }, true);
 
 /* ═══════════ RECHERCHE ET FICHE PERSONNAGE ═══════════ */
 /* Loupe de l'accueil : un personnage (tous ses noms) ou un titre. La fiche range ses apparitions en trois blocs :
