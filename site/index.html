@@ -4259,6 +4259,240 @@ body.bv-en-cours #barre,body.bv-en-cours #nav,body.bv-en-cours #app{visibility:h
 @media (max-height:640px){.infI-haut{height:104px;margin-bottom:6px}.infI-titre b{font-size:28px}.infI-regles{gap:3px;margin-bottom:6px}.infI-regles li{font-size:12px}.infI-gain{padding:6px 10px;margin-bottom:6px}.infI-gain .paquet{width:30px}.infI-jeux{margin-bottom:6px}.infI-jeux li{padding:4px 8px}.infI-fin{display:none}}
 .inf-res{background:linear-gradient(90deg,#2a0508,#140306);box-shadow:inset 0 0 0 1px rgba(255,80,80,.4)}
 .inf-res .inf-gant{gap:5px}.inf-res .ip{width:22px;height:28px}
+/* Page du Défi Infinity (maquette 2) : écran fixe, Thanos en pleine largeur dès le haut, contenu jusqu'aux 3/4 */
+#jeu.inf-fixe #jeu-in{padding:0 !important;max-width:none}
+.infP{display:flex;flex-direction:column}
+.infP-haut{position:relative;height:calc(var(--haut) + 290px);overflow:hidden}
+.infP-haut img{position:absolute;right:-30px;bottom:-4%;height:96%;filter:drop-shadow(0 0 26px rgba(255,60,60,.6))}
+.infP-haut::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(26,3,6,.8) 10%,transparent 55%),linear-gradient(transparent 55%,var(--n4) 98%)}
+.infP-titre{position:absolute;z-index:1;left:20px;bottom:18px;display:flex;flex-direction:column;gap:8px}
+.infP-titre .k{font:700 11px/1 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:#ffc9c9}
+.infP-titre b{font:900 46px/.88 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.7)}
+.infP-titre small{font:600 13px/1.35 var(--rc);color:#ddd;text-shadow:0 1px 8px #000}
+.infP-jeux{list-style:none;margin:6px 20px 0;padding:0}
+.infP-jeux li{display:flex;align-items:center;gap:12px;height:42px;border-bottom:1px solid rgba(255,255,255,.08)}
+.infP-jeux li .ip{flex:0 0 auto;width:20px;height:26px}
+.infP-jeux li b{flex:1;font:800 15px/1 var(--rc);text-transform:uppercase;color:#ddd}
+.infP-jeux li em{font:700 13px/1 var(--rc);font-style:normal;color:#888}
+.infP-jeux li.cur b{color:#fff}.infP-jeux li.cur em{color:#ff6b6b}
+.infP-jeux li.ok b{color:#777}.infP-jeux li.ok em{color:#5ad18a}
+.infP-gain{display:flex;align-items:center;gap:12px;margin:14px 20px 0}
+.infP-gain .paquet{flex:0 0 auto;width:34px}
+.infP-gain span{font:500 12px/1.35 var(--rc);color:#aaa}
+.infP-gain b{display:block;font:900 13px/1.2 var(--rc);text-transform:uppercase;letter-spacing:.06em;color:#ffd23a}
+.infP-go{margin:16px 20px 0;width:auto}
+.infP-etat{margin:16px 20px 0;padding:13px 14px;text-align:center;font:800 13px/1.2 var(--rc);letter-spacing:.06em;text-transform:uppercase}
+.infP-etat.ko{color:#ff6b6b;background:rgba(255,59,59,.1);box-shadow:inset 0 0 0 1px rgba(255,59,59,.35)}
+.infP-etat.or{color:#ffd23a;background:rgba(255,210,58,.1);box-shadow:inset 0 0 0 1px rgba(255,210,58,.4)}
+@media (max-height:640px){.infP-haut{height:calc(var(--haut) + 200px)}.infP-titre b{font-size:36px}.infP-jeux li{height:34px}.infP-gain{margin-top:8px}.infP-go,.infP-etat{margin-top:10px}}
+/* ════ Défi Infinity · V5.7 : résultats centrés, victoire plein écran, Pack Infinity ════ */
+/* Résultat d'une partie du défi : tout centré, une grosse pierre */
+.infR{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:22px 0 8px;padding:26px 18px 22px;
+  background:radial-gradient(70% 60% at 50% 0%,color-mix(in srgb,var(--g,#ec1d24) 35%,transparent),transparent 70%),linear-gradient(180deg,#1d0408,#0e0204);box-shadow:inset 0 0 0 1px rgba(255,80,80,.35)}
+.infR.ko{--g:#ec1d24;filter:saturate(.7)}
+.infR-pierre{display:block;width:64px;height:80px;margin-bottom:6px}
+.infR-pierre .ip{width:100%;height:100%}
+.infR.ok .infR-pierre{animation:infPop .7s cubic-bezier(.2,1.6,.4,1) both}
+.infR.ko .infR-pierre{opacity:.5;animation:infCasse .6s ease both}
+@keyframes infPop{from{transform:scale(.2) rotate(-40deg);opacity:0}}
+@keyframes infCasse{20%{transform:translateX(-6px) rotate(-6deg)}40%{transform:translateX(6px) rotate(5deg)}60%{transform:translateX(-4px)}}
+.infR .k{margin:0;font:700 11px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:#ffc9c9}
+.infR b{font:900 30px/1 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 0 22px color-mix(in srgb,var(--g) 70%,transparent)}
+.infR .inf-gant{justify-content:center;gap:6px;margin:6px 0 2px}
+.infR .inf-gant .ip{width:20px;height:25px}
+.infR small{font:600 13px/1.35 var(--rc);color:#bbb}.infR small em{font-style:normal;color:#fff}
+.infR-pro{margin:4px 0 0;font:800 12px/1 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#ff6b6b}
+.infR-go{width:100%;margin-top:10px;background:#fff;color:#000}.infR-go svg{fill:#000}
+/* Victoire : plein écran, centré */
+.infV{position:fixed;inset:0;z-index:4;display:grid;place-items:center;overflow:hidden;text-align:center}
+.infV-fond{position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 32%,rgba(255,190,60,.35),transparent 70%),radial-gradient(90% 70% at 50% 40%,#3a0a5e,#0a0312 75%)}
+.infV-rayons{position:absolute;left:50%;top:32%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;
+  background:repeating-conic-gradient(from 0deg,rgba(255,210,120,.13) 0 6deg,transparent 6deg 18deg);animation:infTourne 30s linear infinite;mask:radial-gradient(circle,#000 10%,transparent 45%);-webkit-mask:radial-gradient(circle,#000 10%,transparent 45%)}
+@keyframes infTourne{to{transform:rotate(360deg)}}
+.infV-in{position:relative;display:flex;flex-direction:column;align-items:center;width:min(100%,420px);padding:calc(var(--haut) + 40px) 22px calc(var(--bas) + 24px)}
+.infV-gant{height:min(30vh,250px);aspect-ratio:360/560;animation:infMonte 1s cubic-bezier(.2,.9,.3,1) both}
+.infV-gant img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px rgba(255,200,80,.55))}
+@keyframes infMonte{from{transform:translateY(40px) scale(.85);opacity:0}}
+.infV-pierres{display:flex;justify-content:center;gap:10px;margin:-6px 0 16px}
+.infV-pierres span{display:block;width:26px;height:33px;animation:infAllume .5s calc(.6s + var(--k) * .22s) cubic-bezier(.2,1.6,.4,1) both}
+.infV-pierres .ip{width:100%;height:100%}
+@keyframes infAllume{from{transform:scale(0);filter:brightness(4)}}
+.infV .k{margin:0 0 8px;font:700 11px/1 var(--rc);letter-spacing:.18em;text-transform:uppercase;color:#ffd23a;animation:infFondu .5s 2s both}
+.infV h2{margin:0;font:900 40px/.92 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 0 30px rgba(255,200,80,.6);animation:infFondu .6s 2.1s both}
+@keyframes infFondu{from{opacity:0;transform:translateY(10px)}}
+.infV-pack{width:118px;margin:22px auto 10px;animation:infPack .8s 2.4s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 0 26px rgba(176,77,255,.7))}
+@keyframes infPack{from{transform:scale(.3) rotate(-12deg);opacity:0}}
+.infV-gain{margin:0 0 16px;font:700 12px/1.3 var(--rc);letter-spacing:.06em;text-transform:uppercase;color:#d9c8ff;animation:infFondu .5s 2.8s both}
+.infV-go{width:100%;height:50px;background:linear-gradient(90deg,#ffd23a,#ffb300);color:#000;font-size:15px;animation:infFondu .5s 3s both}
+/* Pack Infinity : cosmos violet et or, le Gant au centre, 6 gemmes */
+.paquet.v5.t-inf{--p1:#ffe9a8;--p2:#6a1fd1;--p3:#0d0420;--p4:#ffd23a;--pl:rgba(176,77,255,.8)}
+.pqi .pq-corps{background:#0d0420}
+.pqi-cosmos{position:absolute;inset:0;background:radial-gradient(55% 40% at 50% 42%,rgba(255,200,90,.55),transparent 70%),radial-gradient(90% 70% at 50% 40%,#6a1fd1,#12052a 80%),
+  radial-gradient(.8cqw .8cqw at 18% 20%,#fff,transparent),radial-gradient(.6cqw .6cqw at 78% 30%,#fff,transparent),radial-gradient(.7cqw .7cqw at 30% 70%,#ffe,transparent),radial-gradient(.6cqw .6cqw at 85% 75%,#fff,transparent)}
+.pqi-gant{position:absolute;left:50%;top:13%;height:66%;transform:translateX(-50%);filter:drop-shadow(0 0 4cqw rgba(255,200,80,.6))}
+.pqi .pq-corps::before{background:linear-gradient(180deg,transparent 55%,rgba(13,4,32,.95) 82%)}
+.pqi .pq-heros{display:none}
+.pqi-c{justify-content:space-between !important;align-items:center !important;text-align:center !important;padding:8cqw 6cqw 7cqw !important}
+.pqi .pq-logo{width:34cqw}
+.pqi-bas{display:flex;flex-direction:column;align-items:center;gap:2cqw}
+.pqi-gemmes{display:flex;gap:2cqw}
+.pqi-gemmes i{width:4cqw;height:5.4cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--g) 45%,color-mix(in srgb,var(--g) 50%,#000));box-shadow:0 0 2.4cqw var(--g),0 0 0 .6cqw #c9922c}
+.pqi-nom{font:900 17cqw/.9 var(--rc);font-style:italic;text-transform:uppercase;letter-spacing:-.02em;background:linear-gradient(180deg,#fff6d0,#ffc93a 55%,#c27a10);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 .6cqw 1.6cqw rgba(0,0,0,.6))}
+.pqi-nb{font:700 3.6cqw/1 var(--rc);letter-spacing:.3em;text-transform:uppercase;color:#e9d8ff}
+/* Ouverture : les pierres convergent, flash, puis le pack apparaît */
+.pk.pki .pk-nebuleuse{background:radial-gradient(60% 50% at 50% 45%,rgba(176,77,255,.45),transparent 70%),radial-gradient(40% 30% at 50% 45%,rgba(255,200,80,.3),transparent 70%)}
+.pk.pki:not(.pki-pret) .pk-scene,.pk.pki:not(.pki-pret) .pk-texte{opacity:0;transform:scale(.4)}
+.pk.pki .pk-scene{transition:opacity .5s,transform .7s cubic-bezier(.2,1.5,.4,1)}
+.pki-intro{position:absolute;inset:0;z-index:6;pointer-events:none}
+.pki-intro i{position:absolute;left:50%;top:45%;width:34px;height:44px;margin:-22px 0 0 -17px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--g) 45%,color-mix(in srgb,var(--g) 45%,#000));box-shadow:0 0 22px var(--g),0 0 50px var(--g),0 0 0 3px #c9922c;
+  animation:pkiVient 1.5s calc(var(--k) * .12s) cubic-bezier(.6,0,.4,1) both}
+@keyframes pkiVient{0%{transform:rotate(var(--a)) translateY(-46vh) rotate(calc(-1 * var(--a))) scale(.6);opacity:0}
+  25%{opacity:1}75%{transform:rotate(calc(var(--a) + 200deg)) translateY(-70px) rotate(calc(-1 * var(--a) - 200deg)) scale(1)}100%{transform:rotate(calc(var(--a) + 260deg)) translateY(0) scale(.2);opacity:0}}
+.pki-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff,rgba(255,230,180,.8) 20%,transparent 60%);opacity:0;animation:pkiFlash .9s 1.45s ease-out both}
+@keyframes pkiFlash{15%{opacity:1}100%{opacity:0}}
+.pki-titre{position:absolute;left:0;right:0;top:calc(var(--haut) + 70px);margin:0;text-align:center;font:900 28px/1 var(--rc);font-style:italic;letter-spacing:.06em;text-transform:uppercase;color:#ffd23a;text-shadow:0 0 20px rgba(255,200,80,.7);opacity:0;animation:infFondu .5s .2s both,pkiPart .4s 1.5s forwards}
+@keyframes pkiPart{to{opacity:0;transform:scale(1.3)}}
+.pk.pki-boom{animation:pkiSecoue .5s .6s ease}
+@keyframes pkiSecoue{20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+.pk.pki-boom .pk-rayons.on{filter:hue-rotate(0deg);animation:pkiArcEnCiel 1.2s linear infinite}
+@keyframes pkiArcEnCiel{to{filter:hue-rotate(360deg)}}
+/* ════ Défi Infinity · V5.7 : résultats centrés, victoire plein écran, Pack Infinity (photo du Gant) ════ */
+.infR{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin:22px 0 8px;padding:26px 18px 22px;
+  background:radial-gradient(70% 60% at 50% 0%,color-mix(in srgb,var(--g,#ec1d24) 35%,transparent),transparent 70%),linear-gradient(180deg,#1d0408,#0e0204);box-shadow:inset 0 0 0 1px rgba(255,80,80,.35)}
+.infR.ko{--g:#ec1d24}
+.infR-pierre{display:block;width:64px;height:80px;margin-bottom:6px}
+.infR-pierre .ip{width:100%;height:100%}
+.infR.ok .infR-pierre{animation:infPop .7s cubic-bezier(.2,1.6,.4,1) both}
+.infR.ko .infR-pierre{opacity:.5;animation:infCasse .6s ease both}
+@keyframes infPop{from{transform:scale(.2) rotate(-40deg);opacity:0}}
+@keyframes infCasse{20%{transform:translateX(-6px) rotate(-6deg)}40%{transform:translateX(6px) rotate(5deg)}60%{transform:translateX(-4px)}}
+.infR .k{margin:0;font:700 11px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:#ffc9c9}
+.infR b{font:900 30px/1 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 0 22px color-mix(in srgb,var(--g) 70%,transparent)}
+.infR .inf-gant{justify-content:center;gap:6px;margin:6px 0 2px}
+.infR .inf-gant .ip{width:20px;height:25px}
+.infR small{font:600 13px/1.35 var(--rc);color:#bbb}.infR small em{font-style:normal;color:#fff}
+.infR-pro{margin:4px 0 0;font:800 12px/1 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#ff6b6b}
+.infR-go{width:100%;margin-top:10px;background:#fff;color:#000}.infR-go svg{fill:#000}
+/* Victoire : plein écran, centré */
+.infV{position:fixed;inset:0;z-index:4;display:grid;place-items:center;overflow:hidden;text-align:center}
+.infV-fond{position:absolute;inset:0;background:radial-gradient(55% 40% at 50% 34%,rgba(255,190,60,.35),transparent 70%),radial-gradient(90% 70% at 50% 40%,#2c0a52,#07030f 75%)}
+.infV-rayons{position:absolute;left:50%;top:34%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;
+  background:repeating-conic-gradient(from 0deg,rgba(255,210,120,.12) 0 6deg,transparent 6deg 18deg);animation:infTourne 30s linear infinite;-webkit-mask:radial-gradient(circle,#000 8%,transparent 40%);mask:radial-gradient(circle,#000 8%,transparent 40%)}
+@keyframes infTourne{to{transform:rotate(360deg)}}
+.infV-in{position:relative;display:flex;flex-direction:column;align-items:center;width:min(100%,420px);padding:calc(var(--haut) + 30px) 22px calc(var(--bas) + 20px)}
+.infV-gant{height:min(32vh,270px);aspect-ratio:291/620;animation:infMonte 1s cubic-bezier(.2,.9,.3,1) both}
+.infV-gant img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 34px rgba(255,200,80,.55))}
+@keyframes infMonte{from{transform:translateY(40px) scale(.85);opacity:0}}
+.infV-pierres{display:flex;justify-content:center;gap:10px;margin:14px 0 16px}
+.infV-pierres span{display:block;width:24px;height:30px;animation:infAllume .5s calc(.6s + var(--k) * .22s) cubic-bezier(.2,1.6,.4,1) both}
+.infV-pierres .ip{width:100%;height:100%}
+@keyframes infAllume{from{transform:scale(0);filter:brightness(4)}}
+.infV .k{margin:0 0 8px;font:700 11px/1 var(--rc);letter-spacing:.18em;text-transform:uppercase;color:#ffd23a;animation:infFondu .5s 2s both}
+.infV h2{margin:0;font:900 40px/.92 var(--rc);text-transform:uppercase;color:#fff;text-shadow:0 0 30px rgba(255,200,80,.6);animation:infFondu .6s 2.1s both}
+@keyframes infFondu{from{opacity:0;transform:translateY(10px)}}
+.infV-pack{width:108px;margin:20px auto 10px;animation:infPack .8s 2.4s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 0 26px rgba(176,77,255,.7))}
+@keyframes infPack{from{transform:scale(.3) rotate(-12deg);opacity:0}}
+.infV-gain{margin:0 0 16px;font:700 12px/1.3 var(--rc);letter-spacing:.06em;text-transform:uppercase;color:#d9c8ff;animation:infFondu .5s 2.8s both}
+.infV-go{width:100%;height:50px;justify-content:center;background:linear-gradient(90deg,#ffd23a,#ffb300);color:#000;font-size:15px;animation:infFondu .5s 3s both}
+/* Pack Infinity : la photo du Gant dans le cosmos, logo en haut, nom doré en bas */
+.paquet.v5.t-inf{--p1:#ffe9a8;--p2:#6a1fd1;--p3:#0d0420;--p4:#ffd23a;--pl:rgba(176,77,255,.8)}
+.pqi .pq-corps{background:#0d0420}
+.pqi-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.pqi .pq-corps::before{background:linear-gradient(180deg,rgba(13,4,32,.5),transparent 22%,transparent 58%,rgba(13,4,32,.95) 86%)}
+.pqi .pq-trame{opacity:.25}
+.pqi-c{justify-content:space-between !important;align-items:center !important;text-align:center !important;padding:8cqw 6cqw 7cqw !important}
+.pqi .pq-logo{width:34cqw}
+.pqi-bas{display:flex;flex-direction:column;align-items:center;gap:2cqw}
+.pqi-gemmes{display:flex;gap:2cqw}
+.pqi-gemmes i{width:4cqw;height:5.4cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--g) 45%,color-mix(in srgb,var(--g) 50%,#000));box-shadow:0 0 2.4cqw var(--g),0 0 0 .6cqw #c9922c}
+.pqi-nom{font:900 17cqw/.9 var(--rc);font-style:italic;text-transform:uppercase;letter-spacing:-.02em;background:linear-gradient(180deg,#fff6d0,#ffc93a 55%,#c27a10);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 .6cqw 1.6cqw rgba(0,0,0,.6))}
+.pqi-nb{font:700 3.6cqw/1 var(--rc);letter-spacing:.3em;text-transform:uppercase;color:#e9d8ff}
+/* Ouverture : les 6 pierres convergent, flash, puis le pack apparaît ; à la déchirure, ondes arc-en-ciel */
+.pk.pki .pk-nebuleuse{background:radial-gradient(60% 50% at 50% 45%,rgba(176,77,255,.45),transparent 70%),radial-gradient(40% 30% at 50% 45%,rgba(255,200,80,.3),transparent 70%)}
+.pk.pki:not(.pki-pret) .pk-scene,.pk.pki:not(.pki-pret) .pk-texte{opacity:0;transform:scale(.4)}
+.pk.pki .pk-scene{transition:opacity .5s,transform .7s cubic-bezier(.2,1.5,.4,1)}
+.pki-intro{position:absolute;inset:0;z-index:6;pointer-events:none}
+.pki-intro i{position:absolute;left:50%;top:45%;width:34px;height:44px;margin:-22px 0 0 -17px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--g) 45%,color-mix(in srgb,var(--g) 45%,#000));box-shadow:0 0 22px var(--g),0 0 50px var(--g),0 0 0 3px #c9922c;
+  animation:pkiVient 1.5s calc(var(--k) * .12s) cubic-bezier(.6,0,.4,1) both}
+@keyframes pkiVient{0%{transform:rotate(var(--a)) translateY(-46vh) rotate(calc(-1 * var(--a))) scale(.6);opacity:0}
+  25%{opacity:1}75%{transform:rotate(calc(var(--a) + 200deg)) translateY(-70px) rotate(calc(-1 * var(--a) - 200deg)) scale(1)}100%{transform:rotate(calc(var(--a) + 260deg)) translateY(0) scale(.2);opacity:0}}
+.pki-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff,rgba(255,230,180,.8) 20%,transparent 60%);opacity:0;animation:pkiFlash .9s 1.45s ease-out both}
+@keyframes pkiFlash{15%{opacity:1}100%{opacity:0}}
+.pki-titre{position:absolute;left:0;right:0;top:calc(var(--haut) + 70px);margin:0;text-align:center;font:900 28px/1 var(--rc);font-style:italic;letter-spacing:.06em;text-transform:uppercase;color:#ffd23a;text-shadow:0 0 20px rgba(255,200,80,.7);animation:infFondu .5s .2s both,pkiPart .4s 1.5s forwards}
+@keyframes pkiPart{to{opacity:0;transform:scale(1.3)}}
+.pk.pki-boom{animation:pkiSecoue .5s .6s ease}
+@keyframes pkiSecoue{20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+.pk.pki-boom .pk-rayons.on{animation:pkiArcEnCiel 1.2s linear infinite}
+@keyframes pkiArcEnCiel{to{filter:hue-rotate(360deg)}}
+/* Défi Infinity · tout autour du Gant (photo du poing lumineux ; le claquement de doigts quand le Gant est complet) */
+.infD{background:#05060c;box-shadow:inset 0 0 0 1px rgba(255,210,120,.28)}
+.infD .infD-fond{background:radial-gradient(70% 90% at 80% 40%,rgba(90,60,200,.35),transparent 70%),#05060c;filter:none}
+.infD-poing{position:absolute;right:0;top:0;width:62%;height:100%;object-fit:cover;object-position:50% 22%;-webkit-mask:linear-gradient(90deg,transparent,#000 38%);mask:linear-gradient(90deg,transparent,#000 38%)}
+.infD-snap{position:absolute;right:6px;bottom:0;height:104%;filter:drop-shadow(0 0 22px rgba(255,200,80,.45))}
+.infD::after{background:linear-gradient(90deg,rgba(5,6,12,.9) 22%,rgba(5,6,12,.3) 48%,transparent 62%)}
+.infD .k{color:#ffd9a0}
+.infD.ferme .infD-poing{filter:grayscale(.85) brightness(.55)}
+.infD.brise .infD-poing{filter:grayscale(.5) brightness(.6) sepia(.5) hue-rotate(-30deg)}
+.infP-haut{background:#05060c}
+.infP-poing{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 26%}
+.infP-haut::after{background:linear-gradient(90deg,rgba(5,6,12,.75) 8%,transparent 55%),linear-gradient(transparent 50%,var(--n4) 98%)}
+@container (max-width:90px){.pqi-nb,.pqi-gemmes{display:none}.pqi-nom{font-size:20cqw}}
+.infP-gain .paquet{overflow:hidden}
+/* ════ Défi Infinity · V5.8 : vraies pierres (cristaux) + illustration du Gant ════ */
+.ip{display:block;position:relative;overflow:visible}
+.ip img{position:absolute;inset:-14%;width:128%;height:128%;object-fit:contain;transition:filter .4s,opacity .4s}
+.ip:not(.on):not(.cur) img{filter:grayscale(1) brightness(.4) contrast(1.2);opacity:.75}
+.ip.on{filter:none}.ip.on img{filter:drop-shadow(0 0 4px var(--g)) drop-shadow(0 0 9px color-mix(in srgb,var(--g) 60%,transparent))}
+.ip.cur{filter:none}.ip.cur img{filter:grayscale(.55) brightness(.75);animation:ipVit 1.6s ease-in-out infinite}
+@keyframes ipVit{50%{filter:grayscale(0) brightness(1.1) drop-shadow(0 0 8px var(--g))}}
+/* Encart Jeux : l'illustration du Gant en fond, texte à gauche */
+.infD-illu{position:absolute;right:-6%;top:0;width:72%;height:100%;object-fit:cover;object-position:50% 30%;-webkit-mask:linear-gradient(90deg,transparent,#000 34%);mask:linear-gradient(90deg,transparent,#000 34%)}
+.infD .infD-fond{background:#06050b}
+.infD::after{background:linear-gradient(90deg,rgba(6,5,11,.92) 26%,rgba(6,5,11,.35) 52%,transparent 66%)}
+.infD.ferme .infD-illu{filter:grayscale(.9) brightness(.5)}
+.infD.brise .infD-illu{filter:grayscale(.6) brightness(.55) sepia(.4) hue-rotate(-25deg)}
+.infD-gant{gap:7px}.infD-gant .ip{width:20px;height:22px}
+/* Page du défi : l'illustration en plein haut */
+.infP-haut{background:#06050b}
+.infP-illu{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+.infP-haut::after{background:linear-gradient(90deg,rgba(6,5,11,.82) 6%,rgba(6,5,11,.2) 52%,transparent 70%),linear-gradient(transparent 48%,var(--n4) 97%)}
+.infP-titre .k{color:#ffd9a0}
+.infP-jeux li .ip{width:22px;height:24px}
+.infR-pierre{width:78px;height:78px}
+.infR .inf-gant .ip{width:22px;height:24px}
+.infV-pierres span{width:30px;height:32px}
+.pqi-gemmes .ip{width:5cqw;height:5.4cqw}
+.pki-intro i{background:none;box-shadow:none;width:44px;height:48px;margin:-24px 0 0 -22px;border-radius:0}
+.pki-intro i .ip{width:100%;height:100%}
+.infV-gant{height:min(40vh,340px);aspect-ratio:736/919}
+.infV-gant img{object-fit:cover;filter:none;-webkit-mask:radial-gradient(closest-side,#000 62%,transparent);mask:radial-gradient(closest-side,#000 62%,transparent)}
+.infV-fond{background:radial-gradient(55% 40% at 50% 30%,rgba(176,77,255,.28),transparent 70%),radial-gradient(90% 70% at 50% 40%,#140a24,#05030a 75%)}
+.infP-illu{left:auto;right:-10%;width:80%;object-position:50% 42%;-webkit-mask:linear-gradient(90deg,transparent,#000 30%);mask:linear-gradient(90deg,transparent,#000 30%)}
+.infP-haut::after{background:linear-gradient(90deg,rgba(6,5,11,.7) 10%,transparent 45%),linear-gradient(transparent 55%,var(--n4) 97%)}
+.infR.ko .infR-pierre{opacity:1}.infR.ko .infR-pierre .ip img{filter:saturate(.5) brightness(.6) contrast(1.1);opacity:1}
+/* V5.8 · victoire : titre en haut, pierres, le pack seul au centre */
+.infV{place-items:start center}
+.infV-in{min-height:100%;justify-content:flex-start;padding-top:calc(var(--haut) + 46px)}
+.infV-rayons{top:58%}
+.infV .k{animation:infFondu .5s .1s both}
+.infV h2{font-size:42px;animation:infFondu .6s .2s both}
+.infV-pierres{gap:12px;margin:20px 0 6px}
+.infV-pierres span{width:34px;height:36px;animation-delay:calc(.7s + var(--k) * .2s)}
+.infV-pack{width:min(48vw,200px);margin:26px auto 16px;animation-delay:2s;filter:drop-shadow(0 0 34px rgba(176,77,255,.75)) drop-shadow(0 0 70px rgba(255,200,80,.25))}
+.infV-gain{animation-delay:2.4s}
+.infV-go{animation-delay:2.6s}
+/* V5.8 · finitions avant publication */
+.infP-illu{right:-24%;width:84%}
+.infP-haut::after{background:linear-gradient(90deg,rgba(6,5,11,.88) 14%,rgba(6,5,11,.35) 46%,transparent 62%),linear-gradient(transparent 55%,var(--n4) 97%)}
+.ip:not(.on):not(.cur) img{filter:grayscale(1) brightness(.62) contrast(1.15);opacity:.9}
+.infR.ok{background:radial-gradient(70% 60% at 50% 0%,color-mix(in srgb,var(--g) 38%,transparent),transparent 72%),linear-gradient(180deg,#121218,#0a0a0d);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--g) 55%,transparent)}
+.infR.ok .k{color:color-mix(in srgb,var(--g) 45%,#fff)}
+.infR.ko{background:radial-gradient(70% 60% at 50% 0%,rgba(236,29,36,.16),transparent 70%),linear-gradient(180deg,#141416,#0a0a0b);box-shadow:inset 0 0 0 1px rgba(236,29,36,.5)}
+.infR.ko .infR-pierre .ip img{filter:saturate(.75) brightness(.85) drop-shadow(0 0 6px rgba(236,29,36,.5))}
+.infP-gain .paquet{width:50px}
+@container (max-width:90px){.pqi-nom{font-size:15cqw}}
 </style>
 </head>
 <body>
@@ -4399,7 +4633,7 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/4f546b7e55d85675.webp", "akinator": "/m/8719345bd3061689.webp", "dossier": "/m/db3d15d3fe14c412.webp", "filmo": "/m/f1dc2e724cd2d1b9.webp", "heros": "/m/6017ccaff98dbf79.webp", "inf_thanos": "/m/1755826421d84aad.webp", "ordre": "/m/7083df33cfcb6a2c.webp", "pierres": "/m/129603cad2382191.webp", "qui": "/m/c81d984f92278235.webp", "quiparle": "/m/e9e23243e0ee8f83.webp", "replique": "/m/d47e05f12fc50827.webp", "swipe": "/m/2f6fc8320848e97b.webp", "vs": "/m/703acd4a82da8317.webp"};
+const IMG_JEUX = {"affiche": "/m/4f546b7e55d85675.webp", "akinator": "/m/8719345bd3061689.webp", "dossier": "/m/db3d15d3fe14c412.webp", "filmo": "/m/f1dc2e724cd2d1b9.webp", "heros": "/m/6017ccaff98dbf79.webp", "inf_illu": "/m/a77d7b4c8de2bcd3.webp", "inf_pack": "/m/102492ccfdc6a0d0.webp", "infp_ame": "/m/e4b0d65ef7668051.webp", "infp_espace": "/m/1de75373264e9d09.webp", "infp_esprit": "/m/54ab22897d25b2a3.webp", "infp_pouvoir": "/m/7da269c6016d9395.webp", "infp_realite": "/m/8a22e87308dd2dff.webp", "infp_temps": "/m/72809ceefb14db50.webp", "ordre": "/m/7083df33cfcb6a2c.webp", "pierres": "/m/129603cad2382191.webp", "qui": "/m/c81d984f92278235.webp", "quiparle": "/m/e9e23243e0ee8f83.webp", "replique": "/m/d47e05f12fc50827.webp", "swipe": "/m/2f6fc8320848e97b.webp", "vs": "/m/703acd4a82da8317.webp"};
 /* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
 const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [33, 64], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 45], "vs": [51, 44]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
@@ -9113,7 +9347,7 @@ function tirerRarete(mini){
 /* Ouvre un pack : les cartes sont acquises tout de suite (même si on ferme pendant la révélation). */
 function tirerPack(t){
   const P = PACKS[t] || PACKS.std, c = collec();
-  const rar = [tirerRarete(P.mini)].concat(Array.from({ length:P.n - 1 }, () => tirerRarete(1)));
+  const rar = [tirerRarete(P.mini)].concat(Array.from({ length:P.n - 1 }, () => tirerRarete(P.mini2 || 1)));   // mini2 : rareté minimale des autres cartes (Pack Infinity)
   c.s5++; c.s6++;
   if(c.s6 >= PITIE6 && Math.max(...rar) < 6) rar[0] = 6;
   else if(c.s5 >= PITIE5 && Math.max(...rar) < 5) rar[0] = 5;
@@ -9586,8 +9820,27 @@ const INF_JOURS = [3, 6];   // mercredi, samedi
 const INF_PIERRES = [["Espace", "#3a8bff"], ["Esprit", "#ffd23a"], ["Réalité", "#ff3b3b"], ["Pouvoir", "#b04dff"], ["Temps", "#2fe07a"], ["Âme", "#ff8a1c"]];
 const INF_JEUX = ["affiche", "ordre", "replique", "quiparle", "qui", "heros", "dossier", "filmo", "vs", "swipe", "pierres"];   // pas le Gardien : ce n'est pas un jeu d'adresse
 const JOURS_FR = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
-PACKS.inf = { nom:"Infinity", n:6, mini:6 };   // 6 cartes dont une Cosmique (6 étoiles)
+PACKS.inf = { nom:"Infinity", n:10, mini:6, mini2:3 };   // 10 cartes : une Cosmique (6 étoiles) garantie, les autres Épiques ou mieux
 HEROS_PACK.inf = indexDe("Captain Marvel");
+paquet = (o => t => t !== "inf" ? o(t) : `<span class="paquet v5 t-inf pqi"><span class="pq-dent h"></span><span class="pq-corps">${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_pack ? `<img class="pqi-photo" src="${img(IMG_JEUX.inf_pack)}" alt="">` : ""}<span class="pq-trame"></span></span><span class="pq-dent b"></span>
+  <span class="pq-contenu pqi-c"><span class="pq-logo">${logoMarvel()}</span><span class="pqi-bas"><span class="pqi-gemmes">${INF_PIERRES.map((p, k) => pierreSVG(k, "on")).join("")}</span>
+  <span class="pqi-nom">Infinity</span><span class="pqi-nb">10 cartes</span></span></span></span>`)(paquet);
+/* Ouverture du Pack Infinity : les 6 pierres convergent sur le pack, claquement de lumière, puis déchirure en onde arc-en-ciel. */
+scenePack = (o => function(){ o(); if(PK.t !== "inf") return;
+  const pk = document.getElementById("pk"); if(!pk) return;
+  pk.classList.add("pki");
+  pk.insertAdjacentHTML("beforeend", `<div class="pki-intro">${INF_PIERRES.map((p, k) => `<i style="--k:${k};--g:${p[1]};--a:${k * 60 - 90}deg">${pierreSVG(k, "on")}</i>`).join("")}<span class="pki-flash"></span><p class="pki-titre">Pack Infinity</p></div>`);
+  PK.phase = "intro";
+  setTimeout(() => { try{ jouerCourt("legende", .7); }catch(e){} vibre([30, 40, 60]); }, 1500);
+  setTimeout(() => { PK.phase = "paquet"; pk.classList.add("pki-pret"); }, 2300);
+  setTimeout(() => { const i = pk.querySelector(".pki-intro"); if(i) i.remove(); }, 3200);
+})(scenePack);
+dechirerPack = (o => function(){ const inf = PK.t === "inf" && PK.phase === "paquet"; o(); if(!inf) return;
+  const pk = document.getElementById("pk"), pq = document.getElementById("pk-paquet"); pk.classList.add("pki-boom");
+  setTimeout(() => { const c0 = centreDe(pq); [1, 2, 3, 4, 5, 6].forEach((r, k) => setTimeout(() => FX.onde(c0.x, c0.y, r, { max:1.8, epaisseur:6 }), k * 110));
+    FX.gerbe(c0.x, c0.y, 6, 320, { vitesse:1.7, taille:1.4 }); }, 620);
+})(dechirerPack);
+const infImg = (cle, cls) => typeof IMG_JEUX !== "undefined" && IMG_JEUX[cle] ? `<img class="${cls}" src="${img(IMG_JEUX[cle])}" alt="">` : "";
 let INF_EN_JEU = null, INF_PARTIE = 0;   // jeu du défi en cours (en mémoire : une partie coupée par un rechargement compte comme abandonnée)
 const infJour = (d = new Date()) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
 const infOuvert = (d = new Date()) => INF_JOURS.includes(d.getDay());
@@ -9602,6 +9855,7 @@ function infTirage(jour){
 function infEtat(){
   const e = etat[profil]; if(!e) return null;
   const s = e.infinity = e.infinity || { gants:0 }, j = infJour();
+  if(s.regle !== 2){ s.regle = 2; if(s.jour === j){ s.etape = 0; s.brise = false; s.fini = false; s.tente = null; } }   // nouvel objectif (plus de la moitié) : le défi du jour repart à zéro
   if(infOuvert() && s.jour !== j){ s.jour = j; s.etape = 0; s.brise = false; s.fini = false; s.tente = null; }
   // une étape lancée qui n'a jamais rendu son résultat (appli fermée en pleine partie) : le Gant se brise
   if(s.tente && s.tente !== INF_EN_JEU){ if(s.jour === j){ s.brise = true; s.cassePar = s.tente; } s.tente = null; sauver(); }
@@ -9618,10 +9872,14 @@ function infDelai(cible){
   const ms = Math.max(0, cible - Date.now()), h = Math.floor(ms / 36e5), m = Math.floor(ms % 36e5 / 6e4);
   return h >= 24 ? Math.floor(h / 24) + " j " + (h % 24) + " h" : h ? h + " h " + String(m).padStart(2, "0") : m + " min";
 }
+/* Objectif de chaque jeu dans le défi : plus de la moitié du maximum (5/8, 8/15, 10/18…) ; palier Héroïque pour les jeux sans maximum. */
+const INF_MAX = { ordre:8, qui_chrono:15, qui_libre:15, pierres:18 };
+const infSeuil = cle => INF_MAX[cle] ? Math.floor(INF_MAX[cle] / 2) + 1 : PALIERS[cle].p[1];
 function infObjectif(id){
-  if(id === "heros") return fmtPalier("heros_chrono", 2) + " en chrono · " + fmtPalier("heros_libre", 2) + " en libre";
-  if(id === "qui") return fmtPalier("qui_chrono", 2) + " en chrono · " + fmtPalier("qui_libre", 2) + " en libre";
-  return fmtPalier(id, 2);
+  const f = cle => INF_MAX[cle] ? infSeuil(cle) + "/" + INF_MAX[cle] : fmtPalier(cle, 1);
+  if(id === "heros") return f("heros_chrono") + " (chrono)";
+  if(id === "qui") return f("qui_chrono");
+  return f(id);
 }
 const nomJeu = id => NOMS_DEFIS[id] || id;
 const infGemme = (k, etat) => `<i class="inf-g ${etat}" style="--g:${INF_PIERRES[k][1]}" title="Pierre ${INF_PIERRES[k][0]}"></i>`;
@@ -9630,16 +9888,11 @@ function infGant(n, cur){ return `<span class="inf-gant">${INF_PIERRES.map((p, k
 /* Bande en haut de la page Jeux : défi ouvert, en cours, brisé, complet, ou fermé (compte à rebours). */
 /* Pierre d'infinité dessinée : gemme ovale sertie d'or (allumée), sertissage vide qui pulse (à gagner), ou vide (à venir). */
 const mixHex = (h, m, t) => "#" + [1, 3, 5].map(i => Math.round(parseInt(h.substr(i, 2), 16) * (1 - t) + m * t).toString(16).padStart(2, "0")).join("");
+const INF_NOMS = ["Pierre de l'Espace", "Pierre de l'Esprit", "Pierre de Réalité", "Pierre du Pouvoir", "Pierre du Temps", "Pierre de l'Âme"];
+const INF_FICHIERS = ["espace", "esprit", "realite", "pouvoir", "temps", "ame"];
 function pierreSVG(k, etat){
-  const c = INF_PIERRES[k][1], id = "ip" + k;
-  const pierre = etat === "on" ? `<ellipse cx="12" cy="15" rx="7.6" ry="10.4" fill="url(#${id}g)"/><ellipse cx="12" cy="15" rx="5.2" ry="7.6" fill="none" stroke="${mixHex(c, 255, .55)}" stroke-width=".5" opacity=".55"/>
-      <path d="M12 4.8 15.6 10 12 25.2 8.4 10Z" fill="#fff" opacity=".1"/><ellipse cx="9.4" cy="9.6" rx="2.3" ry="3.4" fill="#fff" opacity=".75" transform="rotate(-24 9.4 9.6)"/><circle cx="14.6" cy="20.5" r=".9" fill="#fff" opacity=".5"/>`
-    : `<ellipse cx="12" cy="15" rx="7.6" ry="10.4" fill="url(#${id}v)"/>` + (etat === "cur" ? `<ellipse class="ip-halo" cx="12" cy="15" rx="7.6" ry="10.4" fill="none" stroke="${c}" stroke-width="1.6"/>` : "");
-  return `<svg class="ip ${etat}" style="--g:${c}" viewBox="0 0 24 30" aria-hidden="true"><defs>
-    <radialGradient id="${id}g" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="${mixHex(c, 255, .75)}"/><stop offset=".35" stop-color="${mixHex(c, 255, .15)}"/><stop offset=".75" stop-color="${c}"/><stop offset="1" stop-color="${mixHex(c, 0, .6)}"/></radialGradient>
-    <radialGradient id="${id}v" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#2a1f30"/><stop offset="1" stop-color="#07040a"/></radialGradient>
-    <linearGradient id="${id}o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset=".45" stop-color="#d9a640"/><stop offset="1" stop-color="#6e430c"/></linearGradient></defs>
-    <ellipse cx="12" cy="15" rx="10.6" ry="13.6" fill="url(#${id}o)"/><ellipse cx="12" cy="15" rx="8.6" ry="11.4" fill="#3a2406"/>${pierre}</svg>`;
+  const d = typeof IMG_JEUX !== "undefined" && IMG_JEUX["infp_" + INF_FICHIERS[k]];
+  return `<span class="ip ${etat}" style="--g:${INF_PIERRES[k][1]}" aria-hidden="true">${d ? `<img src="${img(d)}" alt="">` : ""}</span>`;
 }
 /* Défi ouvert : le jeu en cours en grand (son visuel), la pierre à gagner, le Gant en 6 pierres. */
 let INF_DESIGN = "B2";
@@ -9653,14 +9906,14 @@ function infOuvertDesign(s, l, minuit){
         <span class="infA-bas"><span class="infA-gant">${gant}</span><span class="infA-go">${SVG.jouer}Jouer</span></span></span>
       <span class="infA-fin">Fin dans ${infDelai(minuit)}</span></section>`;
   if(INF_DESIGN === "B2") return `<section class="infD" data-inf-intro>
-      <span class="infD-fond"></span>${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_thanos ? `<img class="infD-thanos" src="${img(IMG_JEUX.inf_thanos)}" alt="">` : ""}
+      <span class="infD-fond"></span>${infImg("inf_illu", "infD-illu")}
       <span class="infD-t"><span class="infD-gant">${INF_PIERRES.map((p, k) => pierreSVG(k, k < s.etape ? "on" : k === s.etape ? "cur" : "")).join("")}</span>
-        <span class="k">${JOURS_FR[new Date().getDay()].replace(/^./, c => c.toUpperCase())} · ${s.etape ? "pierre " + (s.etape + 1) + "/6" : "6 jeux, zéro faute"}</span><b>Défi<br>Infinity</b>
+        <b>Défi<br>Infinity</b>
         <span class="infD-go">${SVG.jouer}${s.etape ? "Continuer" : "Commencer"}</span></span></section>`;
   if(INF_DESIGN === "B") return `<section class="infB" style="--g:${P[1]}">
       <span class="infB-fond">${j.img ? `<img src="${j.img}" alt="">` : ""}</span>
       <span class="infB-gant">${gant}</span>
-      <span class="k">${kick}</span><b>Pierre de l'${P[0]}</b><small>${nomJeu(id)} · ${obj}</small>
+      <span class="k">${kick}</span><b>${INF_NOMS[s.etape]}</b><small>${nomJeu(id)} · ${obj}</small>
       <button class="infB-go" data-inf-go>${SVG.jouer}Jouer · ${nomJeu(id)}</button><span class="infB-fin">Fin dans ${infDelai(minuit)}</span></section>`;
   return `<section class="infC" style="--g:${P[1]}" data-inf-go>
       <span class="infC-img">${j.img ? `<img src="${j.img}" alt="">` : ""}<i>${s.etape + 1}</i></span>
@@ -9670,7 +9923,7 @@ function infOuvertDesign(s, l, minuit){
 }
 /* Encart (même style que le défi ouvert) pour les autres états : Gant brisé, complet, ou jour sans défi. */
 function infCarte(cls, n, k, titre, sous, intro){
-  return `<section class="infD ${cls}"${intro ? " data-inf-intro" : ""}><span class="infD-fond"></span>${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_thanos ? `<img class="infD-thanos" src="${img(IMG_JEUX.inf_thanos)}" alt="">` : ""}
+  return `<section class="infD ${cls}"${intro ? " data-inf-intro" : ""}><span class="infD-fond"></span>${infImg("inf_illu", "infD-illu")}
     <span class="infD-t"><span class="infD-gant">${INF_PIERRES.map((p, k) => pierreSVG(k, k < n ? "on" : "")).join("")}</span><span class="k">${k}</span><b>${titre}</b><small class="infD-sous">${sous}</small></span></section>`;
 }
 function bandeInfinity(){
@@ -9694,17 +9947,14 @@ function bandeInfinity(){
 function infIntro(){
   const s = infEtat(); if(!infAujourdhui(s)) return;
   const l = infTirage(s.jour), minuit = new Date(); minuit.setHours(24, 0, 0, 0), fini = s.fini || s.brise;
-  document.getElementById("jeu-in").innerHTML = `<div class="infI">
-    <div class="infI-haut"><span class="infD-fond"></span>${typeof IMG_JEUX !== "undefined" && IMG_JEUX.inf_thanos ? `<img src="${img(IMG_JEUX.inf_thanos)}" alt="">` : ""}
-      <span class="infI-titre"><span class="k">Le mercredi et le samedi</span><b>Défi Infinity</b></span></div>
-    <ul class="infI-regles">
-      <li><b>6 jeux</b> tirés au sort, dans un ordre imposé</li>
-      <li><b>Zéro faute</b> : le palier Légendaire dans chaque jeu</li>
-      <li><b>Un seul essai</b> : un jeu raté brise le Gant</li>
-      <li><b>Pause possible</b>, mais tout finir avant minuit</li></ul>
-    <div class="infI-gain">${paquet("inf")}<span><b>Une seule récompense</b>Le Pack Infinity à la 6<sup>e</sup> pierre : une carte Cosmique garantie et 1 000 points. Rien avant.</span></div>
-    <ol class="infI-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape && !fini ? "cur" : ""}">${pierreSVG(k, k < s.etape ? "on" : k === s.etape && !fini ? "cur" : "")}<span><b>${nomJeu(id)}</b><small>${infObjectif(id)}</small></span></li>`).join("")}</ol>
-    ${fini ? "" : `<button class="b4 b4-rouge infI-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer" : "Commencer"} · ${nomJeu(l[s.etape])}</button><p class="infI-fin">Fin du défi dans ${infDelai(minuit)}</p>`}
+  const etat = s.fini ? `<p class="infP-etat or">Gant complet · Pack Infinity gagné</p>` : s.brise ? `<p class="infP-etat ko">Gant brisé à la pierre ${s.etape + 1} · prochain défi ${JOURS_FR[infProchain().getDay()]}</p>` : "";
+  document.getElementById("jeu-in").innerHTML = `<div class="infP">
+    <div class="infP-haut">${infImg("inf_illu", "infP-illu")}
+      <span class="infP-titre"><span class="k">${JOURS_FR[new Date().getDay()]} · fin dans ${infDelai(minuit)}</span><b>Défi<br>Infinity</b>
+        <small>Réunis les 6 pierres avant minuit.<br>Un seul essai, pause permise entre deux jeux.</small></span></div>
+    <ol class="infP-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape && !fini ? "cur" : ""}">${pierreSVG(k, k < s.etape ? "on" : k === s.etape && !fini ? "cur" : "")}<b>${nomJeu(id)}</b><em>${infObjectif(id)}</em></li>`).join("")}</ol>
+    <div class="infP-gain">${paquet("inf")}<span><b>Pack Infinity</b>Carte Cosmique garantie + 1 000 pts<br>uniquement à la 6<sup>e</sup> pierre</span></div>
+    ${etat || `<button class="b4 b4-rouge infP-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer" : "Commencer"}</button>`}
   </div>`;
   document.getElementById("jeu").classList.add("inf-fixe");
   ouvrirFeuille("jeu");
@@ -9724,21 +9974,34 @@ function infResultat(cle, v){
   if(!s || s.tente !== id) return "";
   s.tente = null;
   const k = s.etape, P = INF_PIERRES[k];
-  if(palierDe(cle, v) < 3){
+  const grand = (k2, etat) => `<span class="infR-pierre" style="--g:${INF_PIERRES[k2][1]}">${pierreSVG(k2, etat)}</span>`;
+  if(v < infSeuil(cle)){
     s.brise = true; s.cassePar = id; sauver(); if(typeof rendreDefis === "function") rendreDefis();
-    return `<div class="inf-res ko">${infGant(k)}<p class="surtitre">Défi Infinity</p><b>Le Gant se brise</b><small>Il fallait ${infObjectif(id)} · prochain défi ${JOURS_FR[infProchain().getDay()]}</small></div>`;
+    return `<div class="infR ko">${grand(k, "")}<p class="k">Défi Infinity · pierre ${k + 1}/6</p><b>Le Gant se brise</b>
+      <small>Il fallait ${infObjectif(id)}</small>${infGant(k)}<p class="infR-pro">Prochain défi ${JOURS_FR[infProchain().getDay()]}</p></div>`;
   }
   s.etape = k + 1;
   if(s.etape >= 6){
     s.fini = true; s.gants = (s.gants || 0) + 1;
-    collec().packs.push({ t:"inf", o:"Défi Infinity" }); sauver(); if(typeof rendreDefis === "function") rendreDefis();
-    return `<div class="inf-res fini">${infGant(6)}<p class="surtitre">Défi Infinity</p><b>Les 6 pierres sont à toi !</b><small>Pack Infinity : une carte Cosmique garantie · +1 000 points</small>
-      <span class="recomp-pack">${paquet("inf")}</span><button class="btn btn-packs" data-ouvrir-packs>Ouvrir le Pack Infinity</button></div>`;
+    collec().packs.unshift({ t:"inf", o:"Défi Infinity" });   // le Pack Infinity s'ouvre en premier
+    sauver(); if(typeof rendreDefis === "function") rendreDefis();
+    return infVictoire();
   }
   sauver(); if(typeof rendreDefis === "function") rendreDefis();
   const suiv = infTirage(s.jour)[s.etape];
-  return `<div class="inf-res ok" style="--g:${P[1]}">${infGant(s.etape)}<p class="surtitre">Défi Infinity</p><b>Pierre de l'${P[0]} obtenue · ${s.etape}/6</b>
-    <small>Prochain jeu : ${nomJeu(suiv)}</small><button class="btn btn-blanc" data-inf-go>Continuer le défi</button></div>`;
+  return `<div class="infR ok" style="--g:${P[1]}">${grand(k, "on")}<p class="k">Défi Infinity · ${s.etape}/6</p><b>${INF_NOMS[k]}</b>
+    ${infGant(s.etape)}<small>Prochain jeu : <em>${nomJeu(suiv)}</em> · ${infObjectif(suiv)}</small>
+    <button class="b4 infR-go" data-inf-go>${SVG.jouer}Continuer le défi</button></div>`;
+}
+/* Victoire : plein écran centré, le titre en haut, les 6 pierres s'allument une à une, puis le Pack Infinity seul. */
+function infVictoire(){
+  return `<div class="infV"><span class="infV-fond"></span><span class="infV-rayons"></span>
+    <div class="infV-in">
+      <p class="k">Défi Infinity · le Gant est complet</p><h2>Les 6 pierres<br>sont à toi</h2>
+      <div class="infV-pierres">${INF_PIERRES.map((p, k) => `<span style="--k:${k};--g:${p[1]}">${pierreSVG(k, "on")}</span>`).join("")}</div>
+      <div class="infV-pack">${paquet("inf")}</div>
+      <p class="infV-gain">10 cartes · une Cosmique garantie · +1 000 pts</p>
+      <button class="b4 infV-go" data-ouvrir-packs>Ouvrir le Pack Infinity</button></div></div>`;
 }
 /* Écran d'intro d'un jeu lancé par le défi : l'objectif à atteindre. */
 function infBandeauJeu(id){
