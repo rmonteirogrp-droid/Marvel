@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="/m/ba399367040f71a1.png">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Marvel">
 <style>
 /* Polices intégrées (Barlow Condensed pour les titres, Inter pour le texte) : identiques hors connexion. */
@@ -4033,6 +4033,73 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 /* ═══ V5.3 ═══ */
 /* Page Jeux rangée par familles : de l'air entre une grille et le titre de la famille suivante */
 .j4 .g4 + .s4-tete{margin-top:30px}
+/* Bienvenue : l'en-tête et les onglets n'apparaissent qu'à l'ouverture de l'iris (jamais leurs textes seuls sur le noir) */
+body.bv-en-cours #barre,body.bv-en-cours #nav{visibility:hidden}
+/* Page Jeux (V5.5) : bande joueur, pastilles de famille, cartes portrait 3:4 (titre posé sur le bas de l'image) */
+.jb5{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--g4);margin:4px 0 10px}
+.jb5-av{flex:0 0 auto;width:46px;height:46px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,255,255,.7)}
+.jb5-av img{display:block;width:100%;height:100%}
+.jb5-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.jb5-txt b{font:900 18px/1 var(--rc);text-transform:uppercase;color:#fff}
+.jb5-txt small{font:700 11px/1.2 var(--rc);letter-spacing:.06em;text-transform:uppercase;color:var(--t4m)}
+.jb5-barre{display:block;height:3px;margin-top:4px;background:rgba(255,255,255,.14)}
+.jb5-barre i{display:block;height:100%;background:var(--a)}
+.jb5-rec{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding-left:12px;border-left:1px solid var(--l4)}
+.jb5-rec b{font:900 22px/1 var(--rc);color:#fff}
+.jb5-rec b i{font-style:normal;font-size:14px;color:var(--t4m)}
+.jb5-rec small{font:700 11px/1 var(--rc);letter-spacing:.06em;text-transform:uppercase;color:var(--t4m)}
+.jb5-go{width:100%;margin-bottom:16px;overflow:hidden;text-overflow:ellipsis}
+.jf5{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 14px;padding:0 16px}
+.jf5::-webkit-scrollbar{display:none}
+.jf5 button{flex:0 0 auto;height:34px;padding:0 14px;font:700 12px/34px var(--rc);letter-spacing:.06em;text-transform:uppercase;color:#ccc;background:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.jf5 button.on{color:#000;background:#fff;box-shadow:none}
+.g5{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.jc5{position:relative;display:block;aspect-ratio:3/4;overflow:hidden;background:#000;text-align:left}
+.jc5 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.jc5::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(transparent,rgba(0,0,0,.92) 70%)}
+.jc5-t{position:absolute;z-index:1;left:0;right:0;bottom:0;padding:0 11px 11px;display:flex;flex-direction:column;gap:4px}
+.jc5-t .k{font:700 10px/1 var(--rc);letter-spacing:.12em;text-transform:uppercase;color:var(--a)}
+.jc5-t b{font:900 17px/1.02 var(--rc);text-transform:uppercase;color:#fff}
+.jc5-t small{font:700 11px/1 var(--rc);letter-spacing:.05em;text-transform:uppercase;color:var(--t4m)}
+.jc5-t em{font-style:normal;color:#fff}
+.jc5-t em i{font-style:normal;color:var(--t4m)}
+/* Défi Infinity : la bande du Gant (6 pierres) en haut de la page Jeux, le résultat en fin de partie, le Pack Infinity */
+.inf5{position:relative;margin:6px 0 18px;padding:16px 16px 14px;overflow:hidden;background:radial-gradient(120% 140% at 100% 0%,rgba(176,77,255,.28),transparent 55%),radial-gradient(120% 140% at 0% 100%,rgba(255,196,60,.18),transparent 55%),#141018;box-shadow:inset 0 0 0 1px rgba(255,210,90,.28)}
+.inf5.ferme{background:#161616;box-shadow:inset 0 0 0 1px var(--l4)}
+.inf5.brise{background:#181212;box-shadow:inset 0 0 0 1px rgba(255,59,59,.35)}
+.inf5.fini{box-shadow:inset 0 0 0 1.5px #ffd23a,0 0 30px rgba(255,210,58,.25)}
+.inf-gant{display:flex;gap:9px;margin-bottom:12px}
+.inf-g{--g:#888;display:block;width:22px;height:22px;transform:rotate(45deg);border-radius:4px;background:#2a2a2a;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18)}
+.inf-g.on{background:radial-gradient(circle at 35% 30%,#fff 0,var(--g) 38%,color-mix(in srgb,var(--g) 55%,#000) 100%);box-shadow:0 0 12px var(--g),inset 0 0 0 1px rgba(255,255,255,.5)}
+.inf-g.cur{box-shadow:inset 0 0 0 2px var(--g),0 0 10px color-mix(in srgb,var(--g) 60%,transparent);animation:infPulse 1.6s ease-in-out infinite}
+@keyframes infPulse{50%{box-shadow:inset 0 0 0 2px var(--g),0 0 18px var(--g)}}
+.inf5.brise .inf-g:not(.on){opacity:.45}
+.inf5-t{display:flex;flex-direction:column;gap:5px}
+.inf5-t .k{font:700 11px/1 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:#ffd23a}
+.inf5.ferme .inf5-t .k{color:var(--t4m)}.inf5.brise .inf5-t .k{color:#ff5a5a}
+.inf5-t b{font:900 22px/1.05 var(--rc);text-transform:uppercase;color:#fff}
+.inf5-t small{font:600 13px/1.3 var(--rc);color:#bbb}
+.inf5-jeux{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin:14px 0 14px;padding:0}
+.inf5-jeux li{display:flex;align-items:center;gap:8px;font:700 13px/1.15 var(--rc);text-transform:uppercase;color:#9a9a9a}
+.inf5-jeux li span{flex:0 0 auto;display:grid;place-items:center;width:20px;height:20px;font-size:11px;color:#000;background:#555}
+.inf5-jeux li.ok{color:#fff}.inf5-jeux li.ok span{background:var(--g)}
+.inf5-jeux li.cur{color:#fff}.inf5-jeux li.cur span{background:#fff}
+.inf5-go{width:100%}
+.inf-gants{display:inline-block;margin-top:10px;font:700 11px/1 var(--rc);letter-spacing:.1em;text-transform:uppercase;color:#ffd23a}
+.inf-res{margin:18px 0 6px;padding:16px;text-align:left;background:#141018;box-shadow:inset 0 0 0 1px rgba(255,210,90,.3);display:flex;flex-direction:column;gap:6px}
+.inf-res.ko{background:#181212;box-shadow:inset 0 0 0 1px rgba(255,59,59,.4)}
+.inf-res b{font:900 20px/1.1 var(--rc);text-transform:uppercase;color:#fff}
+.inf-res small{font:600 13px/1.3 var(--rc);color:#bbb}
+.inf-res .inf-gant{margin-bottom:6px}
+.inf-res .btn{margin-top:8px}
+.inf-res .recomp-pack{display:block;width:110px;margin:8px 0 0}
+.inf-jeu{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 14px;background:#141018;box-shadow:inset 0 0 0 1px rgba(255,210,90,.3)}
+.inf-jeu .inf-gant{flex:0 0 auto;gap:5px;margin:0}
+.inf-jeu .inf-g{width:12px;height:12px;border-radius:2px}
+.inf-jeu-t{display:flex;flex-direction:column;gap:3px;min-width:0}
+.inf-jeu b{font:800 13px/1.1 var(--rc);letter-spacing:.06em;text-transform:uppercase;color:#ffd23a}
+.inf-jeu small{font:600 12px/1.25 var(--rc);color:#ccc}
+.paquet.v5.t-inf{--p1:#ffe9a8;--p2:#9b3dff;--p3:#140629;--p4:#ffd23a;--pl:rgba(176,77,255,.7)}
 </style>
 </head>
 <body>
@@ -4173,7 +4240,7 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/ae50355921835806.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/46415319322ecb5a.webp", "filmo": "/m/bbf631b82b3b778b.webp", "heros": "/m/75c351db2cfc291f.webp", "ordre": "/m/75ca5e8078ec6722.webp", "pierres": "/m/0bed29616ce0b804.webp", "qui": "/m/e6c381e442b9cfff.webp", "quiparle": "/m/cf585ec9715abac3.webp", "replique": "/m/8fbac7e7dd71a54c.webp", "swipe": "/m/8d7777b3fceb5ff9.webp", "vs": "/m/278ea7f2eb21ad63.webp"};
+const IMG_JEUX = {"affiche": "/m/4f546b7e55d85675.webp", "akinator": "/m/8719345bd3061689.webp", "dossier": "/m/db3d15d3fe14c412.webp", "filmo": "/m/f1dc2e724cd2d1b9.webp", "heros": "/m/6017ccaff98dbf79.webp", "ordre": "/m/7083df33cfcb6a2c.webp", "pierres": "/m/129603cad2382191.webp", "qui": "/m/c81d984f92278235.webp", "quiparle": "/m/e9e23243e0ee8f83.webp", "replique": "/m/d47e05f12fc50827.webp", "swipe": "/m/2f6fc8320848e97b.webp", "vs": "/m/703acd4a82da8317.webp"};
 /* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
 const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [33, 64], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 45], "vs": [51, 44]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
@@ -5730,6 +5797,7 @@ function pointsDe(pid){
   tousBonus().forEach(it => { if(vu(it)) pts += 30; });
   const col = (e.cartes && e.cartes.col) || {};
   if(typeof CARTES !== "undefined") CARTES.forEach(i => { if(col[i]) pts += PTS_RARETE[RARETE[i]] || 0; });
+  pts += ((e.infinity && e.infinity.gants) || 0) * 1000;   // chaque Gant de l'infini complété
   return pts;
 }
 function niveauDe(pid){
@@ -6347,26 +6415,34 @@ function defiDuJour(){
   const px = fo ? Math.max(-60, Math.min(100, Math.round((fo[0] / 100 * 1.65 - .62) / .65 * 100))) : 50;
   return { ...j, heures:h, image:j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${px}% ${fo[1]}%"` : ""}>` : "" };
 }
-/* Page Jeux : « À la une » (4 jeux en grand, qui changent chaque jour et défilent tout seuls), puis les jeux rangés par famille. */
-const FAMILLES_JEUX = [["ecran", "Films et scènes"], ["persos", "Les personnages"], ["duel", "Duels et défis"]];
+/* Page Jeux : la bande du Défi Infinity, des pastilles pour choisir la famille, puis les jeux en cartes portrait. */
+const FAMILLES_JEUX = [["ecran", "Films et scènes"], ["persos", "Personnages"], ["duel", "Duels et défis"]];
+let filtreJeux = "tout";
+const recordBattu = j => /[1-9]/.test(String(j.rec).split(/<i>|\//)[0]);
+function carteJeu(j){
+  const fam = (FAMILLES_JEUX.find(f => f[0] === j.fam) || [, ""])[1];
+  return `<button class="jc5 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : ""}
+    <span class="jc5-t"><span class="k">${fam}</span><b>${j.nom}</b><small>${recordBattu(j) ? `Record <em>${j.rec}</em>` : "À découvrir"}</small></span></button>`;
+}
+function grilleJeux(l){ return l.filter(j => filtreJeux === "tout" || j.fam === filtreJeux).map(carteJeu).join(""); }
 function rendreDefis(){
   if(typeof packDuJour === "function") packDuJour();
-  const l = listeJeux(), d = new Date(), n = Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
-  const une = [0, 1, 2, 3].map(k => l[(n + k * 3) % l.length]).filter((j, k, t) => t.indexOf(j) === k);
-  document.getElementById("v-defis").innerHTML = `
-    <div class="colonne j4">
-      <h1 class="h4-page">Jeux</h1>
-      <div class="une4" id="une4">${une.map(j => { const fo = typeof FOCALE_JEUX !== "undefined" && FOCALE_JEUX[j.id];
-        return `<button class="une4-c" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${fo[0]}% ${fo[1]}%"` : ""}>` : ""}
-        <span class="une4-t"><span class="k">À la une</span><b>${j.nom}</b><small>${j.accroche}</small>
-          <span class="une4-bas"><span class="b4 b4-rouge">${SVG.jouer}Jouer</span><span class="une4-rec">Record <em>${j.rec}</em></span></span></span></button>`; }).join("")}</div>
-      <div class="une4-pts" id="une4-pts">${une.map((j, k) => `<i${k ? "" : ` class="on"`}></i>`).join("")}</div>
-      ${FAMILLES_JEUX.map(([f, titre]) => { const g = l.filter(j => j.fam === f); return g.length ? `<div class="s4-tete"><h2 class="h4-sec">${titre}</h2></div>
-      <div class="g4">${g.map(j => `<button class="jc4 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : "<span class='jc4-vide'></span>"}
-        <span class="jc4-t"><b>${j.nom}</b><small>Record <em>${j.rec}</em></small></span></button>`).join("")}</div>` : ""; }).join("")}
+  const l = listeJeux();
+  const bande = typeof bandeInfinity === "function" ? bandeInfinity() : "";
+  const v = document.getElementById("v-defis");
+  v.innerHTML = `
+    <div class="colonne j4 j5">
+      <h1 class="h4-page">Jeux</h1>${bande}
+      <div class="jf5" id="jf5">${[["tout", "Tous"]].concat(FAMILLES_JEUX).map(([f, t]) => `<button data-fjeux="${f}" class="${filtreJeux === f ? "on" : ""}">${t}</button>`).join("")}</div>
+      <div class="g5" id="g5">${grilleJeux(l)}</div>
     </div>
     <div class="fin-page"></div>`;
-  activerUne();
+  document.getElementById("jf5").onclick = e => {
+    const b = e.target.closest("[data-fjeux]"); if(!b) return;
+    filtreJeux = b.dataset.fjeux;
+    document.querySelectorAll("#jf5 button").forEach(x => x.classList.toggle("on", x === b));
+    document.getElementById("g5").innerHTML = grilleJeux(listeJeux());
+  };
 }
 /* Carrousel : les points suivent le glissement ; défilement automatique toutes les 5 s, en pause dès qu'on le touche. */
 function activerUne(){
@@ -9343,6 +9419,123 @@ document.addEventListener("click", e => {
   if(pas){ const l = listeCatalogue(), k = l.indexOf(carteVue); if(k >= 0){ carteVue = l[(k + +pas.dataset.cdPas + l.length) % l.length]; vueCarte(carteVue); rendreCarte(); document.getElementById("carte").scrollTo({ top:0 }); } return; }
 });
 
+/* ── Défi Infinity : le mercredi et le samedi, 6 jeux tirés au sort (les mêmes pour tous les profils), dans un ordre tiré au sort.
+   Chaque jeu doit atteindre son palier Légendaire (le « parfait » de chaque jeu) : une pierre d'infinité s'allume.
+   Un seul essai : un jeu raté ou abandonné en cours de partie brise le Gant jusqu'au prochain défi.
+   Les 6 pierres : le Pack Infinity (une carte 6 étoiles garantie) et 1 000 points. ── */
+const INF_JOURS = [3, 6];   // mercredi, samedi
+const INF_PIERRES = [["Espace", "#3a8bff"], ["Esprit", "#ffd23a"], ["Réalité", "#ff3b3b"], ["Pouvoir", "#b04dff"], ["Temps", "#2fe07a"], ["Âme", "#ff8a1c"]];
+const INF_JEUX = ["affiche", "ordre", "replique", "quiparle", "qui", "heros", "dossier", "filmo", "vs", "swipe", "pierres"];   // pas le Gardien : ce n'est pas un jeu d'adresse
+const JOURS_FR = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+PACKS.inf = { nom:"Infinity", n:6, mini:6 };   // 6 cartes dont une Cosmique (6 étoiles)
+HEROS_PACK.inf = indexDe("Captain Marvel");
+let INF_EN_JEU = null, INF_PARTIE = 0;   // jeu du défi en cours (en mémoire : une partie coupée par un rechargement compte comme abandonnée)
+const infJour = (d = new Date()) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const infOuvert = (d = new Date()) => INF_JOURS.includes(d.getDay());
+/* Les 6 jeux d'un jour : tirage déterministe (graine = la date), donc identique sur tous les téléphones. */
+function infTirage(jour){
+  let h = 2166136261; for(const ch of "infinity·" + jour){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const alea = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; };
+  const dispo = listeJeux().map(j => j.id), l = INF_JEUX.filter(id => dispo.includes(id));
+  for(let k = l.length - 1; k > 0; k--){ const j = Math.floor(alea() * (k + 1)); [l[k], l[j]] = [l[j], l[k]]; }
+  return l.slice(0, 6);
+}
+function infEtat(){
+  const e = etat[profil]; if(!e) return null;
+  const s = e.infinity = e.infinity || { gants:0 }, j = infJour();
+  if(infOuvert() && s.jour !== j){ s.jour = j; s.etape = 0; s.brise = false; s.fini = false; s.tente = null; }
+  // une étape lancée qui n'a jamais rendu son résultat (appli fermée en pleine partie) : le Gant se brise
+  if(s.tente && s.tente !== INF_EN_JEU){ if(s.jour === j){ s.brise = true; s.cassePar = s.tente; } s.tente = null; sauver(); }
+  return s;
+}
+const infAujourdhui = s => s && s.jour === infJour() && infOuvert();
+/* Prochain jour de défi (après aujourd'hui) et le temps qui reste avant. */
+function infProchain(){
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  do d.setDate(d.getDate() + 1); while(!infOuvert(d));
+  return d;
+}
+function infDelai(cible){
+  const ms = Math.max(0, cible - Date.now()), h = Math.floor(ms / 36e5), m = Math.floor(ms % 36e5 / 6e4);
+  return h >= 24 ? Math.floor(h / 24) + " j " + (h % 24) + " h" : h ? h + " h " + String(m).padStart(2, "0") : m + " min";
+}
+function infObjectif(id){
+  if(id === "heros") return fmtPalier("heros_chrono", 2) + " en chrono · " + fmtPalier("heros_libre", 2) + " en libre";
+  if(id === "qui") return fmtPalier("qui_chrono", 2) + " en chrono · " + fmtPalier("qui_libre", 2) + " en libre";
+  return fmtPalier(id, 2);
+}
+const nomJeu = id => NOMS_DEFIS[id] || id;
+const infGemme = (k, etat) => `<i class="inf-g ${etat}" style="--g:${INF_PIERRES[k][1]}" title="Pierre ${INF_PIERRES[k][0]}"></i>`;
+function infGant(n, cur){ return `<span class="inf-gant">${INF_PIERRES.map((p, k) => infGemme(k, k < n ? "on" : k === cur ? "cur" : "")).join("")}</span>`; }
+
+/* Bande en haut de la page Jeux : défi ouvert, en cours, brisé, complet, ou fermé (compte à rebours). */
+function bandeInfinity(){
+  const s = infEtat(); if(!s) return "";
+  const minuit = new Date(); minuit.setHours(24, 0, 0, 0);
+  const pro = infProchain(), proTxt = JOURS_FR[pro.getDay()], gants = s.gants ? `<span class="inf-gants">${s.gants} Gant${s.gants > 1 ? "s" : ""} complété${s.gants > 1 ? "s" : ""}</span>` : "";
+  if(infAujourdhui(s)){
+    const l = infTirage(s.jour);
+    if(s.fini) return `<section class="inf5 fini">${infGant(6)}<div class="inf5-t"><span class="k">Défi Infinity</span><b>Gant complet !</b><small>Pack Infinity gagné · prochain défi ${proTxt}</small></div>${gants}</section>`;
+    if(s.brise) return `<section class="inf5 brise">${infGant(s.etape)}<div class="inf5-t"><span class="k">Défi Infinity</span><b>Gant brisé à la pierre ${s.etape + 1}</b><small>${nomJeu(s.cassePar || l[s.etape])} · prochain défi ${proTxt}</small></div>${gants}</section>`;
+    return `<section class="inf5 ouvert">${infGant(s.etape, s.etape)}
+      <div class="inf5-t"><span class="k">Défi Infinity · aujourd'hui</span><b>${s.etape ? "Pierre " + (s.etape + 1) + " sur 6" : "6 jeux · zéro faute"}</b>
+        <small>Un seul essai · fin dans ${infDelai(minuit)}</small></div>
+      <ol class="inf5-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape ? "cur" : ""}" style="--g:${INF_PIERRES[k][1]}"><span>${k + 1}</span>${nomJeu(id)}</li>`).join("")}</ol>
+      <button class="b4 b4-rouge inf5-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer · " + nomJeu(l[s.etape]) : "Lancer le défi"}</button>${gants}</section>`;
+  }
+  const dernier = s.jour ? (s.fini ? "Dernier défi : Gant complet" : s.brise ? `Dernier défi : brisé à la pierre ${s.etape + 1}` : s.etape ? `Dernier défi : ${s.etape}/6 pierres` : "") : "";
+  return `<section class="inf5 ferme">${infGant(0)}<div class="inf5-t"><span class="k">Défi Infinity</span><b>Prochain défi ${proTxt}</b>
+    <small>Dans ${infDelai(pro)} · 6 jeux, zéro faute, un seul essai${dernier ? " · " + dernier : ""}</small></div>${gants}</section>`;
+}
+function infLancer(){
+  const s = infEtat(); if(!infAujourdhui(s) || s.brise || s.fini) return;
+  const id = infTirage(s.jour)[s.etape]; if(!id) return;
+  s.tente = id; INF_EN_JEU = id; INF_PARTIE = JEU.partie; sauver();
+  ouvrirJeu(id);
+}
+/* Fin de partie (appelé par recompenser) : la pierre s'allume si le palier Légendaire est atteint, sinon le Gant se brise. */
+function infResultat(cle, v){
+  const id = cle.split("_")[0];
+  if(!INF_EN_JEU || INF_EN_JEU !== id) return "";
+  const s = infEtat(); INF_EN_JEU = null;   // l'état d'abord (sinon l'étape en cours passerait pour abandonnée)
+  if(!s || s.tente !== id) return "";
+  s.tente = null;
+  const k = s.etape, P = INF_PIERRES[k];
+  if(palierDe(cle, v) < 3){
+    s.brise = true; s.cassePar = id; sauver(); if(typeof rendreDefis === "function") rendreDefis();
+    return `<div class="inf-res ko">${infGant(k)}<p class="surtitre">Défi Infinity</p><b>Le Gant se brise</b><small>Il fallait ${infObjectif(id)} · prochain défi ${JOURS_FR[infProchain().getDay()]}</small></div>`;
+  }
+  s.etape = k + 1;
+  if(s.etape >= 6){
+    s.fini = true; s.gants = (s.gants || 0) + 1;
+    collec().packs.push({ t:"inf", o:"Défi Infinity" }); sauver(); if(typeof rendreDefis === "function") rendreDefis();
+    return `<div class="inf-res fini">${infGant(6)}<p class="surtitre">Défi Infinity</p><b>Les 6 pierres sont à toi !</b><small>Pack Infinity : une carte Cosmique garantie · +1 000 points</small>
+      <span class="recomp-pack">${paquet("inf")}</span><button class="btn btn-packs" data-ouvrir-packs>Ouvrir le Pack Infinity</button></div>`;
+  }
+  sauver(); if(typeof rendreDefis === "function") rendreDefis();
+  const suiv = infTirage(s.jour)[s.etape];
+  return `<div class="inf-res ok" style="--g:${P[1]}">${infGant(s.etape)}<p class="surtitre">Défi Infinity</p><b>Pierre de l'${P[0]} obtenue · ${s.etape}/6</b>
+    <small>Prochain jeu : ${nomJeu(suiv)}</small><button class="btn btn-blanc" data-inf-go>Continuer le défi</button></div>`;
+}
+/* Écran d'intro d'un jeu lancé par le défi : l'objectif à atteindre. */
+function infBandeauJeu(id){
+  if(INF_EN_JEU !== id) return;
+  const s = infEtat(), c = document.getElementById("jeu-in"); if(!s || !c) return;
+  c.insertAdjacentHTML("afterbegin", `<div class="inf-jeu" style="--g:${INF_PIERRES[s.etape][1]}">${infGant(s.etape, s.etape)}<span class="inf-jeu-t"><b>Défi Infinity · pierre ${s.etape + 1}/6</b><small>Objectif : ${infObjectif(id)} · une seule chance</small></span></div>`);
+}
+recompenser = (r => function(cle, v, ...a){ const inf = infResultat(cle, v); return inf + r(cle, v, ...a); })(recompenser);
+ouvrirJeu = (o => function(id){ o(id); infBandeauJeu(id); })(ouvrirJeu);
+// fermer le jeu après avoir lancé la partie = abandon (le Gant se brise) ; fermer sur l'écran d'intro = on n'a pas encore joué
+fermerFeuille = (f => function(id){
+  if(id === "jeu" && INF_EN_JEU){
+    const s = infEtat();
+    if(s && s.tente === INF_EN_JEU){ if(JEU.partie !== INF_PARTIE){ s.brise = true; s.cassePar = INF_EN_JEU; } s.tente = null; sauver(); }
+    INF_EN_JEU = null; if(typeof rendreDefis === "function" && vue === "defis") setTimeout(rendreDefis, 300);
+  }
+  return f(id);
+})(fermerFeuille);
+document.addEventListener("click", e => { if(e.target.closest("[data-inf-go]")){ e.stopPropagation(); infLancer(); } }, true);
+
 /* ═══════════ RECHERCHE ET FICHE PERSONNAGE ═══════════ */
 /* Loupe de l'accueil : un personnage (tous ses noms) ou un titre. La fiche range ses apparitions en trois blocs :
    la version principale (son acteur principal, prises de vue réelles), les variantes animées (What If, Zombies…)
@@ -10742,9 +10935,14 @@ function entrer(p, source){
   const f = document.getElementById("entree");
   f.classList.add("part");
   setTimeout(() => { f.hidden = true; f.classList.remove("part", "ouvert"); arreterDefile(); }, 820);
-  ["barre","app","nav"].forEach(i => document.getElementById(i).hidden = false);
-  majUnivers();
-  allerA(vue === "profil" ? "accueil" : vue);
+  // l'appli se construit derrière la Bienvenue, une image plus tard : l'iPhone affiche d'abord l'icône qui s'envole
+  // (sinon il fige le tout premier état de l'animation le temps de dessiner l'accueil). En-tête et onglets restent cachés jusqu'à l'iris.
+  document.body.classList.add("bv-en-cours");
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    ["barre","app","nav"].forEach(i => document.getElementById(i).hidden = false);
+    majUnivers();
+    allerA(vue === "profil" ? "accueil" : vue);
+  }));
 }
 function quitterApp(){
   fermerModales();
@@ -11311,9 +11509,10 @@ function bienvenue(p, source, ms){
   el.style.setProperty("--dy", r && r.width ? (r.top + r.height / 2 - c.top - c.height / 2) + "px" : "0px");
   el.style.setProperty("--sc", r && r.width ? r.width / c.width : .6);
   el.querySelectorAll("*").forEach(x => { x.style.animation = "none"; void x.offsetWidth; x.style.animation = ""; });
-  const t1 = setTimeout(() => el.classList.add("part"), ms - 1000), t2 = setTimeout(fin, ms);
-  function fin(){ clearTimeout(t1); clearTimeout(t2); el.onclick = null; if(el.hidden) return; el.hidden = true; el.classList.remove("part"); majSonVue(); }
-  el.onclick = () => { clearTimeout(t1); el.classList.add("part"); setTimeout(fin, 450); };   // un toucher passe la Bienvenue
+  const ouvrir = () => { el.classList.add("part"); document.body.classList.remove("bv-en-cours"); };
+  const t1 = setTimeout(ouvrir, ms - 1000), t2 = setTimeout(fin, ms);
+  function fin(){ clearTimeout(t1); clearTimeout(t2); el.onclick = null; document.body.classList.remove("bv-en-cours"); if(el.hidden) return; el.hidden = true; el.classList.remove("part"); majSonVue(); }
+  el.onclick = () => { clearTimeout(t1); ouvrir(); setTimeout(fin, 450); };   // un toucher passe la Bienvenue
 }
 
 /* Servie par le site (Netlify) : vrai manifeste + service worker (app gardée en mémoire, ouverture instantanée, hors ligne).
