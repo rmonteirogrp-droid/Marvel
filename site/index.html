@@ -4029,6 +4029,10 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 .une4-pts{display:flex;justify-content:center;gap:6px;margin:10px 0 18px}
 .une4-pts i{width:18px;height:3px;background:rgba(255,255,255,.25);transition:background .3s,width .3s}
 .une4-pts i.on{width:34px;background:var(--a)}
+
+/* ═══ V5.3 ═══ */
+/* Page Jeux rangée par familles : de l'air entre une grille et le titre de la famille suivante */
+.j4 .g4 + .s4-tete{margin-top:30px}
 </style>
 </head>
 <body>
@@ -4169,7 +4173,7 @@ const IMG_AFF_DOOM = ["/m/26543666d432fa0a.webp", "/m/25f8e7d21a2c23e8.webp", "/
 /* Prochaines sorties : affiches (TMDB ou composées pour l'app quand il n'y en a pas encore). */
 const IMG_AVENIR = {"bp3": "/m/c9df8b3be9e98f00.webp", "ghost28": "/m/b0551f4170ade1c5.webp", "mzfk": "/m/28a2a13d4823f5a8.webp", "mzlg": "/m/8a8437b890e19aa4.webp", "mzws": "/m/26cf7d5f4c159110.webp", "sw27": "/m/857f6adccb00e216.webp", "xmen28": "/m/d93140fa46e022fa.webp", "zodiac": "/m/d55b160a85312006.webp"};
 /* Page Jeux : une illustration façon comics par jeu (Marvel Snap, recadrée en 16:10). */
-const IMG_JEUX = {"affiche": "/m/8d7777b3fceb5ff9.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/46415319322ecb5a.webp", "filmo": "/m/ae50355921835806.webp", "heros": "/m/75c351db2cfc291f.webp", "ordre": "/m/75ca5e8078ec6722.webp", "pierres": "/m/0bed29616ce0b804.webp", "qui": "/m/8bd4483c09d23006.webp", "quiparle": "/m/d8b803589fae7c5a.webp", "replique": "/m/32c432018d5b156b.webp", "swipe": "/m/bcafb7f01d7800e1.webp", "vs": "/m/278ea7f2eb21ad63.webp"};
+const IMG_JEUX = {"affiche": "/m/ae50355921835806.webp", "akinator": "/m/5fa0adf606be52aa.webp", "dossier": "/m/46415319322ecb5a.webp", "filmo": "/m/bbf631b82b3b778b.webp", "heros": "/m/75c351db2cfc291f.webp", "ordre": "/m/75ca5e8078ec6722.webp", "pierres": "/m/0bed29616ce0b804.webp", "qui": "/m/e6c381e442b9cfff.webp", "quiparle": "/m/cf585ec9715abac3.webp", "replique": "/m/8fbac7e7dd71a54c.webp", "swipe": "/m/8d7777b3fceb5ff9.webp", "vs": "/m/278ea7f2eb21ad63.webp"};
 /* Point de visée de chaque visuel (centre du visage, en %) : cadre la tuile « Défi du jour ». */
 const FOCALE_JEUX = {"affiche": [50, 30], "akinator": [55, 53], "dossier": [50, 36], "filmo": [51, 32], "heros": [61, 42], "ordre": [33, 64], "pierres": [47, 42], "qui": [49, 35], "quiparle": [33, 30], "replique": [50, 38], "swipe": [52, 45], "vs": [51, 44]};
 /* Accueil MCU façon bande-annonce (≈ 25 s, coupes franches) : montée sur la voix de Nick Fury, puis combats (Avengers, Civil War, Ragnarok, Infinity War) jusqu'à Captain America face à Thanos. */
@@ -6315,20 +6319,23 @@ const etiquetteDefi = n => String(n).padStart(2, "0") + " · " + (THEME_DEFI[n] 
 function listeJeux(){
   const r = recordsHeros(), q = recordsQui(), v = recordsVs(), sur = t => `<i>${t}</i>`;
   return [
-    ["heros", "Héros en mémoire", "Cite un max de héros en 3 minutes", "Wolverine", Math.max(r.chrono, r.libre)],
-    ["qui", "Qui est-ce ?", "15 visages à reconnaître", "Doctor Strange", q.chrono ? q.chrono + sur("/15") : (q.libre ? fmtChrono(q.libre * 100) : 0)],
-    ["vs", "Qui gagne ?", "Deux légendes, un seul vainqueur", "Hulk", v.record],
-    ["affiche", "Devine l'affiche", "L'affiche se dévoile peu à peu", "Spider-Man", recordsDe("affiche").record + sur(" pts")],
-    ["ordre", "Dans l'ordre", "Remets les films dans l'ordre", "Captain America", recordsDe("ordre").record + sur("/8")],
-    ["replique", "Qui a dit ça ?", "Une réplique culte, quatre suspects", "Loki", recordsDe("replique").record + sur(" pts")],
-    typeof QP_CLIPS !== "undefined" && ["quiparle", "Qui parle ?", "Reconnais la voix en VF", "Nick Fury", recordsDe("quiparle").record + sur(" pts")],
-    typeof DOSSIER !== "undefined" && ["dossier", "Dossier classifié", "Déclassifie la fiche en une minute", "Black Widow", recordsDe("dossier").record + sur("%")],
-    typeof FILMO !== "undefined" && ["filmo", "Filmographie", "Toutes ses apparitions à l'écran", "Iron Man", recordsDe("filmo").record + sur(" pts")],
-    typeof AKI_T !== "undefined" && ["akinator", "Le Gardien", "Uatu lit dans ton esprit", "Uatu", recordsAki().record + sur(" q.")],
-    typeof SW !== "undefined" && ["swipe", "Swipe", "Vrai ou faux en 60 secondes", "Quicksilver", recordsDe("swipe").record + sur(" pts")],
-    typeof PZ !== "undefined" && ["pierres", "Les 6 pierres", "Survie : réunis les pierres d'infinité", "Thanos", recordsDe("pierres").record + sur("/18")],
-  ].filter(Boolean).map(([id, nom, accroche, perso, rec]) => { const i = indexDe(perso);
-    return { id, nom, accroche, rec, img:typeof IMG_JEUX !== "undefined" && IMG_JEUX[id] ? img(IMG_JEUX[id]) : i !== undefined && aPhoto(i) ? photo(i) : "" }; });
+    // Films et scènes : reconnaître les films, leurs répliques, leurs voix
+    ["affiche", "Devine l'affiche", "L'affiche se dévoile peu à peu", "Iron Man", recordsDe("affiche").record + sur(" pts"), "ecran"],
+    ["ordre", "Dans l'ordre", "Remets les films dans l'ordre", "Captain America", recordsDe("ordre").record + sur("/8"), "ecran"],
+    ["replique", "Qui a dit ça ?", "Une réplique culte, quatre suspects", "Deadpool", recordsDe("replique").record + sur(" pts"), "ecran"],
+    typeof QP_CLIPS !== "undefined" && ["quiparle", "Qui parle ?", "Reconnais la voix en VF", "Groot", recordsDe("quiparle").record + sur(" pts"), "ecran"],
+    // Les personnages
+    ["qui", "Qui est-ce ?", "15 visages à reconnaître", "Femme Invisible", q.chrono ? q.chrono + sur("/15") : (q.libre ? fmtChrono(q.libre * 100) : 0), "persos"],
+    ["heros", "Héros en mémoire", "Cite un max de héros en 3 minutes", "Wolverine", Math.max(r.chrono, r.libre), "persos"],
+    typeof DOSSIER !== "undefined" && ["dossier", "Dossier classifié", "Déclassifie la fiche en une minute", "Black Widow", recordsDe("dossier").record + sur("%"), "persos"],
+    typeof FILMO !== "undefined" && ["filmo", "Filmographie", "Toutes ses apparitions à l'écran", "Nick Fury", recordsDe("filmo").record + sur(" pts"), "persos"],
+    // Duels et défis : battre un adversaire ou le chrono
+    ["vs", "Qui gagne ?", "Deux légendes, un seul vainqueur", "Hulk", v.record, "duel"],
+    typeof SW !== "undefined" && ["swipe", "Swipe", "Vrai ou faux en 60 secondes", "Spider-Man", recordsDe("swipe").record + sur(" pts"), "duel"],
+    typeof PZ !== "undefined" && ["pierres", "Les 6 pierres", "Survie : réunis les pierres d'infinité", "Thanos", recordsDe("pierres").record + sur("/18"), "duel"],
+    typeof AKI_T !== "undefined" && ["akinator", "Le Gardien", "Uatu lit dans ton esprit", "Uatu", recordsAki().record + sur(" q."), "duel"],
+  ].filter(Boolean).map(([id, nom, accroche, perso, rec, fam]) => { const i = indexDe(perso);
+    return { id, nom, accroche, rec, fam, img:typeof IMG_JEUX !== "undefined" && IMG_JEUX[id] ? img(IMG_JEUX[id]) : i !== undefined && aPhoto(i) ? photo(i) : "" }; });
 }
 /* Défi du jour : un jeu différent chaque jour (le même pour tout le monde), renouvelé à minuit. */
 function defiDuJour(){
@@ -6340,7 +6347,8 @@ function defiDuJour(){
   const px = fo ? Math.max(-60, Math.min(100, Math.round((fo[0] / 100 * 1.65 - .62) / .65 * 100))) : 50;
   return { ...j, heures:h, image:j.img ? `<img src="${j.img}" alt=""${fo ? ` style="object-position:${px}% ${fo[1]}%"` : ""}>` : "" };
 }
-/* Page Jeux : « À la une » (4 jeux en grand, qui changent chaque jour et défilent tout seuls), puis tous les jeux. */
+/* Page Jeux : « À la une » (4 jeux en grand, qui changent chaque jour et défilent tout seuls), puis les jeux rangés par famille. */
+const FAMILLES_JEUX = [["ecran", "Films et scènes"], ["persos", "Les personnages"], ["duel", "Duels et défis"]];
 function rendreDefis(){
   if(typeof packDuJour === "function") packDuJour();
   const l = listeJeux(), d = new Date(), n = Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
@@ -6353,9 +6361,9 @@ function rendreDefis(){
         <span class="une4-t"><span class="k">À la une</span><b>${j.nom}</b><small>${j.accroche}</small>
           <span class="une4-bas"><span class="b4 b4-rouge">${SVG.jouer}Jouer</span><span class="une4-rec">Record <em>${j.rec}</em></span></span></span></button>`; }).join("")}</div>
       <div class="une4-pts" id="une4-pts">${une.map((j, k) => `<i${k ? "" : ` class="on"`}></i>`).join("")}</div>
-      <div class="s4-tete"><h2 class="h4-sec">Tous les jeux</h2></div>
-      <div class="g4">${l.map(j => `<button class="jc4 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : "<span class='jc4-vide'></span>"}
-        <span class="jc4-t"><b>${j.nom}</b><small>Record <em>${j.rec}</em></small></span></button>`).join("")}</div>
+      ${FAMILLES_JEUX.map(([f, titre]) => { const g = l.filter(j => j.fam === f); return g.length ? `<div class="s4-tete"><h2 class="h4-sec">${titre}</h2></div>
+      <div class="g4">${g.map(j => `<button class="jc4 cc" data-jeu="${j.id}">${j.img ? `<img src="${j.img}" alt="" loading="lazy">` : "<span class='jc4-vide'></span>"}
+        <span class="jc4-t"><b>${j.nom}</b><small>Record <em>${j.rec}</em></small></span></button>`).join("")}</div>` : ""; }).join("")}
     </div>
     <div class="fin-page"></div>`;
   activerUne();
