@@ -4493,6 +4493,37 @@ body.bv-en-cours #barre,body.bv-en-cours #nav,body.bv-en-cours #app{visibility:h
 .infR.ko .infR-pierre .ip img{filter:saturate(.75) brightness(.85) drop-shadow(0 0 6px rgba(236,29,36,.5))}
 .infP-gain .paquet{width:50px}
 @container (max-width:90px){.pqi-nom{font-size:15cqw}}
+/* ════ V5.9 · encart Jeux bord à bord + page du défi aérée (A : récompense en bandeau, B : pack centré) ════ */
+.j4 .infD{margin:4px -16px 20px;min-height:240px;box-shadow:none}
+.j4 .infD-t{height:240px;padding:18px 0 20px 16px}
+.j4 .infD-illu{width:78%;right:-4%}
+.j4 .infD b{font-size:36px}
+.infP-haut{height:calc(var(--haut) + 250px)}
+.infP-titre{bottom:24px;gap:0}
+.infP-chrono{align-self:flex-start;margin-bottom:14px;padding:6px 10px;font:700 11px/1 var(--rc);letter-spacing:.14em;text-transform:uppercase;color:#ffd9a0;background:rgba(0,0,0,.45);box-shadow:inset 0 0 0 1px rgba(255,210,120,.4)}
+.infP-titre b{font-size:54px;line-height:.9}
+.infP-go{margin:18px 20px 0}
+.infP-regle{margin:10px 0 0;text-align:center;font:600 11px/1 var(--rc);letter-spacing:.08em;text-transform:uppercase;color:#777}
+.infP .paquet{overflow:hidden}
+/* A : bandeau récompense */
+.infP-gainA{position:relative;display:flex;align-items:center;gap:18px;margin:16px 20px 0;padding:14px 16px;overflow:hidden;
+  background:linear-gradient(100deg,rgba(110,40,210,.35),rgba(20,10,40,.6) 60%,rgba(255,190,60,.12));box-shadow:inset 0 0 0 1px rgba(255,210,120,.35)}
+.infP-gainA::before{content:"";position:absolute;left:-30px;top:50%;width:160px;height:160px;margin-top:-80px;background:radial-gradient(circle,rgba(190,110,255,.45),transparent 65%)}
+.infP-gainA .paquet{position:relative;flex:0 0 auto;width:62px;transform:rotate(-6deg);filter:drop-shadow(0 6px 16px rgba(176,77,255,.7))}
+.infP-gainA>span{position:relative;display:flex;flex-direction:column;gap:4px}
+.infP-gainA .k{font:700 10px/1 var(--rc);letter-spacing:.16em;text-transform:uppercase;color:#ffd9a0}
+.infP-gainA b{font:900 24px/1 var(--rc);font-style:italic;text-transform:uppercase;background:linear-gradient(180deg,#fff6d0,#ffc93a 60%,#d58a14);-webkit-background-clip:text;background-clip:text;color:transparent}
+.infP-gainA small{font:600 12px/1.35 var(--rc);color:#cfc6e0}
+/* B : pack centré avec halo */
+.infP-B .infP-haut{height:calc(var(--haut) + 215px)}
+.infP-B .infP-jeux li{height:40px}
+.infP-gainB{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;margin:14px 0 0}
+.infP-halo{position:absolute;left:50%;top:44px;width:260px;height:260px;margin:-130px 0 0 -130px;pointer-events:none;
+  background:radial-gradient(circle,rgba(176,77,255,.4),transparent 60%),repeating-conic-gradient(rgba(255,210,120,.12) 0 5deg,transparent 5deg 15deg);
+  -webkit-mask:radial-gradient(circle,#000 20%,transparent 62%);mask:radial-gradient(circle,#000 20%,transparent 62%);animation:infTourne 40s linear infinite}
+.infP-gainB .paquet{position:relative;width:74px;filter:drop-shadow(0 8px 22px rgba(176,77,255,.75))}
+.infP-gainB p{position:relative;margin:0;text-align:center;font:600 12px/1.3 var(--rc);color:#bbb}
+.infP-gainB b{display:block;font:900 18px/1.1 var(--rc);font-style:italic;letter-spacing:.04em;text-transform:uppercase;color:#ffd23a}
 </style>
 </head>
 <body>
@@ -9855,7 +9886,7 @@ function infTirage(jour){
 function infEtat(){
   const e = etat[profil]; if(!e) return null;
   const s = e.infinity = e.infinity || { gants:0 }, j = infJour();
-  if(s.regle !== 2){ s.regle = 2; if(s.jour === j){ s.etape = 0; s.brise = false; s.fini = false; s.tente = null; } }   // nouvel objectif (plus de la moitié) : le défi du jour repart à zéro
+  if(s.regle !== 3){ s.regle = 3; if(s.jour === j){ s.etape = 0; s.brise = false; s.fini = false; s.tente = null; } }   // nouvel objectif (plus de la moitié) : le défi du jour repart à zéro
   if(infOuvert() && s.jour !== j){ s.jour = j; s.etape = 0; s.brise = false; s.fini = false; s.tente = null; }
   // une étape lancée qui n'a jamais rendu son résultat (appli fermée en pleine partie) : le Gant se brise
   if(s.tente && s.tente !== INF_EN_JEU){ if(s.jour === j){ s.brise = true; s.cassePar = s.tente; } s.tente = null; sauver(); }
@@ -9944,17 +9975,20 @@ function bandeInfinity(){
   return infCarte("ferme", 0, "Prochain défi " + proTxt + " · dans " + infDelai(pro), "Défi<br>Infinity", "Le mercredi et le samedi · 6 jeux, zéro faute" + (s.gants ? " · " + s.gants + " Gant" + (s.gants > 1 ? "s" : "") + " complété" + (s.gants > 1 ? "s" : "") : ""), false);
 }
 /* Page intermédiaire : ce qu'est le défi, les règles, les 6 jeux du jour, puis on lance le jeu en cours. */
+let INF_PAGE = "A";
 function infIntro(){
   const s = infEtat(); if(!infAujourdhui(s)) return;
   const l = infTirage(s.jour), minuit = new Date(); minuit.setHours(24, 0, 0, 0), fini = s.fini || s.brise;
   const etat = s.fini ? `<p class="infP-etat or">Gant complet · Pack Infinity gagné</p>` : s.brise ? `<p class="infP-etat ko">Gant brisé à la pierre ${s.etape + 1} · prochain défi ${JOURS_FR[infProchain().getDay()]}</p>` : "";
-  document.getElementById("jeu-in").innerHTML = `<div class="infP">
+  const gain = INF_PAGE === "B"
+    ? `<div class="infP-gainB"><span class="infP-halo"></span>${paquet("inf")}<p><b>Pack Infinity</b>10 cartes · une Cosmique garantie</p></div>`
+    : `<div class="infP-gainA">${paquet("inf")}<span><span class="k">À la 6<sup>e</sup> pierre</span><b>Pack Infinity</b><small>10 cartes · une Cosmique garantie<br>+1 000 pts</small></span></div>`;
+  document.getElementById("jeu-in").innerHTML = `<div class="infP infP-${INF_PAGE}">
     <div class="infP-haut">${infImg("inf_illu", "infP-illu")}
-      <span class="infP-titre"><span class="k">${JOURS_FR[new Date().getDay()]} · fin dans ${infDelai(minuit)}</span><b>Défi<br>Infinity</b>
-        <small>Réunis les 6 pierres avant minuit.<br>Un seul essai, pause permise entre deux jeux.</small></span></div>
+      <span class="infP-titre"><span class="infP-chrono">Fin dans ${infDelai(minuit)}</span><b>Défi<br>Infinity</b></span></div>
     <ol class="infP-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape && !fini ? "cur" : ""}">${pierreSVG(k, k < s.etape ? "on" : k === s.etape && !fini ? "cur" : "")}<b>${nomJeu(id)}</b><em>${infObjectif(id)}</em></li>`).join("")}</ol>
-    <div class="infP-gain">${paquet("inf")}<span><b>Pack Infinity</b>Carte Cosmique garantie + 1 000 pts<br>uniquement à la 6<sup>e</sup> pierre</span></div>
-    ${etat || `<button class="b4 b4-rouge infP-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer" : "Commencer"}</button>`}
+    ${gain}
+    ${etat || `<button class="b4 b4-rouge infP-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer" : "Commencer"}</button><p class="infP-regle">Un seul essai · pauses permises entre les jeux</p>`}
   </div>`;
   document.getElementById("jeu").classList.add("inf-fixe");
   ouvrirFeuille("jeu");
