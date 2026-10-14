@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="/m/ba399367040f71a1.png">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Marvel">
 <style>
 /* Polices intégrées (Barlow Condensed pour les titres, Inter pour le texte) : identiques hors connexion. */
@@ -25,7 +25,7 @@
   --t1:rgba(255,255,255,.94);--t2:rgba(255,255,255,.62);--t3:rgba(255,255,255,.4);--t4:rgba(255,255,255,.22);
   --filet:rgba(255,255,255,.12);--verre:rgba(12,12,12,.66);
   --titre:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;--texte:'Inter',system-ui,-apple-system,sans-serif;
-  --haut:calc(env(safe-area-inset-top,0px) * 1.38);   /* sous la barre d'état, l'iPhone floute une bande : tout ce qui est en haut (logo, loupe, profil) commence sous cette bande */--bas:env(safe-area-inset-bottom,0px);
+  --haut:env(safe-area-inset-top,0px);--bas:env(safe-area-inset-bottom,0px);
   --ecran:100vh;--doux:cubic-bezier(.2,.8,.2,1);
 }
 @supports (height:100svh){:root{--ecran:100svh}}
@@ -4100,21 +4100,6 @@ body.bv-en-cours #barre,body.bv-en-cours #nav,body.bv-en-cours #app{visibility:h
 .inf-jeu b{font:800 13px/1.1 var(--rc);letter-spacing:.06em;text-transform:uppercase;color:#ffd23a}
 .inf-jeu small{font:600 12px/1.25 var(--rc);color:#ccc}
 .paquet.v5.t-inf{--p1:#ffe9a8;--p2:#9b3dff;--p3:#140629;--p4:#ffd23a;--pl:rgba(176,77,255,.7)}
-/* En-tête plus compact, à la taille de Netflix : ligne du logo 46 px, onglets 36 px (le haut reste sous la bande floutée par l'iPhone) */
-:root{--hd:calc(var(--haut) + 84px)}
-body.sans-onglets{--hd:calc(var(--haut) + 46px)}
-body.replie{--hdv:calc(var(--haut) + 46px)}
-.b-l1{height:46px}
-#barre .logo{padding:6px}
-#barre .logo svg{height:32px;width:79.5px}
-#barre .univers{height:36px}
-#barre .univers button{height:36px;line-height:36px}
-/* En-tête : logo, loupe et profil un peu plus haut, avec de l'air au-dessus du filet */
-:root{--hd:calc(var(--haut) + 88px)}
-body.sans-onglets{--hd:calc(var(--haut) + 50px)}
-body.replie{--hdv:calc(var(--haut) + 50px)}
-.b-l1{height:50px;padding-bottom:8px;box-sizing:border-box}
-#barre .logo{padding:4px 6px}
 /* Défi Infinity plus compact : pierres à droite du surtitre, liste et bouton resserrés */
 .inf5{padding:12px 14px 12px;margin:2px 0 14px}
 .inf5 > .inf-gant{position:absolute;top:12px;right:14px;gap:6px;margin:0}
