@@ -4524,6 +4524,13 @@ body.bv-en-cours #barre,body.bv-en-cours #nav,body.bv-en-cours #app{visibility:h
 .infP-gainB .paquet{position:relative;width:74px;filter:drop-shadow(0 8px 22px rgba(176,77,255,.75))}
 .infP-gainB p{position:relative;margin:0;text-align:center;font:600 12px/1.3 var(--rc);color:#bbb}
 .infP-gainB b{display:block;font:900 18px/1.1 var(--rc);font-style:italic;letter-spacing:.04em;text-transform:uppercase;color:#ffd23a}
+/* V5.9.1 · formes Marvel (coins coupés) sur le défi */
+.infP-chrono{clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);box-shadow:none;background:rgba(255,200,90,.16);color:#ffd9a0}
+.infP-gainA{clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%);box-shadow:inset 3px 0 0 #ffd23a}
+.infP-etat{clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.infP-etat.ko{box-shadow:inset 3px 0 0 #ec1d24}.infP-etat.or{box-shadow:inset 3px 0 0 #ffd23a}
+.infR{clip-path:polygon(0 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%)}
+.infR.ok{box-shadow:inset 0 3px 0 var(--g)}.infR.ko{box-shadow:inset 0 3px 0 #ec1d24}
 </style>
 </head>
 <body>
@@ -9982,10 +9989,10 @@ function infIntro(){
   const etat = s.fini ? `<p class="infP-etat or">Gant complet · Pack Infinity gagné</p>` : s.brise ? `<p class="infP-etat ko">Gant brisé à la pierre ${s.etape + 1} · prochain défi ${JOURS_FR[infProchain().getDay()]}</p>` : "";
   const gain = INF_PAGE === "B"
     ? `<div class="infP-gainB"><span class="infP-halo"></span>${paquet("inf")}<p><b>Pack Infinity</b>10 cartes · une Cosmique garantie</p></div>`
-    : `<div class="infP-gainA">${paquet("inf")}<span><span class="k">À la 6<sup>e</sup> pierre</span><b>Pack Infinity</b><small>10 cartes · une Cosmique garantie<br>+1 000 pts</small></span></div>`;
+    : `<div class="infP-gainA">${paquet("inf")}<span><span class="k">Récompense finale</span><b>Pack Infinity</b><small>10 cartes · une Cosmique garantie<br>+1 000 pts</small></span></div>`;
   document.getElementById("jeu-in").innerHTML = `<div class="infP infP-${INF_PAGE}">
     <div class="infP-haut">${infImg("inf_illu", "infP-illu")}
-      <span class="infP-titre"><span class="infP-chrono">Fin dans ${infDelai(minuit)}</span><b>Défi<br>Infinity</b></span></div>
+      <span class="infP-titre">${fini ? "" : `<span class="infP-chrono">Fin dans ${infDelai(minuit)}</span>`}<b>Défi<br>Infinity</b></span></div>
     <ol class="infP-jeux">${l.map((id, k) => `<li class="${k < s.etape ? "ok" : k === s.etape && !fini ? "cur" : ""}">${pierreSVG(k, k < s.etape ? "on" : k === s.etape && !fini ? "cur" : "")}<b>${nomJeu(id)}</b><em>${infObjectif(id)}</em></li>`).join("")}</ol>
     ${gain}
     ${etat || `<button class="b4 b4-rouge infP-go" data-inf-go>${SVG.jouer}${s.etape ? "Continuer" : "Commencer"}</button><p class="infP-regle">Un seul essai · pauses permises entre les jeux</p>`}
