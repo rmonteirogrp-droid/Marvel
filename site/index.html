@@ -25,7 +25,7 @@
   --t1:rgba(255,255,255,.94);--t2:rgba(255,255,255,.62);--t3:rgba(255,255,255,.4);--t4:rgba(255,255,255,.22);
   --filet:rgba(255,255,255,.12);--verre:rgba(12,12,12,.66);
   --titre:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;--texte:'Inter',system-ui,-apple-system,sans-serif;
-  --haut:env(safe-area-inset-top,0px);--bas:env(safe-area-inset-bottom,0px);
+  --haut:calc(env(safe-area-inset-top,0px) * 1.5);   /* sous la barre d'état, l'iPhone floute une bande : tout ce qui est en haut (logo, loupe, profil) commence sous cette bande */--bas:env(safe-area-inset-bottom,0px);
   --ecran:100vh;--doux:cubic-bezier(.2,.8,.2,1);
 }
 @supports (height:100svh){:root{--ecran:100svh}}
