@@ -4034,7 +4034,7 @@ body.replie #barre .univers{height:0;opacity:0;border-top-width:0;border-bottom-
 /* Page Jeux rangée par familles : de l'air entre une grille et le titre de la famille suivante */
 .j4 .g4 + .s4-tete{margin-top:30px}
 /* Bienvenue : l'en-tête et les onglets n'apparaissent qu'à l'ouverture de l'iris (jamais leurs textes seuls sur le noir) */
-body.bv-en-cours #barre,body.bv-en-cours #nav{visibility:hidden}
+body.bv-en-cours #barre,body.bv-en-cours #nav,body.bv-en-cours #app{visibility:hidden}
 /* Page Jeux (V5.5) : bande joueur, pastilles de famille, cartes portrait 3:4 (titre posé sur le bas de l'image) */
 .jb5{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--g4);margin:4px 0 10px}
 .jb5-av{flex:0 0 auto;width:46px;height:46px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,255,255,.7)}
@@ -4109,6 +4109,25 @@ body.replie{--hdv:calc(var(--haut) + 46px)}
 #barre .logo svg{height:32px;width:79.5px}
 #barre .univers{height:36px}
 #barre .univers button{height:36px;line-height:36px}
+/* En-tête : logo, loupe et profil un peu plus haut, avec de l'air au-dessus du filet */
+:root{--hd:calc(var(--haut) + 88px)}
+body.sans-onglets{--hd:calc(var(--haut) + 50px)}
+body.replie{--hdv:calc(var(--haut) + 50px)}
+.b-l1{height:50px;padding-bottom:8px;box-sizing:border-box}
+#barre .logo{padding:4px 6px}
+/* Défi Infinity plus compact : pierres à droite du surtitre, liste et bouton resserrés */
+.inf5{padding:12px 14px 12px;margin:2px 0 14px}
+.inf5 > .inf-gant{position:absolute;top:12px;right:14px;gap:6px;margin:0}
+.inf5 > .inf-gant .inf-g{width:13px;height:13px;border-radius:3px}
+.inf5-t{gap:3px}
+.inf5-t .k{font-size:10px;padding-right:130px}
+.inf5-t b{font-size:18px}
+.inf5-t small{font-size:12px}
+.inf5-jeux{gap:4px 10px;margin:10px 0}
+.inf5-jeux li{font-size:12px;gap:6px}
+.inf5-jeux li span{width:17px;height:17px;font-size:10px}
+.inf5-go{height:40px;font-size:13px}
+.inf-gants{margin-top:8px}
 </style>
 </head>
 <body>
