@@ -490,6 +490,8 @@ h1.hero-title{
 .ft-logo{height:44px;width:auto}
 .ft-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
 .ft-col h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-dk-soft);margin-bottom:16px;font-weight:700}
+/* nom de produit : jamais tout en capitales, seule l'initiale l'est */
+.ft-col h4.ft-nom{text-transform:none;letter-spacing:.02em;font-size:13px}
 .ft-col a{display:block;font-size:14.5px;color:var(--on-dk);padding:5px 0;transition:color var(--t-fast),padding-left var(--t-fast)}
 .ft-col a:hover{color:var(--vert-hi);padding-left:5px}
 .ft-bot{margin-top:30px}
